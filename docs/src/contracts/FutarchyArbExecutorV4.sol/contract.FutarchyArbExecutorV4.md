@@ -1,14 +1,14 @@
 # FutarchyArbExecutorV4
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyArbExecutorV4.sol)
 
-
 ## State Variables
+
 ### runner
 
 ```solidity
 address public immutable runner
 ```
-
 
 ### PATCH_NONE
 
@@ -16,10 +16,9 @@ address public immutable runner
 uint8 constant PATCH_NONE = type(uint8).max
 ```
 
-
 ## Functions
-### onlyRunner
 
+### onlyRunner
 
 ```solidity
 modifier onlyRunner() ;
@@ -27,13 +26,11 @@ modifier onlyRunner() ;
 
 ### constructor
 
-
 ```solidity
 constructor(address _runner) ;
 ```
 
 ### execute10
-
 
 ```solidity
 function execute10(address[10] calldata targets, bytes[10] calldata calldatas, uint256 count) external payable;
@@ -41,20 +38,17 @@ function execute10(address[10] calldata targets, bytes[10] calldata calldatas, u
 
 ### executeOne
 
-
 ```solidity
 function executeOne(address target, bytes calldata data) external payable returns (bytes memory);
 ```
 
 ### runSell
 
-
 ```solidity
 function runSell(SellArgs calldata a) external onlyRunner;
 ```
 
 ### runBuy
-
 
 ```solidity
 function runBuy(BuyArgs calldata a) external onlyRunner;
@@ -66,13 +60,11 @@ Execute a single execute10 batch (e.g., CUR -> COMP via Balancer) with delta che
 
 External only for the configured runner; internally uses the same self-call pattern as sell/buy flows.
 
-
 ```solidity
 function runTrade(Execute10Batch calldata b) external onlyRunner returns (uint256 out);
 ```
 
-### _runExecute10Checked
-
+### \_runExecute10Checked
 
 ```solidity
 function _runExecute10Checked(
@@ -85,34 +77,29 @@ function _runExecute10Checked(
 
 ### sell_conditional_arbitrage
 
-
 ```solidity
 function sell_conditional_arbitrage(SellArgs calldata a) external;
 ```
 
 ### buy_conditional_arbitrage
 
-
 ```solidity
 function buy_conditional_arbitrage(BuyArgs calldata a) external;
 ```
 
-### _ensureAllowance
-
+### \_ensureAllowance
 
 ```solidity
 function _ensureAllowance(IERC20 token, address spender, uint256 need) internal;
 ```
 
-### _safeCall
-
+### \_safeCall
 
 ```solidity
 function _safeCall(address target, bytes memory data, uint256 value) internal;
 ```
 
-### _patchedCalldata
-
+### \_patchedCalldata
 
 ```solidity
 function _patchedCalldata(
@@ -124,8 +111,7 @@ function _patchedCalldata(
 ) internal pure returns (bytes memory cd);
 ```
 
-### _revertWith
-
+### \_revertWith
 
 ```solidity
 function _revertWith(bytes memory ret) private pure;
@@ -133,12 +119,12 @@ function _revertWith(bytes memory ret) private pure;
 
 ### receive
 
-
 ```solidity
 receive() external payable;
 ```
 
 ## Events
+
 ### SellExecuted
 
 ```solidity
@@ -186,6 +172,7 @@ event TradeExecuted(address indexed tokenIn, address indexed tokenOut, uint256 a
 ```
 
 ## Structs
+
 ### Tokens
 
 ```solidity
@@ -321,4 +308,3 @@ struct BuyArgs {
     int256 minNetCur;
 }
 ```
-

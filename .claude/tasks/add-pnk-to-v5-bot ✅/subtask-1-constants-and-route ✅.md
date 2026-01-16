@@ -1,12 +1,15 @@
 Title: Add PNK trading constants and Balancer route (Gnosis)
 
 Status
+
 - Completed: constants, poolIds, assets order, deadlines, and helpers are implemented in FutarchyArbExecutorV5.sol and deployed.
 
 Objective
+
 - Centralize constants used by the new PNK buy/sell flows. Keep them isolated and easy to swap if pools change.
 
 What to add
+
 - Addresses (checksummed):
   - `SDAI = 0xaf204776c7245bF4147c2612BF6e5972Ee483701`
   - `WETH = 0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1`
@@ -32,9 +35,11 @@ What to add
   - Swapr v2 swap: `3510754692` (far future)
 
 Minimal interfaces (for implementation)
+
 - IVault.batchSwap (SwapKind.GIVEN_IN, BatchSwapStep[], address[] assets, FundManagement, int256[] limits, uint256 deadline) → int256[] assetDeltas
 - IERC20 minimal (balanceOf, approve)
 - IAlgebra/Swapr exactInputSingle as already present in V5
 
 Acceptance
+
 - Constants grouped under a PNK-specific section or library in V5 and used only by the new PNK functions.

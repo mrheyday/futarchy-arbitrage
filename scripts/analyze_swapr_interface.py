@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+'#!/usr/bin/env python3
 """
 Analyze the actual Swapr router interface on Gnosis Chain.
 This will help us understand the exact encoding needed.

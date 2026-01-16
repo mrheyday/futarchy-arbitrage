@@ -54,15 +54,15 @@ python -m src.arbitrage_bot \
 
 ## Parameters
 
-| Parameter | Description | Example |
-|-----------|-------------|---------|
-| `--env` | Path to environment file with pool addresses | `.env.0x959...` |
-| `--amount` | Amount of sDAI to trade | `0.01` |
-| `--interval` | Seconds between price checks | `120` |
-| `--tolerance` | Minimum price deviation to trigger trade | `0.04` |
-| `--min-profit` | Minimum profit required (can be negative) | `0.001` |
-| `--dry-run` | Simulate trades without executing | Flag |
-| `--prefund` | Transfer sDAI to executor if needed | Flag |
+| Parameter      | Description                                  | Example         |
+| -------------- | -------------------------------------------- | --------------- |
+| `--env`        | Path to environment file with pool addresses | `.env.0x959...` |
+| `--amount`     | Amount of sDAI to trade                      | `0.01`          |
+| `--interval`   | Seconds between price checks                 | `120`           |
+| `--tolerance`  | Minimum price deviation to trigger trade     | `0.04`          |
+| `--min-profit` | Minimum profit required (can be negative)    | `0.001`         |
+| `--dry-run`    | Simulate trades without executing            | Flag            |
+| `--prefund`    | Transfer sDAI to executor if needed          | Flag            |
 
 ## How It Works
 
@@ -80,7 +80,6 @@ python -m src.arbitrage_bot \
      - Buy composite on Balancer
      - Split into conditional tokens
      - Sell conditionals on Swapr
-   
    - **BUY Flow**: When Balancer is overpriced
      - Buy cheap conditionals on Swapr
      - Merge into composite token

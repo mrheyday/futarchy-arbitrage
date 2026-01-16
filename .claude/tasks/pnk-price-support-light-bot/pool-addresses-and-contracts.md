@@ -3,24 +3,28 @@
 ## Core Contracts
 
 ### PNK Token
+
 - **Network**: Gnosis Chain
 - **Address**: `[TO BE DETERMINED]`
 - **Decimals**: 18
 - **Symbol**: PNK
 
 ### WETH (Wrapped Ether on Gnosis)
+
 - **Network**: Gnosis Chain
 - **Address**: `[TO BE DETERMINED FROM CONFIG]`
 - **Decimals**: 18
 - **Symbol**: WETH
 
 ### WXDAI (Wrapped xDAI)
+
 - **Network**: Gnosis Chain
 - **Address**: `[DERIVED FROM POOL]`
 - **Decimals**: 18
 - **Symbol**: WXDAI
 
 ### sDAI (Savings DAI)
+
 - **Network**: Gnosis Chain
 - **Address**: `0x89C80A4540A00b5270347E02e2E144c71da2EceD`
 - **Decimals**: 18
@@ -30,6 +34,7 @@
 ## Liquidity Pools
 
 ### PNK/WETH Pool
+
 - **Address**: `0x2613Cb099C12CECb1bd290Fd0eF6833949374165`
 - **Type**: Uniswap V2 Compatible
 - **Token0**: `[TO BE DETERMINED]`
@@ -37,6 +42,7 @@
 - **Fee**: 0.3%
 
 ### WETH/WXDAI Pool
+
 - **Address**: `0x1865d5445010e0baf8be2eb410d3eae4a68683c2`
 - **Type**: Uniswap V2 Compatible
 - **Token0**: `[TO BE DETERMINED]`
@@ -46,6 +52,7 @@
 ## Required ABI Methods
 
 ### For Uniswap V2 Pools
+
 ```solidity
 // Get current reserves
 function getReserves() external view returns (
@@ -62,6 +69,7 @@ function token1() external view returns (address);
 ```
 
 ### For sDAI Contract
+
 ```solidity
 // Get current sDAI to DAI conversion rate
 function convertToAssets(uint256 shares) external view returns (uint256 assets);
@@ -73,6 +81,7 @@ function previewRedeem(uint256 shares) external view returns (uint256 assets);
 ## Configuration Requirements
 
 ### Environment Variables
+
 ```bash
 # Token Addresses
 PNK_TOKEN_ADDRESS=
@@ -90,6 +99,7 @@ RPC_URL=https://rpc.gnosischain.com
 ```
 
 ### Python Configuration Structure
+
 ```python
 PNK_CONFIG = {
     "pools": {

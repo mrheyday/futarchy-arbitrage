@@ -1,6 +1,5 @@
-
-
 # Contents
+
 - [IERC20](FutarchyArbExecutorV3.sol/interface.IERC20.md)
 - [IFutarchyRouter](FutarchyArbExecutorV3.sol/interface.IFutarchyRouter.md)
 - [FutarchyArbExecutorV3](FutarchyArbExecutorV3.sol/contract.FutarchyArbExecutorV3.md)

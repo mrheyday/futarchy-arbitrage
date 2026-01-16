@@ -4,11 +4,11 @@ Below is a **fully on‑chain, atomic** way to swap **PNK → sDAI on Gnosis Cha
 
 ## Plan (concise checklist)
 
-* **Identify canonical contracts on Gnosis**: token addresses (PNK, sDAI, WETH, wxDAI) and on‑chain DEX contracts (Sushi v2, Honeyswap v2, Balancer Vault).
-* **Pick a route that has live liquidity** and settles **in one transaction**; prefer a simple v2 path if available; otherwise compose **v2 + Balancer** inside one call.
-* **Preflight on‑chain**: check pairs exist and quote with `getAmountsOut` (v2) or `queryBatchSwap` (Balancer).
-* **Approve once** and **execute the atomic swap** with a single transaction that either delivers sDAI or reverts.
-* **Verify settlement** (receipt shows sDAI transfer to recipient in the same tx).
+- **Identify canonical contracts on Gnosis**: token addresses (PNK, sDAI, WETH, wxDAI) and on‑chain DEX contracts (Sushi v2, Honeyswap v2, Balancer Vault).
+- **Pick a route that has live liquidity** and settles **in one transaction**; prefer a simple v2 path if available; otherwise compose **v2 + Balancer** inside one call.
+- **Preflight on‑chain**: check pairs exist and quote with `getAmountsOut` (v2) or `queryBatchSwap` (Balancer).
+- **Approve once** and **execute the atomic swap** with a single transaction that either delivers sDAI or reverts.
+- **Verify settlement** (receipt shows sDAI transfer to recipient in the same tx).
 
 ---
 
@@ -16,22 +16,22 @@ Below is a **fully on‑chain, atomic** way to swap **PNK → sDAI on Gnosis Cha
 
 **Tokens (Gnosis Chain)**
 
-* **PNK (Kleros, bridged “Pinakion on xDai”)**: `0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3`. Labeled “Kleros: PNK Token” on GnosisScan; also referenced by Kleros forum. ([GeckoTerminal][1])
-* **sDAI (Savings xDai)**: `0xaf204776c7245bf4147c2612bf6e5972ee483701`. Confirmed by Spark docs and labeled “Gnosis: sDAI Token” on GnosisScan. ([docs.spark.fi][2])
-* **WETH (bridged)**: `0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1`. Verified on Blockscout and CoinGecko. ([Gnosis Blockscout][3], [CoinGecko][4])
-* **wxDAI (wrapped xDAI, ERC‑20)**: `0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d`. From Gnosis docs. ([docs.gnosischain.com][5])
+- **PNK (Kleros, bridged “Pinakion on xDai”)**: `0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3`. Labeled “Kleros: PNK Token” on GnosisScan; also referenced by Kleros forum. ([GeckoTerminal][1])
+- **sDAI (Savings xDai)**: `0xaf204776c7245bf4147c2612bf6e5972ee483701`. Confirmed by Spark docs and labeled “Gnosis: sDAI Token” on GnosisScan. ([docs.spark.fi][2])
+- **WETH (bridged)**: `0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1`. Verified on Blockscout and CoinGecko. ([Gnosis Blockscout][3], [CoinGecko][4])
+- **wxDAI (wrapped xDAI, ERC‑20)**: `0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d`. From Gnosis docs. ([docs.gnosischain.com][5])
 
 **DEX contracts (Gnosis Chain)**
 
-* **SushiSwap v2 Router**: `0x1b02da8cb0d097eb8d57a175b88c7d8b47997506`. Official Sushi address book lists this for GNOSIS. ([GeckoTerminal][6])
-* **Honeyswap (Uniswap v2) Router**: `0x1C232F01118CB8B424793ae03F870aa7D0ac7f77`. Seen on a live Gnosis transaction as “Honeyswap: Uniswap V2 Router 2” and in Omen/1Hive repos. ([Gnosis Chain Blockchain Explorer][7], [GitHub][8])
-* **Balancer v2 Vault** (multi‑pool router): `0xBA12222222228d8Ba445958a75a0704d566BF2C8` (canonical across networks, confirmed for Gnosis in Balancer deployments repo and by GnosisScan logs). ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
+- **SushiSwap v2 Router**: `0x1b02da8cb0d097eb8d57a175b88c7d8b47997506`. Official Sushi address book lists this for GNOSIS. ([GeckoTerminal][6])
+- **Honeyswap (Uniswap v2) Router**: `0x1C232F01118CB8B424793ae03F870aa7D0ac7f77`. Seen on a live Gnosis transaction as “Honeyswap: Uniswap V2 Router 2” and in Omen/1Hive repos. ([Gnosis Chain Blockchain Explorer][7], [GitHub][8])
+- **Balancer v2 Vault** (multi‑pool router): `0xBA12222222228d8Ba445958a75a0704d566BF2C8` (canonical across networks, confirmed for Gnosis in Balancer deployments repo and by GnosisScan logs). ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
 
 **Liquidity reality check (so we choose a viable route):**
 
-* **PNK has an active PNK/WETH v2 pool on Swapr (Gnosis)** (Uniswap‑v2‑like fork): pair `0x2613...4165`. ([DEX Screener][11])
-* **sDAI has active pools on Sushi v3 (e.g., sDAI/GNO)** and **Balancer** (stable baskets including sDAI). This means final leg into sDAI is readily available onchain. ([GeckoTerminal][6], [Balancer][12])
-* **WETH/WXDAI is on Sushi v2**, so converting WETH↔wxDAI onchain is straightforward. ([DEX Screener][13])
+- **PNK has an active PNK/WETH v2 pool on Swapr (Gnosis)** (Uniswap‑v2‑like fork): pair `0x2613...4165`. ([DEX Screener][11])
+- **sDAI has active pools on Sushi v3 (e.g., sDAI/GNO)** and **Balancer** (stable baskets including sDAI). This means final leg into sDAI is readily available onchain. ([GeckoTerminal][6], [Balancer][12])
+- **WETH/WXDAI is on Sushi v2**, so converting WETH↔wxDAI onchain is straightforward. ([DEX Screener][13])
 
 Taken together, two robust atomic patterns emerge:
 
@@ -59,10 +59,10 @@ const provider = new ethers.JsonRpcProvider(RPC);
 const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
 const SUSHI_V2_ROUTER = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
-const PNK   = "0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3";
-const WETH  = "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1";
+const PNK = "0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3";
+const WETH = "0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1";
 const WXDAI = "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d";
-const SDAI  = "0xaf204776c7245bf4147c2612bf6e5972ee483701";
+const SDAI = "0xaf204776c7245bf4147c2612bf6e5972ee483701";
 
 const router = new ethers.Contract(SUSHI_V2_ROUTER, IUniswapV2Router02, signer);
 const pnk = new ethers.Contract(PNK, IERC20, signer);
@@ -70,9 +70,9 @@ const pnk = new ethers.Contract(PNK, IERC20, signer);
 // Example: path PNK -> WETH -> WXDAI -> sDAI
 const path = [PNK, WETH, WXDAI, SDAI];
 
-const amountIn  = ethers.parseUnits("1000", 18);      // 1000 PNK
-const minOut    = ethers.parseUnits("800", 18);       // set based on quotes; sDAI is >1.0 (non-rebasing)
-const deadline  = Math.floor(Date.now()/1000) + 1200; // 20 minutes
+const amountIn = ethers.parseUnits("1000", 18); // 1000 PNK
+const minOut = ethers.parseUnits("800", 18); // set based on quotes; sDAI is >1.0 (non-rebasing)
+const deadline = Math.floor(Date.now() / 1000) + 1200; // 20 minutes
 
 // 1) approve
 await (await pnk.approve(SUSHI_V2_ROUTER, amountIn)).wait();
@@ -83,7 +83,7 @@ const tx = await router.swapExactTokensForTokens(
   minOut,
   path,
   await signer.getAddress(),
-  deadline
+  deadline,
 );
 await tx.wait();
 ```
@@ -98,16 +98,16 @@ await tx.wait();
 
 **Pattern**
 
-* Hop 1 (v2 AMM): **PNK → WETH** (or `→ wxDAI`) using **Sushi v2** or **Honeyswap v2** router.
-* Hop 2 (Balancer Vault): **WETH/wxDAI → sDAI** using a Balancer stable route (e.g., via USDC/USDT/sDAI).
+- Hop 1 (v2 AMM): **PNK → WETH** (or `→ wxDAI`) using **Sushi v2** or **Honeyswap v2** router.
+- Hop 2 (Balancer Vault): **WETH/wxDAI → sDAI** using a Balancer stable route (e.g., via USDC/USDT/sDAI).
 
 Both calls are done by **your contract** in a single external transaction; any revert along the way cancels the whole tx → **atomic**.
 
 Why this works well on Gnosis:
 
-* PNK has a liquid **PNK/WETH** v2 pool (Swapr), demonstrating PNK↔WETH liquidity onchain. ([DEX Screener][11])
-* sDAI liquidity concentrates on **Balancer** (e.g., USDC/USDT/sDAI) and also exists on Sushi v3 (e.g., **sDAI/GNO**), so the second leg is reliably settleable onchain. ([Balancer][12], [GeckoTerminal][6])
-* The **Balancer Vault** is a single contract router that atomically executes multi‑pool swaps and reverts on failure. Address on Gnosis is the canonical `0xBA1222...`. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10], [docs.balancer.fi][15])
+- PNK has a liquid **PNK/WETH** v2 pool (Swapr), demonstrating PNK↔WETH liquidity onchain. ([DEX Screener][11])
+- sDAI liquidity concentrates on **Balancer** (e.g., USDC/USDT/sDAI) and also exists on Sushi v3 (e.g., **sDAI/GNO**), so the second leg is reliably settleable onchain. ([Balancer][12], [GeckoTerminal][6])
+- The **Balancer Vault** is a single contract router that atomically executes multi‑pool swaps and reverts on failure. Address on Gnosis is the canonical `0xBA1222...`. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10], [docs.balancer.fi][15])
 
 ### Solidity reference (minimal “two‑hop across protocols”)
 
@@ -284,8 +284,8 @@ contract PnkToSdaiAtomic {
 
 **How you use it**
 
-* For the v2 hop, pass **`v2Router = SUSHI_V2`** (or `HONEY_V2`) and **`v2Path = [PNK, WETH]`** (or `[PNK, WXDAI]`) depending on where you find the best live pair. For example, PNK/WETH liquidity exists on Swapr (v2‑like), but if you’re not using Swapr’s router, prefer a PNK pair that’s on Sushi/Honey. ([DEX Screener][11])
-* For the Balancer hop, either use a **direct sDAI pool** if one exists for your intermediate (supply `balSinglePoolId`), or route through a stablecoin hub via `batchSwap` (supply two `poolIds`, e.g., `(intermediate→USDC, USDC→sDAI)` with `assets = [intermediate, USDC, sDAI]`). Balancer’s **Vault** on Gnosis is `0xBA1222…` and it atomically executes both steps. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
+- For the v2 hop, pass **`v2Router = SUSHI_V2`** (or `HONEY_V2`) and **`v2Path = [PNK, WETH]`** (or `[PNK, WXDAI]`) depending on where you find the best live pair. For example, PNK/WETH liquidity exists on Swapr (v2‑like), but if you’re not using Swapr’s router, prefer a PNK pair that’s on Sushi/Honey. ([DEX Screener][11])
+- For the Balancer hop, either use a **direct sDAI pool** if one exists for your intermediate (supply `balSinglePoolId`), or route through a stablecoin hub via `batchSwap` (supply two `poolIds`, e.g., `(intermediate→USDC, USDC→sDAI)` with `assets = [intermediate, USDC, sDAI]`). Balancer’s **Vault** on Gnosis is `0xBA1222…` and it atomically executes both steps. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
 
 **Why this meets the requirement**
 Both the v2 router swap and the Balancer Vault swap(s) happen **inside one EOA transaction**; if any step fails, the contract reverts before exit. There is **no off‑chain matching** (unlike CoW Protocol). The whole sequence is **atomically** settled in the block or not at all.
@@ -295,30 +295,29 @@ Both the v2 router swap and the Balancer Vault swap(s) happen **inside one EOA t
 ## Pre‑trade verification (on‑chain, no guessing)
 
 1. **Check pairs exist and quote**
+   - Use the v2 router’s `getAmountsOut(amountIn, path)` to see if `PNK → WETH` (or `→ wxDAI`) is viable, and estimate output. (Same ABI as Uniswap v2.) ([Uniswap Docs][14])
 
-   * Use the v2 router’s `getAmountsOut(amountIn, path)` to see if `PNK → WETH` (or `→ wxDAI`) is viable, and estimate output. (Same ABI as Uniswap v2.) ([Uniswap Docs][14])
 2. **Find Balancer pool(s) & simulate output**
-
-   * Pick pools that include sDAI on Gnosis (e.g., **USDC/USDT/sDAI** baskets per Balancer governance threads). ([Balancer][12])
-   * Use the Vault’s **`queryBatchSwap`** off‑chain (call‑static) to compute expected sDAI out for your chosen pools and assets (same parameters as `batchSwap`). Then set `minOutSDAI` conservatively to enforce atomic slippage protection at runtime. (Vault semantics described in Balancer docs.) ([docs.balancer.fi][15])
+   - Pick pools that include sDAI on Gnosis (e.g., **USDC/USDT/sDAI** baskets per Balancer governance threads). ([Balancer][12])
+   - Use the Vault’s **`queryBatchSwap`** off‑chain (call‑static) to compute expected sDAI out for your chosen pools and assets (same parameters as `batchSwap`). Then set `minOutSDAI` conservatively to enforce atomic slippage protection at runtime. (Vault semantics described in Balancer docs.) ([docs.balancer.fi][15])
 
 ---
 
 ## Notes & assumptions worth being explicit about
 
-* **sDAI is non‑rebasing** and appreciates over time; it typically trades **> 1** vs. dollar stables. Don’t set `minOut` as if it were exactly 1:1. (Community discussions reflect this behavior on Gnosis sDAI.) ([Token Engineering Commons][16])
-* **Routers**: Sushi v2 (`0x1b02…`) and Honeyswap v2 (`0x1C23…`) are well‑established on Gnosis. Use whichever gives you the direct PNK pair; both settle atomically on‑chain. ([GeckoTerminal][6], [Gnosis Chain Blockchain Explorer][7])
-* **WETH & wxDAI**: both are ERC‑20s on Gnosis and frequently serve as routing intermediates. Addresses above from official explorers/docs. ([Gnosis Blockscout][3], [CoinGecko][4], [docs.gnosischain.com][5])
-* **Balancer Vault**: Gnosis uses the canonical `0xBA1222…` address (validated in the official deployments repo and onchain logs). This is the single entry point for all Balancer swaps. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
-* **Example v2‑only path caveat**: Depending on current liquidity, Sushi/Honey may not host an `wxDAI/sDAI` or `WETH/sDAI` v2 pool. If the example “all‑v2 route” reverts at quote time, prefer **Option B** (v2 + Balancer), which is the robust route on Gnosis today given sDAI concentration on Balancer. Evidence of sDAI liquidity on Sushi v3 and Balancer is provided above. ([GeckoTerminal][6], [Balancer][12])
-* **Network context**: Gnosis Chain (chainId **100**), gas token is **xDAI** (wrappable as **wxDAI**). ([docs.gnosischain.com][5])
+- **sDAI is non‑rebasing** and appreciates over time; it typically trades **> 1** vs. dollar stables. Don’t set `minOut` as if it were exactly 1:1. (Community discussions reflect this behavior on Gnosis sDAI.) ([Token Engineering Commons][16])
+- **Routers**: Sushi v2 (`0x1b02…`) and Honeyswap v2 (`0x1C23…`) are well‑established on Gnosis. Use whichever gives you the direct PNK pair; both settle atomically on‑chain. ([GeckoTerminal][6], [Gnosis Chain Blockchain Explorer][7])
+- **WETH & wxDAI**: both are ERC‑20s on Gnosis and frequently serve as routing intermediates. Addresses above from official explorers/docs. ([Gnosis Blockscout][3], [CoinGecko][4], [docs.gnosischain.com][5])
+- **Balancer Vault**: Gnosis uses the canonical `0xBA1222…` address (validated in the official deployments repo and onchain logs). This is the single entry point for all Balancer swaps. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
+- **Example v2‑only path caveat**: Depending on current liquidity, Sushi/Honey may not host an `wxDAI/sDAI` or `WETH/sDAI` v2 pool. If the example “all‑v2 route” reverts at quote time, prefer **Option B** (v2 + Balancer), which is the robust route on Gnosis today given sDAI concentration on Balancer. Evidence of sDAI liquidity on Sushi v3 and Balancer is provided above. ([GeckoTerminal][6], [Balancer][12])
+- **Network context**: Gnosis Chain (chainId **100**), gas token is **xDAI** (wrappable as **wxDAI**). ([docs.gnosischain.com][5])
 
 ---
 
 ## Minimal ABI snippets you’ll need
 
-* **IUniswapV2Router02** (standard Uniswap v2 router ABI; use only `swapExactTokensForTokens` for this guide). Official v2 integration docs: functions & patterns are unchanged across forks. ([Uniswap Docs][14])
-* **Balancer Vault** ABI for `swap` / `batchSwap`. Concepts and semantics documented here. ([docs.balancer.fi][15])
+- **IUniswapV2Router02** (standard Uniswap v2 router ABI; use only `swapExactTokensForTokens` for this guide). Official v2 integration docs: functions & patterns are unchanged across forks. ([Uniswap Docs][14])
+- **Balancer Vault** ABI for `swap` / `batchSwap`. Concepts and semantics documented here. ([docs.balancer.fi][15])
 
 ---
 
@@ -374,28 +373,29 @@ We added a helper script that performs these exact steps:
     - Uses far‑future deadline for Swapr
 
 Notes
+
 - We do not rely on GNO as a final hop; it only appears as an intermediate asset in the Balancer branch. The batchSwap produces WETH, which is then swapped directly to PNK on Swapr.
 - If Balancer pool composition changes, update the poolIds/assets order or switch to querying `queryBatchSwap` to discover a live route at runtime.
 
 ### References (key facts)
 
-* sDAI (Savings xDAI) token & address on Gnosis. ([docs.spark.fi][2])
-* PNK token on Gnosis (xDai). ([GeckoTerminal][1])
-* Sushi v2 router address on Gnosis. ([GeckoTerminal][6])
-* Honeyswap v2 router address on Gnosis (live tx). ([Gnosis Chain Blockchain Explorer][7])
-* WETH (bridged) & wxDAI token addresses. ([Gnosis Blockscout][3], [CoinGecko][4], [docs.gnosischain.com][5])
-* WETH/wxDAI pool on Sushi v2 (routing leg). ([DEX Screener][13])
-* sDAI pools on Sushi v3 & Balancer on Gnosis. ([GeckoTerminal][6], [Balancer][12])
-* Balancer Vault canonical address & on‑chain logs on Gnosis. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
+- sDAI (Savings xDAI) token & address on Gnosis. ([docs.spark.fi][2])
+- PNK token on Gnosis (xDai). ([GeckoTerminal][1])
+- Sushi v2 router address on Gnosis. ([GeckoTerminal][6])
+- Honeyswap v2 router address on Gnosis (live tx). ([Gnosis Chain Blockchain Explorer][7])
+- WETH (bridged) & wxDAI token addresses. ([Gnosis Blockscout][3], [CoinGecko][4], [docs.gnosischain.com][5])
+- WETH/wxDAI pool on Sushi v2 (routing leg). ([DEX Screener][13])
+- sDAI pools on Sushi v3 & Balancer on Gnosis. ([GeckoTerminal][6], [Balancer][12])
+- Balancer Vault canonical address & on‑chain logs on Gnosis. ([GitHub][9], [Gnosis Chain Blockchain Explorer][10])
 
 ---
 
 ## What I need from you to make this production‑ready
 
-* **Your expected trade size(s)** (to choose a path with sufficient depth and set realistic `minOut`),
-* **Slippage tolerance** (bps),
-* Preference between **WETH** vs **wxDAI** as intermediate,
-* Whether you want me to **hard‑code specific Balancer poolIds** (e.g., concrete `[intermediate→USDC, USDC→sDAI]` on Gnosis) and deliver a ready‑to‑deploy contract with exact calldata for `batchSwap`.
+- **Your expected trade size(s)** (to choose a path with sufficient depth and set realistic `minOut`),
+- **Slippage tolerance** (bps),
+- Preference between **WETH** vs **wxDAI** as intermediate,
+- Whether you want me to **hard‑code specific Balancer poolIds** (e.g., concrete `[intermediate→USDC, USDC→sDAI]` on Gnosis) and deliver a ready‑to‑deploy contract with exact calldata for `batchSwap`.
 
 If you share those, I’ll finalize the exact route (including concrete Balancer pool IDs), and provide a short script that **pre‑quotes on‑chain** (`getAmountsOut` / `queryBatchSwap`) and then **fires the atomic tx** with your chosen bounds.
 

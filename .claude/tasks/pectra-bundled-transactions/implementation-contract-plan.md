@@ -1,25 +1,31 @@
 # FutarchyBatchExecutor Implementation Contract Plan
 
 ## Overview
+
 The FutarchyBatchExecutor is designed to enable EIP-7702 batched transactions for futarchy arbitrage operations. When an EOA delegates to this contract via EIP-7702, it can execute multiple operations atomically.
 
 ## Key Design Decisions
 
 ### 1. Generic vs Specialized Functions
+
 The contract provides both:
+
 - **Generic batch execution** (`execute`, `executeWithResults`) for flexibility
 - **Specialized functions** (`executeBuyConditional`, `executeSellConditional`) for optimized paths
 
 ### 2. Return Value Handling
+
 - `execute()`: Simple batch execution, reverts on failure
 - `executeWithResults()`: Returns array of results for dynamic decision making
 - This allows handling cases where swap outputs affect subsequent operations
 
 ### 3. Approval Management
+
 - `setApprovals()`: Batch approval setter to minimize overhead
 - Internal `_approve()` with proper error handling and return value checking
 
 ### 4. Error Handling
+
 - Custom errors for gas efficiency
 - Detailed revert information including which call failed
 - Events for all operations to aid debugging
@@ -27,6 +33,7 @@ The contract provides both:
 ## Operations Flow
 
 ### Buy Conditional Flow
+
 1. **Approve** FutarchyRouter to spend sDAI
 2. **Split** sDAI → YES/NO conditional sDAI tokens
 3. **Approve** Swapr router for YES/NO conditional sDAI
@@ -39,6 +46,7 @@ The contract provides both:
 10. **Handle** any excess conditional tokens
 
 ### Sell Conditional Flow
+
 1. **Approve** Balancer to spend sDAI
 2. **Swap** sDAI → Company token on Balancer
 3. **Approve** FutarchyRouter for Company token
@@ -53,7 +61,9 @@ The contract provides both:
 ## Advanced Features
 
 ### 1. Dynamic Amount Calculation
+
 For operations where output amounts affect subsequent calls:
+
 ```solidity
 function executeWithDynamicAmounts(
     Call[] calldata staticCalls,
@@ -62,13 +72,16 @@ function executeWithDynamicAmounts(
 ```
 
 Where `DynamicCall` includes:
+
 - Target address
 - Function selector
 - Parameter indices to replace
 - Source call index for the replacement value
 
 ### 2. Conditional Execution
+
 Skip operations based on conditions:
+
 ```solidity
 struct ConditionalCall {
     Call call;
@@ -79,6 +92,7 @@ struct ConditionalCall {
 ```
 
 ### 3. Gas Optimization
+
 - Use assembly for low-level calls where beneficial
 - Pack structs efficiently
 - Minimize storage operations (all logic in memory/calldata)
@@ -93,12 +107,14 @@ struct ConditionalCall {
 ## Integration with Python
 
 The Python code will:
+
 1. Encode all operation calldata
 2. Build the Call array
 3. Sign EIP-7702 authorization
 4. Submit transaction to EOA address
 
 Example encoding:
+
 ```python
 # Split position
 split_data = encode_abi(

@@ -28,7 +28,8 @@ contract PectraWrapper {
     }
 
     modifier onlyOwner() {
-        if (msg.sender != owner) revert OnlyOwner();
+        // Allow owner OR self-call (EIP-7702 delegation where address(this) == msg.sender)
+        if (msg.sender != owner && msg.sender != address(this)) revert OnlyOwner();
         _;
     }
 

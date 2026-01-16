@@ -9,6 +9,7 @@ This is a futarchy arbitrage bot for Gnosis Chain that monitors price discrepanc
 ## Environment Setup
 
 The project uses Python virtual environments. Two common environments are used:
+
 - `futarchy_env/` - Main virtual environment
 - `venv/` - Alternative virtual environment
 
@@ -17,6 +18,7 @@ Environment files follow the pattern `.env.0x<address>` where the address corres
 ## Common Commands
 
 ### Virtual Environment Activation
+
 ```bash
 source futarchy_env/bin/activate
 # or
@@ -24,6 +26,7 @@ source venv/bin/activate
 ```
 
 ### Running the Arbitrage Bot
+
 ```bash
 # Basic bot with environment variables
 source futarchy_env/bin/activate && source .env.0x9590dAF4d5cd4009c3F9767C5E7668175cFd37CF && python -m src.arbitrage_commands.simple_bot \
@@ -39,11 +42,13 @@ source futarchy_env/bin/activate && source .env.0x9590dAF4d5cd4009c3F9767C5E7668
 ```
 
 ### Installing Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Running Tests
+
 ```bash
 python -m pytest tests/
 ```
@@ -53,6 +58,7 @@ python -m pytest tests/
 The `fetch_market_data.py` script in `src/setup/` connects to Supabase to fetch market event data and automatically update environment files with correct pool and token addresses.
 
 #### Common Usage
+
 ```bash
 # Update environment file with addresses from market event metadata
 source futarchy_env/bin/activate && source .env.0x<PROPOSAL_ADDRESS> && python -m src.setup.fetch_market_data --proposal --update-env .env.0x<PROPOSAL_ADDRESS>
@@ -62,20 +68,22 @@ source futarchy_env/bin/activate && source .env.0x<PROPOSAL_ADDRESS> && python -
 ```
 
 #### Address Mapping
+
 The script extracts addresses from Supabase market event metadata and maps them to environment variables:
 
-| Environment Variable | Metadata Path |
-|---------------------|---------------|
-| `SWAPR_POOL_YES_ADDRESS` | `metadata.conditional_pools.yes.address` |
-| `SWAPR_POOL_NO_ADDRESS` | `metadata.conditional_pools.no.address` |
-| `SWAPR_POOL_PRED_YES_ADDRESS` | `metadata.prediction_pools.yes.address` |
-| `SWAPR_POOL_PRED_NO_ADDRESS` | `metadata.prediction_pools.no.address` |
-| `SWAPR_SDAI_YES_ADDRESS` | `metadata.currencyTokens.yes.wrappedCollateralTokenAddress` |
-| `SWAPR_SDAI_NO_ADDRESS` | `metadata.currencyTokens.no.wrappedCollateralTokenAddress` |
-| `SWAPR_GNO_YES_ADDRESS` | `metadata.companyTokens.yes.wrappedCollateralTokenAddress` |
-| `SWAPR_GNO_NO_ADDRESS` | `metadata.companyTokens.no.wrappedCollateralTokenAddress` |
+| Environment Variable          | Metadata Path                                               |
+| ----------------------------- | ----------------------------------------------------------- |
+| `SWAPR_POOL_YES_ADDRESS`      | `metadata.conditional_pools.yes.address`                    |
+| `SWAPR_POOL_NO_ADDRESS`       | `metadata.conditional_pools.no.address`                     |
+| `SWAPR_POOL_PRED_YES_ADDRESS` | `metadata.prediction_pools.yes.address`                     |
+| `SWAPR_POOL_PRED_NO_ADDRESS`  | `metadata.prediction_pools.no.address`                      |
+| `SWAPR_SDAI_YES_ADDRESS`      | `metadata.currencyTokens.yes.wrappedCollateralTokenAddress` |
+| `SWAPR_SDAI_NO_ADDRESS`       | `metadata.currencyTokens.no.wrappedCollateralTokenAddress`  |
+| `SWAPR_GNO_YES_ADDRESS`       | `metadata.companyTokens.yes.wrappedCollateralTokenAddress`  |
+| `SWAPR_GNO_NO_ADDRESS`        | `metadata.companyTokens.no.wrappedCollateralTokenAddress`   |
 
 #### Required Environment Variables
+
 - `SUPABASE_URL` - Supabase project URL
 - `SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_ANON_KEY`/`SUPABASE_EDGE_TOKEN`) - Supabase API key
 - `FUTARCHY_PROPOSAL_ADDRESS` - Proposal address to use as market event ID
@@ -83,6 +91,7 @@ The script extracts addresses from Supabase market event metadata and maps them 
 ## Code Architecture
 
 ### Core Structure
+
 - `src/arbitrage_commands/` - Main trading strategies and bot logic
   - `simple_bot.py` - Main arbitrage bot that monitors prices and executes trades
   - `complex_bot.py` - Price discovery and side determination
@@ -96,15 +105,18 @@ The script extracts addresses from Supabase market event metadata and maps them 
 ### Key Components
 
 **Price Monitoring**: The bot calculates a synthetic "ideal" price from Swapr pools:
+
 ```
 ideal_price = pred_price * yes_price + (1 - pred_price) * no_price
 ```
 
-**Trading Logic**: 
+**Trading Logic**:
+
 - If both YES and NO prices on Swapr < Balancer price → Buy conditional Company tokens
 - If both YES and NO prices on Swapr > Balancer price → Sell conditional Company tokens
 
 **Buy Conditional Company Token Process** (`buy_cond.py`):
+
 1. **Split sDAI** into YES and NO conditional sDAI tokens using FutarchyRouter
 2. **Swap conditional sDAI to conditional Company tokens** on Swapr pools (both YES and NO)
 3. **Merge conditional Company tokens** back into regular Company token using FutarchyRouter
@@ -112,18 +124,21 @@ ideal_price = pred_price * yes_price + (1 - pred_price) * no_price
 5. **Sell Company token for sDAI** on Balancer to complete the arbitrage loop
 
 **Conditional sDAI Liquidation** (`conditional_sdai_liquidation.py`):
+
 - Handles imbalances when YES and NO token amounts don't match
 - For excess YES tokens: Direct swap YES→sDAI on Swapr
 - For excess NO tokens: Buy YES tokens with sDAI, then merge back to sDAI
 - Uses 1% slippage tolerance for liquidation swaps
 
 **Configuration System**: Uses a modular config system in `src/config/` with:
+
 - Network settings (`network.py`)
 - Contract addresses and ABIs (`contracts.py`, `abis/`)
 - Token configurations (`tokens.py`)
 - Pool configurations (`pools.py`)
 
 ### Environment Variables Required
+
 - `RPC_URL` - Gnosis Chain RPC endpoint
 - `PRIVATE_KEY` - Trading account private key
 - `SWAPR_POOL_YES_ADDRESS` - Swapr YES token pool
@@ -142,6 +157,7 @@ ideal_price = pred_price * yes_price + (1 - pred_price) * no_price
 ## Protocol Integration
 
 The bot integrates with:
+
 - **Balancer V2** - For conditional token trading
 - **Swapr** - For price discovery (Algebra/Uniswap V3 compatible)
 - **Gnosis Chain** - Network for all operations
@@ -157,6 +173,7 @@ The bot integrates with:
 - The bot includes comprehensive logging and error handling
 
 ### Code Style Guidelines
+
 - **Logging**: Use `print()` statements for arbitrage commands, `logging` module for helpers
 - **Comments**: Use section headers with dashes for major sections
 - **Handler Functions**: Transaction simulation handlers should be prefixed with `handle_`
@@ -164,7 +181,9 @@ The bot integrates with:
 - **Error Handling**: Add descriptive error messages with context
 
 ### Transaction Flow
+
 The bot uses a simulation-first approach:
+
 1. Build transaction bundles as Tenderly-compatible dictionaries
 2. Simulate transactions to calculate optimal parameters
 3. Execute on-chain only after successful simulation
@@ -175,14 +194,17 @@ The bot uses a simulation-first approach:
 This repo uses a strict, emoji-based naming scheme for task folders and subtask files. Follow it exactly to keep progress clear and consistent across features.
 
 ### Folder Naming (top-level tasks)
+
 - In Progress: `folder-name ◐`
 - Completed: `folder-name ✅`
 
 Examples for this project:
+
 - `.claude/tasks/add-pnk-to-v5-bot ◐/` — integrating sDAI↔WETH↔PNK into V5 executor.
 - `.claude/tasks/pnk-sdai-trade ✅/` — finalized docs for the Balancer Vault + Swapr path (sDAI→WETH→PNK).
 
 ### Subtask File Naming (inside task folders)
+
 - Not Started: `subtask-N-description.md`
 - In Progress: `subtask-N-description ◐.md`
 - Completed: `subtask-N-description ✅.md`
@@ -190,6 +212,7 @@ Examples for this project:
 - Skipped/Cancelled: `subtask-N-description ❌.md`
 
 Concrete examples (current state):
+
 ```
 .claude/tasks/
 └── add-pnk-to-v5-bot ◐/
@@ -201,6 +224,7 @@ Concrete examples (current state):
 ```
 
 Suggested examples for other efforts in this repo:
+
 ```
 .claude/tasks/
 ├── futarchy-executor-v5-alignment ◐/
@@ -215,19 +239,24 @@ Suggested examples for other efforts in this repo:
 ```
 
 ### Workflow Pattern
-1) Planning
+
+1. Planning
+
 - Create a descriptive folder under `.claude/tasks/` with no emoji yet, then rename to `◐` when work begins.
 - Break the task into 3–5 numbered subtasks (`subtask-1-…`, `subtask-2-…`, …) aligned to tangible units (e.g., constants, buy flow, sell flow, ABI wiring).
 
-2) Implementation
+2. Implementation
+
 - Mark a subtask `◐` when you start it, and `✅` when complete.
 - Keep subtask files concise: objective, steps, acceptance, and current status.
 - Prefer examples tied to this repo (e.g., Balancer Vault `batchSwap` params, Swapr v2 router usage, V5 executor function signatures).
 
-3) Completion
+3. Completion
+
 - When all subtasks are `✅`, rename the task folder to `✅`.
 - Add a brief summary to `progress.md` (or `README.md`) with links to commits/tx hashes if relevant.
 
 ### Important
+
 - Do not rush renames. Before changing a folder or subtask status, scan other folders to maintain a consistent pattern.
 - Keep naming specific and short: e.g., `subtask-2-buy-flow-sdai-weth-pnk` instead of generic names like `subtask-2-implementation`.

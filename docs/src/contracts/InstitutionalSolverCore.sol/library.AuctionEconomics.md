@@ -1,10 +1,10 @@
 # AuctionEconomics
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/InstitutionalSolverCore.sol)
 
-
 ## Functions
-### commitBid
 
+### commitBid
 
 ```solidity
 function commitBid(AuctionState storage auction, address solver, bytes32 commitHash) internal;
@@ -12,19 +12,18 @@ function commitBid(AuctionState storage auction, address solver, bytes32 commitH
 
 ### revealBid
 
-
 ```solidity
 function revealBid(AuctionState storage auction, address solver, uint256 value, bytes32 salt) internal;
 ```
 
 ### settleAuction
 
-
 ```solidity
 function settleAuction(AuctionState storage auction, address[] memory solvers) internal returns (address winner);
 ```
 
 ## Events
+
 ### BidCommitted
 
 ```solidity
@@ -44,6 +43,7 @@ event AuctionSettled(address winner, uint256 winningBid);
 ```
 
 ## Errors
+
 ### InvalidBid
 
 ```solidity
@@ -63,6 +63,7 @@ error TieBreakFailed();
 ```
 
 ## Structs
+
 ### Bid
 
 ```solidity
@@ -82,4 +83,3 @@ struct AuctionState {
     address winner;
 }
 ```
-

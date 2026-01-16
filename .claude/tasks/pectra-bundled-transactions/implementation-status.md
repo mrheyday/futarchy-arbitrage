@@ -20,6 +20,7 @@
 ## 🚧 Current Blocker
 
 **EIP-7702 Support in eth-account**
+
 - Current version (0.11.3) doesn't have `sign_authorization` method
 - Need eth-account version that supports EIP-7702 (likely v0.13+)
 - This is blocking actual EIP-7702 transaction execution
@@ -27,15 +28,18 @@
 ## 📋 Next Steps
 
 ### Option 1: Wait for EIP-7702 Support
+
 - Monitor eth-account releases for EIP-7702 support
 - Once available, update dependencies and test
 
 ### Option 2: Alternative Testing Approach
+
 1. Deploy a test wrapper contract that can call the executor
 2. Remove the "Only self" check for testing (deploy test version)
 3. Use a different library that supports EIP-7702
 
 ### Option 3: Manual EIP-7702 Implementation
+
 - Implement the authorization signing manually
 - Use raw transaction construction
 - More complex but allows immediate testing

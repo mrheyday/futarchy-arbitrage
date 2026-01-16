@@ -28,6 +28,7 @@ Deploy the FutarchyArbExecutorV5 contract with the owner set to a specific HD pa
 - `python -m src.setup.cli deploy-v5 --path "m/44'/60'/0'/0/5" [--ensure-path] [--mnemonic|--mnemonic-env] [--keystore-pass|--keystore-pass-env] [--fund-xdai 0.02 --funder-env FUNDER_PRIVATE_KEY] [--rpc-url ...] [--chain-id 100] [--dry-run] [--confirm] [--legacy|--max-fee-gwei 2 --priority-fee-gwei 1] [--timeout 300] [--log <path>]`
 
 Flags:
+
 - `--path`: Required HD path for the deployer EOA (owner = msg.sender).
 - `--ensure-path`: Create keystore/index for `--path` if missing (no secrets in index).
 - `--mnemonic|--mnemonic-env`: Source for HD derivation when ensuring/deriving.
@@ -38,16 +39,16 @@ Flags:
 
 ## Workflow
 
-1) Load env (`--env-file`), resolve RPC/chain.
-2) Ensure/derive the deployer account for `--path` (mnemonic required if not present).
-3) Preflight:
+1. Load env (`--env-file`), resolve RPC/chain.
+2. Ensure/derive the deployer account for `--path` (mnemonic required if not present).
+3. Preflight:
    - RPC connectivity and expected `chainId`.
    - EIP‑1559 support (unless `--legacy`).
    - Compile V5, estimate gas with buffer; compute max fees and total cost.
    - Check deployer xDAI balance; optionally auto‑fund if `--fund-xdai` is provided.
-4) Dry‑run: emit a deployment plan JSON (owner addr/path, gas settings, cost estimate).
-5) Deploy (with `--confirm`): sign constructor tx from deployer; send; wait for receipt.
-6) Artifacts/logs: write ABI JSON, deployment log `build/wallets/deploy_v5_<timestamp>.json`, and optionally update an env file with the deployed address.
+4. Dry‑run: emit a deployment plan JSON (owner addr/path, gas settings, cost estimate).
+5. Deploy (with `--confirm`): sign constructor tx from deployer; send; wait for receipt.
+6. Artifacts/logs: write ABI JSON, deployment log `build/wallets/deploy_v5_<timestamp>.json`, and optionally update an env file with the deployed address.
 
 ## Validation
 
@@ -76,4 +77,3 @@ Flags:
   - `python -m src.setup.cli deploy-v5 --path "m/44'/60'/0'/0/5" --env-file .env.seed --max-fee-gwei 2 --priority-fee-gwei 1 --confirm`
 - Ensure path and auto‑fund deployer if needed:
   - `python -m src.setup.cli deploy-v5 --path "m/44'/60'/0'/0/7" --ensure-path --mnemonic-env MNEMONIC --env-file .env.seed --fund-xdai 0.02 --funder-env FUNDER_PRIVATE_KEY --confirm`
-

@@ -1,4 +1,5 @@
 # FutarchyArbExecutorV5
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyArbExecutorV5.sol)
 
 **Title:**
@@ -9,19 +10,19 @@ Snapshot collateral; ensure approvals (Permit2 + Vault); execute pre-encoded Bal
 Expects `buy_company_ops` to be calldata for BatchRouter.swapExactIn(paths, deadline, wethIsEth, userData).
 Contract must already custody the input collateral `cur` (e.g., sDAI).
 
-
 ## State Variables
-### TOKEN_SDAI
-------------------------
-PNK Trading Constants (Gnosis)
-------------------------
-Fixed addresses used by the PNK buy/sell helper flows.
 
+### TOKEN_SDAI
+
+---
+
+## PNK Trading Constants (Gnosis)
+
+Fixed addresses used by the PNK buy/sell helper flows.
 
 ```solidity
 address internal constant TOKEN_SDAI = 0xaf204776c7245bF4147c2612BF6e5972Ee483701
 ```
-
 
 ### TOKEN_WETH
 
@@ -29,13 +30,11 @@ address internal constant TOKEN_SDAI = 0xaf204776c7245bF4147c2612BF6e5972Ee48370
 address internal constant TOKEN_WETH = 0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1
 ```
 
-
 ### TOKEN_PNK
 
 ```solidity
 address internal constant TOKEN_PNK = 0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3
 ```
-
 
 ### BALANCER_VAULT
 
@@ -43,22 +42,19 @@ address internal constant TOKEN_PNK = 0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3
 address internal constant BALANCER_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8
 ```
 
-
 ### SWAPR_V2_ROUTER
 
 ```solidity
 address internal constant SWAPR_V2_ROUTER = 0xE43e60736b1cb4a75ad25240E2f9a62Bff65c0C0
 ```
 
-
 ### PNK_POOL_1
-Balancer batchSwap GIVEN_IN route: sDAI -> WETH (multi-branch), as observed on-chain.
 
+Balancer batchSwap GIVEN_IN route: sDAI -> WETH (multi-branch), as observed on-chain.
 
 ```solidity
 bytes32 internal constant PNK_POOL_1 = 0xa91c413d8516164868f6cca19573fe38f88f5982000200000000000000000157
 ```
-
 
 ### PNK_POOL_2
 
@@ -66,13 +62,11 @@ bytes32 internal constant PNK_POOL_1 = 0xa91c413d8516164868f6cca19573fe38f88f598
 bytes32 internal constant PNK_POOL_2 = 0x7e5870ac540adfd01a213c829f2231c309623eb10002000000000000000000e9
 ```
 
-
 ### PNK_POOL_3
 
 ```solidity
 bytes32 internal constant PNK_POOL_3 = 0x40d2cbc586dd8df50001cdba3f65cd4bbc32d596000200000000000000000154
 ```
-
 
 ### PNK_POOL_4
 
@@ -80,23 +74,20 @@ bytes32 internal constant PNK_POOL_3 = 0x40d2cbc586dd8df50001cdba3f65cd4bbc32d59
 bytes32 internal constant PNK_POOL_4 = 0x480d4f66cc41a1b6784a53a10890e5ece31d75c000020000000000000000014e
 ```
 
-
 ### PNK_POOL_5
 
 ```solidity
 bytes32 internal constant PNK_POOL_5 = 0xa99fd9950b5d5dceeaf4939e221dca8ca9b938ab000100000000000000000025
 ```
 
-
 ### PNK_ASSET_2
+
 Assets order used for the batchSwap indices.
 Index mapping for convenience.
-
 
 ```solidity
 address internal constant PNK_ASSET_2 = 0xC0d871bD13eBdf5c4ff059D8243Fb38210608bD6
 ```
-
 
 ### PNK_ASSET_4
 
@@ -104,13 +95,11 @@ address internal constant PNK_ASSET_2 = 0xC0d871bD13eBdf5c4ff059D8243Fb38210608b
 address internal constant PNK_ASSET_4 = 0xE0eD85F76D9C552478929fab44693E03F0899F23
 ```
 
-
 ### PNK_ASSET_5_GNO
 
 ```solidity
 address internal constant PNK_ASSET_5_GNO = 0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb
 ```
-
 
 ### PNK_IDX_SDAI
 
@@ -118,22 +107,19 @@ address internal constant PNK_ASSET_5_GNO = 0x9C58BAcC331c9aa871AFD802DB6379a98e
 uint256 internal constant PNK_IDX_SDAI = 0
 ```
 
-
 ### PNK_IDX_WETH
 
 ```solidity
 uint256 internal constant PNK_IDX_WETH = 2
 ```
 
-
 ### BALANCER_VAULT_DEADLINE
-Deadlines
 
+Deadlines
 
 ```solidity
 uint256 internal constant BALANCER_VAULT_DEADLINE = 9007199254740991
 ```
-
 
 ### SWAPR_V2_DEADLINE
 
@@ -141,22 +127,19 @@ uint256 internal constant BALANCER_VAULT_DEADLINE = 9007199254740991
 uint256 internal constant SWAPR_V2_DEADLINE = 3510754692
 ```
 
-
 ### owner
 
 ```solidity
 address public owner
 ```
 
-
 ### PERMIT2
-Uniswap Permit2 (canonical)
 
+Uniswap Permit2 (canonical)
 
 ```solidity
 address internal constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3
 ```
-
 
 ### MAX_UINT160
 
@@ -164,13 +147,11 @@ address internal constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3
 uint160 internal constant MAX_UINT160 = type(uint160).max
 ```
 
-
 ### MAX_UINT48
 
 ```solidity
 uint48 internal constant MAX_UINT48 = type(uint48).max
 ```
-
 
 ### DEFAULT_V3_FEE
 
@@ -178,32 +159,29 @@ uint48 internal constant MAX_UINT48 = type(uint48).max
 uint24 internal constant DEFAULT_V3_FEE = 100
 ```
 
-
 ## Functions
-### _pnkAssetsOrder
+
+### \_pnkAssetsOrder
 
 Helper: assets array in the exact order expected by the PNK Balancer route
-
 
 ```solidity
 function _pnkAssetsOrder() internal pure returns (address[] memory assets);
 ```
 
-### _pnkPoolIds
+### \_pnkPoolIds
 
 Helper: poolIds array used by the PNK Balancer route (sDAI -> WETH)
-
 
 ```solidity
 function _pnkPoolIds() internal pure returns (bytes32[] memory poolIds);
 ```
 
-### _buyPnkWithSdai
+### \_buyPnkWithSdai
 
-------------------------
-PNK Buy Flow: sDAI -> WETH (Balancer Vault, single-branch) -> PNK (Swapr)
-------------------------
+---
 
+## PNK Buy Flow: sDAI -> WETH (Balancer Vault, single-branch) -> PNK (Swapr)
 
 ```solidity
 function _buyPnkWithSdai(uint256 amountSdaiIn, uint256 minWethOut, uint256 minPnkOut) internal;
@@ -211,24 +189,21 @@ function _buyPnkWithSdai(uint256 amountSdaiIn, uint256 minWethOut, uint256 minPn
 
 ### buyPnkWithSdai
 
-
 ```solidity
 function buyPnkWithSdai(uint256 amountSdaiIn, uint256 minWethOut, uint256 minPnkOut) external onlyOwner;
 ```
 
-### _sellPnkForSdai
+### \_sellPnkForSdai
 
-------------------------
-PNK Sell Flow: PNK -> WETH (Swapr) -> sDAI (Balancer Vault)
-------------------------
+---
 
+## PNK Sell Flow: PNK -> WETH (Swapr) -> sDAI (Balancer Vault)
 
 ```solidity
 function _sellPnkForSdai(uint256 amountPnkIn, uint256 minWethOut, uint256 minSdaiOut) internal;
 ```
 
 ### sellPnkForSdai
-
 
 ```solidity
 function sellPnkForSdai(uint256 amountPnkIn, uint256 minWethOut, uint256 minSdaiOut) external onlyOwner;
@@ -239,7 +214,6 @@ function sellPnkForSdai(uint256 amountPnkIn, uint256 minWethOut, uint256 minSdai
 SELL complete arbitrage variant that buys PNK internally (sDAI→WETH→PNK) instead of using Balancer calldata.
 
 Signature mirrors sell_conditional_arbitrage_balancer for compatibility; Step 2 differs only.
-
 
 ```solidity
 function sell_conditional_arbitrage_pnk(
@@ -266,7 +240,6 @@ BUY complete arbitrage variant that sells PNK internally (PNK→WETH→sDAI) ins
 
 Signature mirrors buy_conditional_arbitrage_balancer for compatibility; only Step 6 differs.
 
-
 ```solidity
 function buy_conditional_arbitrage_pnk(
     address comp, // MUST be TOKEN_PNK in this variant
@@ -288,40 +261,35 @@ function buy_conditional_arbitrage_pnk(
 
 ### onlyOwner
 
-
 ```solidity
 modifier onlyOwner() ;
 ```
 
 ### constructor
 
-
 ```solidity
 constructor() ;
 ```
 
-### _ensureMaxAllowance
+### \_ensureMaxAllowance
 
 Idempotent ERC20 max-approval (resets to 0 first if needed)
-
 
 ```solidity
 function _ensureMaxAllowance(IERC20 token, address spender) internal;
 ```
 
-### _ensurePermit2Approvals
+### \_ensurePermit2Approvals
 
 Ensure both ERC20->Permit2 and Permit2(owner=this)->router allowances
-
 
 ```solidity
 function _ensurePermit2Approvals(IERC20 token, address router) internal;
 ```
 
-### _swaprExactIn
+### \_swaprExactIn
 
 Algebra/Swapr: approve and execute exact-input single hop
-
 
 ```solidity
 function _swaprExactIn(address swapr_router, address tokenIn, address tokenOut, uint256 amountIn, uint256 minOut)
@@ -329,10 +297,9 @@ function _swaprExactIn(address swapr_router, address tokenIn, address tokenOut, 
     returns (uint256 amountOut);
 ```
 
-### _swaprExactOut
+### \_swaprExactOut
 
 Swapr/UniswapV3: approve and execute exact-output single hop (requires fee tier)
-
 
 ```solidity
 function _swaprExactOut(
@@ -345,8 +312,7 @@ function _swaprExactOut(
 ) internal returns (uint256 amountIn);
 ```
 
-### _poolFeeOrDefault
-
+### \_poolFeeOrDefault
 
 ```solidity
 function _poolFeeOrDefault(address pool) internal view returns (uint24);
@@ -360,7 +326,6 @@ Steps 1–3: split sDAI -> conditional collateral; buy YES/NO comps (exact-in + 
 Step 4: merge comps -> COMP; Step 5–6: sell COMP -> sDAI on Balancer.
 Step 7: sell remaining single-sided conditional collateral (YES_cur or NO_cur) -> cur on Swapr.
 Step 8: on-chain profit check in base-collateral terms against `min_out_final`.
-
 
 ```solidity
 function buy_conditional_arbitrage_balancer(
@@ -386,7 +351,6 @@ function buy_conditional_arbitrage_balancer(
 
 ### sell_conditional_arbitrage_balancer
 
-
 ```solidity
 function sell_conditional_arbitrage_balancer(
     bytes calldata buy_company_ops,
@@ -408,13 +372,11 @@ function sell_conditional_arbitrage_balancer(
 
 ### receive
 
-
 ```solidity
 receive() external payable;
 ```
 
 ### withdrawToken
-
 
 ```solidity
 function withdrawToken(IERC20 token, address to, uint256 amount) external onlyOwner;
@@ -422,13 +384,11 @@ function withdrawToken(IERC20 token, address to, uint256 amount) external onlyOw
 
 ### sweepToken
 
-
 ```solidity
 function sweepToken(IERC20 token, address to) external onlyOwner;
 ```
 
 ### withdrawETH
-
 
 ```solidity
 function withdrawETH(address payable to, uint256 amount) external onlyOwner;
@@ -436,12 +396,12 @@ function withdrawETH(address payable to, uint256 amount) external onlyOwner;
 
 ### transferOwnership
 
-
 ```solidity
 function transferOwnership(address newOwner) external onlyOwner;
 ```
 
 ## Events
+
 ### OwnershipTransferred
 
 ```solidity
@@ -527,4 +487,3 @@ event ConditionalCollateralSplit(
 ```solidity
 event ProfitVerified(uint256 initialBalance, uint256 finalBalance, int256 minProfit);
 ```
-

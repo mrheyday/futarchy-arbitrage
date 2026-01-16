@@ -48,10 +48,12 @@ remappings = [
 ## Compilation Summary
 
 ### Total Files Compiled
+
 - **Solidity Contracts:** 15 files (19 including libraries/interfaces)
 - **Compilation Time:** ~5-6 seconds (with Via-IR)
 
 ### Contract List
+
 1. FutarchyArbExecutorV5.sol
 2. FutarchyArbExecutorV4.sol
 3. FutarchyArbExecutorV3.sol
@@ -73,6 +75,7 @@ remappings = [
 ## Build Artifacts
 
 ### Artifact Location
+
 ```
 out/
 ├── FutarchyArbExecutorV5.sol/FutarchyArbExecutorV5.json (712K)
@@ -86,12 +89,14 @@ out/
 Each JSON artifact contains:
 
 #### 1. ABI (Application Binary Interface)
+
 - Full function signatures with parameter names
 - Event definitions
 - Error definitions (custom errors)
 - State mutability annotations
 
 **Example Function (V5):**
+
 ```json
 {
   "type": "function",
@@ -103,16 +108,19 @@ Each JSON artifact contains:
 ```
 
 #### 2. Bytecode
+
 - **Deployment Bytecode:** Full bytecode including constructor
 - **Runtime Bytecode:** Deployed contract bytecode
 - **Via-IR Optimized:** Yul intermediate representation
 
 **Sample (FutarchyArbExecutorV5):**
+
 ```
 0x60808060405234604d575f80546001600160a01b031916339081178255907f8be0079c531659141344cd1fd0a4f28...
 ```
 
 #### 3. Method Identifiers (Function Selectors)
+
 ```json
 {
   "buyPnkWithSdai(uint256,uint256,uint256)": "ce12e70d",
@@ -123,6 +131,7 @@ Each JSON artifact contains:
 ```
 
 #### 4. Storage Layout
+
 - Slot assignments for state variables
 - Type information
 - Offset within slot
@@ -130,15 +139,19 @@ Each JSON artifact contains:
 **Note:** Storage layout extraction requires manual inspection of artifacts or `forge inspect <contract> storageLayout`
 
 #### 5. AST (Abstract Syntax Tree)
+
 Generated with `--ast` flag. Embedded in artifacts under `ast` key.
 
 **AST Structure:**
+
 - Node types: ContractDefinition, FunctionDefinition, VariableDeclaration
 - Source mappings for debugging
 - Full parse tree for static analysis
 
 #### 6. Assembly (EVM Opcodes)
+
 Generated with `--extra-output asm`. Contains:
+
 - EVM assembly instructions
 - PUSH/JUMP operations
 - DELEGATECALL/STATICCALL patterns
@@ -148,31 +161,36 @@ Generated with `--extra-output asm`. Contains:
 ## Bytecode Analysis
 
 ### Size Limits
+
 - **Max Contract Size:** 24,576 bytes (24 KB) on mainnet
 - **Gnosis Chain Limit:** Same (24 KB)
 
 ### Via-IR Impact
+
 - **Benefit:** Better optimization, smaller bytecode for complex contracts
 - **Trade-off:** Longer compilation time (~5-6s vs ~1s)
 
 ### Gas Optimizations Applied
+
 1. **Unchecked Loops:** All for-loops use `unchecked { ++i; }`
 2. **Custom Errors:** Replaced all `require` strings with custom errors
 3. **Immutable Variables:** Owner and critical addresses are immutable
 4. **Inline Assembly:** Used for keccak256 in some cases (optional)
-5. **CLZ Optimizations:** LibBit.clz_() for log-scaling (Osaka EVM native)
+5. **CLZ Optimizations:** LibBit.clz\_() for log-scaling (Osaka EVM native)
 
 ---
 
 ## SMT Model Checker Results
 
 ### Configuration
+
 - **Engine:** CHC (Constrained Horn Clauses)
 - **Solver:** z3 v4.12+ (`/opt/homebrew/bin/z3`)
 - **Targets:** assert, underflow, overflow, divByZero
 - **Timeout:** 100,000ms
 
 ### Checks Performed
+
 ✅ Integer overflow/underflow  
 ✅ Division by zero  
 ✅ Assertion violations  
@@ -181,9 +199,11 @@ Generated with `--extra-output asm`. Contains:
 ### Warnings & Mitigations
 
 #### Int256 Overflow Warnings (RESOLVED)
+
 **Affected Contracts:** V5, V4, V3, PredictionArbExecutorV1
 
 **Warning:**
+
 ```
 CHC: Overflow (resulting value larger than 2**255 - 1) happens here.
 Counterexample:
@@ -192,6 +212,7 @@ Counterexample:
 ```
 
 **Mitigation Applied:**
+
 ```solidity
 error BalanceTooLarge();
 
@@ -205,6 +226,7 @@ int256 profit = int256(finalBal) - int256(initial);
 **Status:** ✅ All overflow guards implemented
 
 ### SMT Run Command
+
 ```bash
 forge build --model-checker-engine chc
 ```
@@ -216,14 +238,17 @@ forge build --model-checker-engine chc
 ## AST (Abstract Syntax Tree) Generation
 
 ### Generation Command
+
 ```bash
 forge build --ast --force
 ```
 
 ### AST Location
+
 Embedded in all build artifacts under `ast` key: `out/**/*.json`
 
 ### AST Usage
+
 1. **Static Analysis:** Lint rules, security checks
 2. **Documentation:** Auto-generate docs from AST
 3. **Optimization Verification:** Verify unchecked blocks, immutables
@@ -232,6 +257,7 @@ Embedded in all build artifacts under `ast` key: `out/**/*.json`
 ### AST Node Examples
 
 #### ContractDefinition
+
 ```json
 {
   "nodeType": "ContractDefinition",
@@ -242,6 +268,7 @@ Embedded in all build artifacts under `ast` key: `out/**/*.json`
 ```
 
 #### FunctionDefinition
+
 ```json
 {
   "nodeType": "FunctionDefinition",
@@ -292,9 +319,11 @@ sort_imports = true
 ```
 
 ### Lint Status
+
 ✅ **No warnings** (after exclusions applied)
 
 ### Format Application
+
 ```bash
 forge fmt
 ```
@@ -307,13 +336,14 @@ forge fmt
 
 ### Deployed Contracts
 
-| Contract | Version | Deployment File | Chain |
-|----------|---------|-----------------|-------|
-| FutarchyArbExecutorV5 | V5 | `deployments/deployment_executor_v5_1755543275.json` | Gnosis |
-| PredictionArbExecutorV1 | V1 | `deployments/deployment_prediction_arb_v1_1755903555.json` | Gnosis |
-| FutarchyArbExecutorV4 | V4 | `deployment_executor_v4_1754933845.json` | Gnosis |
+| Contract                | Version | Deployment File                                            | Chain  |
+| ----------------------- | ------- | ---------------------------------------------------------- | ------ |
+| FutarchyArbExecutorV5   | V5      | `deployments/deployment_executor_v5_1755543275.json`       | Gnosis |
+| PredictionArbExecutorV1 | V1      | `deployments/deployment_prediction_arb_v1_1755903555.json` | Gnosis |
+| FutarchyArbExecutorV4   | V4      | `deployment_executor_v4_1754933845.json`                   | Gnosis |
 
 ### Deployment Info Structure
+
 ```json
 {
   "contract_name": "FutarchyArbExecutorV5",
@@ -340,14 +370,17 @@ forge fmt
 #### Libraries Used
 
 ##### CLZ-Optimized (Osaka EVM)
+
 - **LibBit:** Native CLZ opcode via `LibBit.clz_(value)`
 - **FixedPointMathLib:** Fixed-point math with CLZ optimizations
 
 ##### Standard Utils
+
 - **LibSort:** Insertion sort for arrays (`insertionSort`)
 - **SafeCastLib:** Safe type casting
 
 #### Import Patterns
+
 ```solidity
 // CLZ-optimized (Osaka EVM native CLZ opcode)
 import {LibBit} from "solady-clz/LibBit.sol";
@@ -363,6 +396,7 @@ import {SafeCastLib} from "solady-utils/SafeCastLib.sol";
 ## Gas Analysis
 
 ### Gas Report Generation
+
 ```bash
 forge test --gas-report
 ```
@@ -370,12 +404,15 @@ forge test --gas-report
 ### Key Optimizations
 
 #### 1. Unchecked Loop Increments
+
 **Before:**
+
 ```solidity
 for (uint256 i = 0; i < length; i++) { ... }
 ```
 
 **After (saves ~60 gas per iteration):**
+
 ```solidity
 for (uint256 i = 0; i < length;) {
     // ... loop body ...
@@ -384,20 +421,24 @@ for (uint256 i = 0; i < length;) {
 ```
 
 #### 2. Custom Errors
+
 **Before (24+ bytes per revert):**
+
 ```solidity
 require(amount > 0, "Amount must be positive");
 ```
 
 **After (~20 bytes per revert):**
+
 ```solidity
 error AmountTooLow();
 if (amount == 0) revert AmountTooLow();
 ```
 
-**Savings:** ~4 bytes per error * 100+ errors = ~400 bytes bytecode reduction
+**Savings:** ~4 bytes per error \* 100+ errors = ~400 bytes bytecode reduction
 
 #### 3. Immutable Variables
+
 **Storage reads:** 2100 gas  
 **Immutable reads:** 3 gas
 
@@ -408,31 +449,37 @@ if (amount == 0) revert AmountTooLow();
 ## Build Commands Reference
 
 ### Basic Build
+
 ```bash
 forge build
 ```
 
 ### Force Rebuild
+
 ```bash
 forge build --force
 ```
 
 ### With AST
+
 ```bash
 forge build --ast --force
 ```
 
 ### With Assembly & Storage
+
 ```bash
 forge build --extra-output asm --extra-output storageLayout --force
 ```
 
 ### With SMT Checker
+
 ```bash
 forge build --model-checker-engine chc
 ```
 
 ### Inspect Contract
+
 ```bash
 # Get ABI
 forge inspect FutarchyArbExecutorV5 abi
@@ -448,6 +495,7 @@ forge inspect FutarchyArbExecutorV5 storageLayout
 ```
 
 ### Format & Lint
+
 ```bash
 # Format all contracts
 forge fmt
@@ -464,6 +512,7 @@ forge build
 ## Testing & Verification
 
 ### Test Execution
+
 ```bash
 # Run all tests
 forge test
@@ -479,6 +528,7 @@ forge test --match-test testBuyFlow
 ```
 
 ### Contract Verification
+
 ```bash
 # Verify on Gnosisscan
 forge verify-contract \
@@ -496,11 +546,13 @@ forge verify-contract \
 ## Coverage Analysis
 
 ### Generate Coverage Report
+
 ```bash
 forge coverage
 ```
 
 ### Coverage Output
+
 ```
 | File                                      | % Lines        | % Statements   | % Branches     |
 |-------------------------------------------|----------------|----------------|----------------|
@@ -514,16 +566,19 @@ forge coverage
 ## Performance Metrics
 
 ### Compilation Time
+
 - **Without Via-IR:** ~1-2 seconds
 - **With Via-IR:** ~5-6 seconds
 - **Trade-off:** Better optimization vs. compile speed
 
 ### Artifact Sizes
+
 - **FutarchyArbExecutorV5.json:** 712 KB
 - **InstitutionalSolverSystem.json:** 210 KB
 - **Average artifact:** ~100-200 KB
 
 ### Bytecode Sizes (Estimated)
+
 - **FutarchyArbExecutorV5:** ~15-18 KB (well under 24 KB limit)
 - **InstitutionalSolverSystem:** ~20-22 KB
 - **Batch Executors:** ~10-15 KB each

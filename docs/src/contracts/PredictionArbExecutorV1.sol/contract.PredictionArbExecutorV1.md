@@ -1,29 +1,30 @@
 # PredictionArbExecutorV1
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/PredictionArbExecutorV1.sol)
 
 **Title:**
 PredictionArbExecutorV1
 
-------------------------
-PredictionArbExecutorV1
-------------------------
+---
+
+## PredictionArbExecutorV1
 
 Minimal executor for prediction-market arbitrage on conditional collateral.
 Flows (owner-only):
+
 - sell_conditional_arbitrage: split {currency} into YES/NO and sell both legs exact-in for {currency}.
 - buy_conditional_arbitrage: buy YES/NO conditional {currency} exact-out (amount each) and merge back to {currency}.
-Notes:
+  Notes:
 - Price decisions are off-chain. This contract just executes the steps atomically.
 - Profit guard `min_out_final` is a signed value in {currency} units (can be negative for testing).
 
-
 ## State Variables
+
 ### owner
 
 ```solidity
 address public owner
 ```
-
 
 ### DEFAULT_V3_FEE
 
@@ -31,10 +32,9 @@ address public owner
 uint24 internal constant DEFAULT_V3_FEE = 500
 ```
 
-
 ## Functions
-### onlyOwner
 
+### onlyOwner
 
 ```solidity
 modifier onlyOwner() ;
@@ -42,27 +42,23 @@ modifier onlyOwner() ;
 
 ### constructor
 
-
 ```solidity
 constructor() ;
 ```
 
 ### transferOwnership
 
-
 ```solidity
 function transferOwnership(address newOwner) external onlyOwner;
 ```
 
-### _ensureMaxAllowance
-
+### \_ensureMaxAllowance
 
 ```solidity
 function _ensureMaxAllowance(IERC20 token, address spender) internal;
 ```
 
-### _swaprExactIn
-
+### \_swaprExactIn
 
 ```solidity
 function _swaprExactIn(address swapr_router, address tokenIn, address tokenOut, uint256 amountIn, uint256 minOut)
@@ -70,8 +66,7 @@ function _swaprExactIn(address swapr_router, address tokenIn, address tokenOut, 
     returns (uint256 amountOut);
 ```
 
-### _swaprExactOut
-
+### \_swaprExactOut
 
 ```solidity
 function _swaprExactOut(address swapr_router, address tokenIn, address tokenOut, uint256 amountOut, uint256 maxIn)
@@ -79,15 +74,13 @@ function _swaprExactOut(address swapr_router, address tokenIn, address tokenOut,
     returns (uint256 amountIn);
 ```
 
-### _poolFeeOrDefault
-
+### \_poolFeeOrDefault
 
 ```solidity
 function _poolFeeOrDefault(address pool) internal view returns (uint24);
 ```
 
 ### sell_conditional_arbitrage
-
 
 ```solidity
 function sell_conditional_arbitrage(
@@ -103,7 +96,6 @@ function sell_conditional_arbitrage(
 ```
 
 ### buy_conditional_arbitrage
-
 
 ```solidity
 function buy_conditional_arbitrage(
@@ -124,13 +116,11 @@ function buy_conditional_arbitrage(
 
 ### receive
 
-
 ```solidity
 receive() external payable;
 ```
 
 ### withdrawToken
-
 
 ```solidity
 function withdrawToken(IERC20 token, address to, uint256 amount) external onlyOwner;
@@ -138,19 +128,18 @@ function withdrawToken(IERC20 token, address to, uint256 amount) external onlyOw
 
 ### sweepToken
 
-
 ```solidity
 function sweepToken(IERC20 token, address to) external onlyOwner;
 ```
 
 ### withdrawETH
 
-
 ```solidity
 function withdrawETH(address payable to, uint256 amount) external onlyOwner;
 ```
 
 ## Events
+
 ### OwnershipTransferred
 
 ```solidity
@@ -206,4 +195,3 @@ event ConditionalCollateralMerged(
 ```solidity
 event ProfitVerified(uint256 initialBalance, uint256 finalBalance, int256 minProfit);
 ```
-

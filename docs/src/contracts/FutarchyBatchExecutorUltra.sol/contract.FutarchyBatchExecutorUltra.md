@@ -1,4 +1,5 @@
 # FutarchyBatchExecutorUltra
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyBatchExecutorUltra.sol)
 
 **Title:**
@@ -8,10 +9,9 @@ Ultra-simple implementation that avoids all 0xEF triggers
 
 No arrays, no loops, just sequential execution
 
-
 ## Functions
-### onlySelf
 
+### onlySelf
 
 ```solidity
 modifier onlySelf() ;
@@ -20,7 +20,6 @@ modifier onlySelf() ;
 ### execute2
 
 Execute 2 calls
-
 
 ```solidity
 function execute2(address target1, bytes calldata data1, address target2, bytes calldata data2)
@@ -32,7 +31,6 @@ function execute2(address target1, bytes calldata data1, address target2, bytes 
 ### execute3
 
 Execute 3 calls
-
 
 ```solidity
 function execute3(
@@ -48,7 +46,6 @@ function execute3(
 ### execute5
 
 Execute 5 calls (no loops)
-
 
 ```solidity
 function execute5(
@@ -68,7 +65,6 @@ function execute5(
 ### executeBuy11
 
 Execute 11 calls for buy conditional flow
-
 
 ```solidity
 function executeBuy11(
@@ -103,15 +99,14 @@ function executeBuy11(
 
 ### receive
 
-
 ```solidity
 receive() external payable;
 ```
 
 ## Events
+
 ### Executed
 
 ```solidity
 event Executed(address target);
 ```
-

@@ -7,6 +7,7 @@ This document outlines a comprehensive testing strategy for deploying Pectra bun
 ## Pre-Production Checklist
 
 ### 1. Infrastructure Verification
+
 ```bash
 # Run comprehensive verification
 python -m src.setup.pectra_verifier
@@ -20,6 +21,7 @@ python -m src.setup.pectra_verifier
 ```
 
 ### 2. Approval Status Audit
+
 ```python
 # Check all required approvals
 python -m src.setup.check_approvals
@@ -32,6 +34,7 @@ python -m src.setup.check_approvals
 ```
 
 ### 3. Environment Configuration
+
 ```bash
 # .env file must include:
 export IMPLEMENTATION_ADDRESS=0x65eb5a03635c627a0f254707712812B234753F31
@@ -45,6 +48,7 @@ export PECTRA_TEST_MODE=true  # Enable test mode initially
 ### Phase 1: Isolated Component Testing (Day 1)
 
 #### 1.1 Contract Interaction Test
+
 ```python
 # Test basic execute10 functionality
 python -m tests.test_minimal_executor
@@ -57,6 +61,7 @@ python -m tests.test_minimal_executor
 ```
 
 #### 1.2 Bundle Construction Test
+
 ```python
 # Test bundle building without execution
 python -m tests.test_bundle_construction
@@ -69,6 +74,7 @@ python -m tests.test_bundle_construction
 ```
 
 #### 1.3 Simulation Accuracy Test
+
 ```python
 # Compare simulation vs actual execution
 python -m tests.test_simulation_accuracy --amount 0.01
@@ -83,6 +89,7 @@ python -m tests.test_simulation_accuracy --amount 0.01
 ### Phase 2: Testnet Mirror Testing (Day 2-3)
 
 #### 2.1 Fork Testing
+
 ```python
 # Run against forked mainnet state
 python -m src.testing.fork_test --fork-url $RPC_URL
@@ -95,6 +102,7 @@ python -m src.testing.fork_test --fork-url $RPC_URL
 ```
 
 #### 2.2 End-to-End Flow Test
+
 ```python
 # Full arbitrage cycle with small amounts
 python -m src.arbitrage_commands.buy_cond_eip7702 0.01 --test-mode
@@ -109,6 +117,7 @@ python -m src.arbitrage_commands.buy_cond_eip7702 0.01 --test-mode
 ### Phase 3: Production Canary Testing (Day 4-7)
 
 #### 3.1 Micro Trades
+
 ```python
 # Start with dust amounts
 AMOUNTS = [0.001, 0.005, 0.01, 0.05, 0.1]  # sDAI
@@ -123,6 +132,7 @@ for amount in AMOUNTS:
 ```
 
 #### 3.2 Monitoring Setup
+
 ```python
 # Real-time monitoring dashboard
 python -m src.monitoring.pectra_monitor
@@ -136,6 +146,7 @@ python -m src.monitoring.pectra_monitor
 ```
 
 #### 3.3 A/B Testing
+
 ```python
 # Run parallel sequential and bundled strategies
 python -m src.testing.ab_test \
@@ -145,7 +156,7 @@ python -m src.testing.ab_test \
 
 # Compare:
 - Profitability
-- Success rate  
+- Success rate
 - Gas efficiency
 - Execution speed
 ```
@@ -153,6 +164,7 @@ python -m src.testing.ab_test \
 ### Phase 4: Gradual Production Rollout (Week 2)
 
 #### 4.1 Progressive Amount Increase
+
 ```python
 # Gradually increase trade sizes
 DAY_1_AMOUNT = 1.0    # $1
@@ -168,6 +180,7 @@ else:
 ```
 
 #### 4.2 Feature Flags
+
 ```python
 # Progressive feature enablement
 FEATURE_FLAGS = {
@@ -182,15 +195,16 @@ FEATURE_FLAGS = {
 ## Production Monitoring
 
 ### 1. Real-Time Metrics
+
 ```python
 # Metrics collection
 class PectraMetrics:
     def __init__(self):
         self.prometheus_client = PrometheusClient()
-        
+
     def track_bundle(self, result):
         self.prometheus_client.increment('pectra_bundles_total')
-        
+
         if result['status'] == 'success':
             self.prometheus_client.increment('pectra_bundles_success')
             self.prometheus_client.observe('pectra_profit_sdai', result['profit'])
@@ -201,6 +215,7 @@ class PectraMetrics:
 ```
 
 ### 2. Alerting Rules
+
 ```yaml
 # Prometheus alerting rules
 groups:
@@ -210,12 +225,12 @@ groups:
         expr: rate(pectra_bundles_failed[5m]) > 0.1
         annotations:
           summary: "Bundle failure rate >10% in last 5 minutes"
-          
+
       - alert: NegativeProfit
         expr: sum(pectra_profit_sdai[1h]) < 0
         annotations:
           summary: "Negative profit in last hour"
-          
+
       - alert: GasSpikePectra
         expr: pectra_gas_used > 3000000
         annotations:
@@ -223,6 +238,7 @@ groups:
 ```
 
 ### 3. Automated Response
+
 ```python
 # Circuit breaker implementation
 class PectraCircuitBreaker:
@@ -230,19 +246,19 @@ class PectraCircuitBreaker:
         self.failure_count = 0
         self.success_count = 0
         self.is_open = False
-        
+
     def record_result(self, success: bool):
         if success:
             self.success_count += 1
             self.failure_count = 0
         else:
             self.failure_count += 1
-            
+
         # Open circuit if 3 consecutive failures
         if self.failure_count >= 3:
             self.is_open = True
             notify_operators("Pectra circuit breaker opened")
-            
+
         # Close circuit after 10 consecutive successes
         if self.success_count >= 10 and self.is_open:
             self.is_open = False
@@ -252,12 +268,14 @@ class PectraCircuitBreaker:
 ## Rollback Plan
 
 ### 1. Immediate Rollback Triggers
+
 - Bundle failure rate > 20%
 - Any fund loss incident
 - Gas costs exceed 2x sequential
 - Unexpected contract behavior
 
 ### 2. Rollback Procedure
+
 ```bash
 # 1. Disable Pectra mode immediately
 export PECTRA_ENABLED=false
@@ -277,18 +295,21 @@ python -m src.diagnostics.analyze_pectra_failures
 ## Success Criteria
 
 ### Week 1 Goals
+
 - [ ] 95%+ bundle success rate
 - [ ] 15%+ gas savings vs sequential
 - [ ] Zero fund loss incidents
 - [ ] <5% error rate
 
 ### Week 2 Goals
+
 - [ ] Handle 50% of arbitrage volume via bundles
 - [ ] Maintain profitability metrics
 - [ ] Successfully execute complex bundles (with liquidation)
 - [ ] Stable operation at $1000+ trade sizes
 
 ### Month 1 Goals
+
 - [ ] 100% migration to bundled transactions
 - [ ] 20%+ improvement in overall profitability
 - [ ] Reduced MEV exposure
@@ -297,16 +318,19 @@ python -m src.diagnostics.analyze_pectra_failures
 ## Risk Mitigation
 
 ### 1. Technical Risks
+
 - **Contract bugs**: Extensive testing + small initial amounts
 - **Gas estimation errors**: Conservative buffers + monitoring
 - **State sync issues**: Fresh state queries + retry logic
 
 ### 2. Market Risks
+
 - **Price volatility**: Tighter slippage tolerances initially
 - **Liquidity crunches**: Dynamic amount sizing
 - **MEV competition**: Monitor for frontrunning
 
 ### 3. Operational Risks
+
 - **Monitoring blind spots**: Comprehensive logging
 - **Alert fatigue**: Tuned thresholds
 - **Operator errors**: Automated safeguards

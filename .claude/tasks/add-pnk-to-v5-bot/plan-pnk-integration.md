@@ -39,11 +39,13 @@ Deadlines and gas presets (to avoid estimator reverts):
 
 ## High-Level Changes
 
-1) Add config/consts
+1. Add config/consts
+
 - Add addresses and poolIds to a v5 config module or executor-level constants; allow router override via env/config.
 - Keep these behind a feature flag or clearly namespaced constants (PNK-specific).
 
-2) New executor functions (do not modify existing)
+2. New executor functions (do not modify existing)
+
 - `def exec_buy_pnk_with_sdai_v5(...):`
   - Inputs (aligned with v5 CLI patterns): `amount_sdai`, `min_weth` (optional), `min_pnk` (optional), `force_send` (gas pre-set toggle), `slippage_bps` (optional), and contextual args already present in v5 executor (signer, w3, chainId).
   - Behavior: build and send (a) sDAI→WETH batchSwap then (b) WETH→PNK swap, exactly as in the working script.
@@ -53,26 +55,31 @@ Deadlines and gas presets (to avoid estimator reverts):
   - Inputs: `amount_pnk`, `min_weth` (optional), `min_sdai` (optional), `force_send`, and contextual args.
   - Behavior: (a) PNK→WETH via Swapr v2, then (b) WETH→sDAI via Balancer Vault batchSwap, mirroring the route indices but reversing direction and amounts as needed.
 
-3) CLI wiring (non-invasive)
+3. CLI wiring (non-invasive)
+
 - Add new subcommands/flags for PNK buy/sell in the v5 CLI module(s) without altering existing ones.
 - Use clear names: `arbv5:buy-pnk` and `arbv5:sell-pnk` (or similar) under the futarchy executor commands.
 
-4) Gas semantics (align with v1/v5 policy)
+4. Gas semantics (align with v1/v5 policy)
+
 - Default: do not pre-populate gas; estimate post-build with +20% buffer.
 - If estimation fails (BAL#507/STF) or `--force-send` is set, set explicit `gas` to the presets above.
 - Apply EIP‑1559 fields (`maxFeePerGas`, `maxPriorityFeePerGas`) using the existing helper.
 
-5) Min-profit and slippage semantics
+5. Min-profit and slippage semantics
+
 - Reuse v5 signed min-profit machinery where applicable (accept negative values).
 - For these PNK flows specifically, expose `--min-weth` (for the Balancer leg limits) and `--min-pnk`/`--min-sdai` for the final leg.
 - If `slippage_bps` provided, compute implied min-out via on-chain quotes (`queryBatchSwap` for Balancer, `getAmountsOut` for v2) in dry-run step; otherwise trust user-provided mins.
 
-6) Approvals and balances
+6. Approvals and balances
+
 - Buy: approve `sDAI → Vault` for `amount_sdai`; then approve `WETH → Swapr` for the received WETH.
 - Sell: approve `PNK → Swapr` for `amount_pnk`; then approve `WETH → Vault` for the WETH received from Swapr.
 - Optional: use exact-amount approvals to limit risk; or unlimited per config flag.
 
-7) Robustness, logging, errors
+7. Robustness, logging, errors
+
 - Abort if intermediate WETH amount is zero (both directions).
 - Propagate revert reasons; log tx hashes for each step; print final receipt status and gas used.
 - Include dry-run mode that only performs on-chain quotes and prints predicted amounts/mins.
@@ -83,8 +90,8 @@ Deadlines and gas presets (to avoid estimator reverts):
 
 Buy (sDAI → WETH → PNK):
 
-1) `IERC20(SDAI).approve(Vault, amount_sdai)`
-2) `IVault.batchSwap(SwapKind.GIVEN_IN, swaps, assets, funds, limits, deadline)`
+1. `IERC20(SDAI).approve(Vault, amount_sdai)`
+2. `IVault.batchSwap(SwapKind.GIVEN_IN, swaps, assets, funds, limits, deadline)`
    - swaps (split amount 50/50):
      - `(POOL_1, 0, 1, half, "0x")`
      - `(POOL_2, 1, 2, 0,   "0x")`
@@ -97,23 +104,24 @@ Buy (sDAI → WETH → PNK):
    - deadline: `9007199254740991`
    - gas: pre-set to `~1_000_000` if needed
 
-3) `IERC20(WETH).approve(SwaprRouter, weth_received)`
-4) `IUniswapV2Router02.swapExactTokensForTokens(weth_in, min_pnk, [WETH, PNK], sender, 3510754692)`
+3. `IERC20(WETH).approve(SwaprRouter, weth_received)`
+4. `IUniswapV2Router02.swapExactTokensForTokens(weth_in, min_pnk, [WETH, PNK], sender, 3510754692)`
    - gas: pre-set to `~800_000` if needed
 
 Sell (PNK → WETH → sDAI):
 
-1) `IERC20(PNK).approve(SwaprRouter, amount_pnk)`
-2) `IUniswapV2Router02.swapExactTokensForTokens(amount_pnk, min_weth, [PNK, WETH], sender, 3510754692)`
+1. `IERC20(PNK).approve(SwaprRouter, amount_pnk)`
+2. `IUniswapV2Router02.swapExactTokensForTokens(amount_pnk, min_weth, [PNK, WETH], sender, 3510754692)`
    - gas: pre-set to `~800_000` if needed
 
-3) `IERC20(WETH).approve(Vault, weth_received)`
-4) `IVault.batchSwap(SwapKind.GIVEN_IN, swaps_rev, assets, funds, limits_rev, deadline)`
+3. `IERC20(WETH).approve(Vault, weth_received)`
+4. `IVault.batchSwap(SwapKind.GIVEN_IN, swaps_rev, assets, funds, limits_rev, deadline)`
    - swaps_rev mirrors the BUY structure but with `amount` on the first WETH‑originating step and zeros thereafter; indices stay the same since assets order is identical.
    - Enforce `-min_sdai` in limits on the `SDAI` index; `WETH` is the positive in.
    - deadline: `9007199254740991`; gas per above.
 
 Note: For SELL via Balancer, we can either:
+
 - Use the reverse of the same poolIds (if pools support WETH→SDAI along the same indices), or
 - Provide a second, empirically verified poolId set for WETH→SDAI. Start with mirrored route; add a config switch to override if needed.
 
@@ -121,17 +129,17 @@ Note: For SELL via Balancer, we can either:
 
 ## Integration Steps (Engineering Plan)
 
-1) Add PNK constants and pool route to a v5 config module (or executor-level constants).
+1. Add PNK constants and pool route to a v5 config module (or executor-level constants).
    - Status: Completed (implemented in FutarchyArbExecutorV5.sol with helpers)
-2) Implement `exec_buy_pnk_with_sdai_v5` using the exact script logic and call shapes above.
+2. Implement `exec_buy_pnk_with_sdai_v5` using the exact script logic and call shapes above.
    - Status: Partial — on-chain buy helper (`buyPnkWithSdai`) implemented and verified; BUY arbitrage entrypoint for PNK (`buy_conditional_arbitrage_pnk`) implemented but pending deployment to complete Step 6 (PNK→sDAI sell) on the BUY path.
-3) Implement `exec_sell_pnk_for_sdai_v5` with mirrored logic; verify indices/limits for WETH→sDAI.
+3. Implement `exec_sell_pnk_for_sdai_v5` with mirrored logic; verify indices/limits for WETH→sDAI.
    - Status: Completed — minimal sell helper implemented and validated; separate complete sell entrypoint added.
-4) Wire new CLI subcommands and flags (amount/mins/force-send/slippage-bps).
-5) Add dry-run quoting that computes mins if `slippage_bps` is provided.
-6) Reuse v5 gas helpers and signed min-profit conversion; keep recipient fixed to sender.
-7) Manual on-chain test with small `--amount 0.01` sDAI buy; then small PNK sell.
-8) Update task docs and usage examples; keep the feature off by default if desired.
+4. Wire new CLI subcommands and flags (amount/mins/force-send/slippage-bps).
+5. Add dry-run quoting that computes mins if `slippage_bps` is provided.
+6. Reuse v5 gas helpers and signed min-profit conversion; keep recipient fixed to sender.
+7. Manual on-chain test with small `--amount 0.01` sDAI buy; then small PNK sell.
+8. Update task docs and usage examples; keep the feature off by default if desired.
 
 ---
 

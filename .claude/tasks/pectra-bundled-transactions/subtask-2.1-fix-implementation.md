@@ -3,9 +3,11 @@
 ## Status: Ready for Implementation
 
 ### Problem Summary
+
 The deployed FutarchyBatchExecutor contract (0x2552eafcE4e4D0863388Fb03519065a2e5866135) contains invalid 0xEF opcodes that prevent EIP-7702 execution. This is due to Solidity 0.8.20+ occasionally emitting the reserved 0xEF byte.
 
 ### Solution Overview
+
 1. Downgrade to Solidity 0.8.19
 2. Disable Yul optimizer
 3. Add bytecode verification
@@ -14,16 +16,20 @@ The deployed FutarchyBatchExecutor contract (0x2552eafcE4e4D0863388Fb03519065a2e
 ## Step-by-Step Implementation
 
 ### Step 1: Update Solidity Version in Contract
+
 **File**: `contracts/FutarchyBatchExecutor.sol`
+
 ```diff
 -pragma solidity ^0.8.20;
 +pragma solidity 0.8.19;
 ```
 
 ### Step 2: Update Compiler Configuration
+
 **File**: `hardhat.config.ts` or `foundry.toml`
 
 For Hardhat:
+
 ```javascript
 solidity: {
   version: "0.8.19",
@@ -40,6 +46,7 @@ solidity: {
 ```
 
 For Foundry:
+
 ```toml
 [profile.default]
 solc_version = "0.8.19"
@@ -49,25 +56,27 @@ via_ir = false  # Avoid IR pipeline which may introduce 0xEF
 ```
 
 ### Step 3: Update Deployment Script
+
 **File**: `src/setup/deploy_batch_executor.py`
 
 Add bytecode verification before deployment:
+
 ```python
 def verify_bytecode(bytecode: str) -> bool:
     """Check if bytecode contains 0xEF opcodes."""
     # Remove 0x prefix if present
     bytecode = bytecode.replace('0x', '')
-    
+
     # Check for 0xEF at even positions (opcode positions)
     ef_positions = []
     for i in range(0, len(bytecode), 2):
         if bytecode[i:i+2].lower() == 'ef':
             ef_positions.append(i // 2)
-    
+
     if ef_positions:
         print(f"❌ Found 0xEF opcodes at byte positions: {ef_positions}")
         return False
-    
+
     print("✅ Bytecode is clean - no 0xEF opcodes found")
     return True
 
@@ -77,26 +86,30 @@ if not verify_bytecode(compiled_contract['evm']['bytecode']['object']):
 ```
 
 ### Step 4: Update Verifier
+
 **File**: `src/helpers/pectra_verifier.py`
 
 Add runtime bytecode check:
+
 ```python
 def check_implementation_bytecode(self, address: str) -> bool:
     """Verify deployed contract has no 0xEF opcodes."""
     code = self.w3.eth.get_code(address)
-    
+
     # Check for 0xEF bytes
     if b'\xef' in code:
         ef_count = code.count(b'\xef')
         self.add_error(f"Implementation contains {ef_count} 0xEF bytes - must redeploy")
         return False
-    
+
     self.add_success("Implementation bytecode is clean")
     return True
 ```
 
 ### Step 5: Create Test Contract
+
 **File**: `contracts/SimpleEIP7702Test.sol`
+
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
@@ -104,15 +117,15 @@ pragma solidity 0.8.19;
 contract SimpleEIP7702Test {
     event TestExecuted(address caller, uint256 value);
     event CallExecuted(address target, bool success, bytes result);
-    
+
     function test() external payable {
         emit TestExecuted(msg.sender, msg.value);
     }
-    
-    function execute(address target, uint256 value, bytes calldata data) 
-        external 
-        payable 
-        returns (bytes memory) 
+
+    function execute(address target, uint256 value, bytes calldata data)
+        external
+        payable
+        returns (bytes memory)
     {
         require(msg.sender == address(this), "Only self");
         (bool success, bytes memory result) = target.call{value: value}(data);
@@ -126,6 +139,7 @@ contract SimpleEIP7702Test {
 ## Deployment Procedure
 
 ### 1. Clean Build
+
 ```bash
 # Remove old artifacts
 rm -rf artifacts cache out
@@ -137,6 +151,7 @@ forge build
 ```
 
 ### 2. Deploy Contract
+
 ```bash
 # Activate environment
 source futarchy_env/bin/activate
@@ -147,6 +162,7 @@ python -m src.setup.deploy_batch_executor
 ```
 
 ### 3. Update Environment
+
 ```bash
 # Add to .env file
 export IMPLEMENTATION_ADDRESS=<new_deployed_address>
@@ -157,6 +173,7 @@ python -m src.helpers.pectra_verifier
 ```
 
 ### 4. Test Minimal Transaction
+
 ```bash
 # Test with simple approval
 python -c "
@@ -175,6 +192,7 @@ print(f'Test transaction built successfully')
 ```
 
 ### 5. Test Buy Bundle
+
 ```bash
 # Dry run
 python -m src.arbitrage_commands.buy_cond_eip7702 0.001
@@ -196,6 +214,7 @@ python -m src.arbitrage_commands.buy_cond_eip7702 0.001 --send
 ## Rollback Plan
 
 If issues persist:
+
 1. Keep old implementation address in `IMPLEMENTATION_ADDRESS_OLD`
 2. Test with different optimizer settings
 3. Try Solidity 0.8.18 or 0.8.17 if needed

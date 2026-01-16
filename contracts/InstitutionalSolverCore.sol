@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.33;
 
+import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {FixedPointMathLib} from "solady-clz/FixedPointMathLib.sol";
 import {LibBit} from "solady-clz/LibBit.sol";
 import {LibSort} from "solady-utils/LibSort.sol";
@@ -52,55 +53,37 @@ library AuctionEconomics {
     function settleAuction(AuctionState storage auction, address[] memory solvers) internal returns (address winner) {
         if (auction.isOpen) revert AuctionClosed();
 
-        // Build array of effective bids for sorting
-        uint256[] memory effectiveBids = new uint256[](solvers.length);
-        uint256 validCount = 0;
-
-        for (uint256 i = 0; i < solvers.length;) {
-            Bid storage bid = auction.bids[solvers[i]];
-            if (!bid.revealed) {
-                unchecked {
-                    ++i;
-                }
-                continue;
-            }
-            uint256 leadingZeros = LibBit.clz_(bid.revealValue);
-            uint256 logApprox = 255 - leadingZeros;
-            uint256 effectiveBid = FixedPointMathLib.mulDiv(bid.revealValue, logApprox, 256);
-            effectiveBids[validCount++] = effectiveBid;
-            unchecked {
-                ++i;
-            }
-        }
-
-        if (validCount == 0) revert InvalidBid();
-
-        // Sort bids in ascending order using LibSort
-        uint256[] memory sortedBids = new uint256[](validCount);
-        for (uint256 i = 0; i < validCount;) {
-            sortedBids[i] = effectiveBids[i];
-            unchecked {
-                ++i;
-            }
-        }
-        LibSort.insertionSort(sortedBids);
-
-        // Find highest bid (last element after ascending sort)
-        uint256 maxBid = sortedBids[validCount - 1];
+        uint256 maxBid = 0;
         address[] memory ties = new address[](solvers.length);
         uint256 tieCount = 0;
 
-        // Collect all solvers with max bid
-        for (uint256 i = 0; i < validCount;) {
-            if (effectiveBids[i] == maxBid) {
-                ties[tieCount++] = solvers[i];
+        for (uint256 i = 0; i < solvers.length;) {
+            address solver = solvers[i];
+            Bid storage bid = auction.bids[solver];
+            if (bid.revealed) {
+                uint256 leadingZeros = LibBit.clz_(bid.revealValue);
+                uint256 logApprox = 255 - leadingZeros;
+                uint256 effectiveBid = FixedPointMathLib.mulDiv(bid.revealValue, logApprox, 256);
+
+                if (effectiveBid > maxBid) {
+                    maxBid = effectiveBid;
+                    tieCount = 1;
+                    ties[0] = solver;
+                } else if (effectiveBid == maxBid) {
+                    if (effectiveBid > 0) {
+                        ties[tieCount] = solver;
+                        unchecked {
+                            ++tieCount;
+                        }
+                    }
+                }
             }
             unchecked {
                 ++i;
             }
         }
 
-        if (tieCount == 0) revert InvalidBid();
+        if (maxBid == 0) revert InvalidBid();
         if (tieCount > 1) {
             uint256 minClz = 256;
             address tieWinner = ties[0];
@@ -151,10 +134,14 @@ library ReputationSystem {
         uint256 logScale = 255 - leadingZeros;
         // forge-lint: disable-next-line(unsafe-typecast)
         int256 scaledDelta = delta * int256(logScale) / 256;
-        state.reputation[solver] += scaledDelta;
+
+        int256 currentRep = state.reputation[solver];
+        int256 newRep = currentRep + scaledDelta;
+        if (newRep < 0) newRep = 0;
+
+        if (newRep != currentRep) state.reputation[solver] = newRep;
         emit ReputationUpdated(solver, scaledDelta);
-        if (state.reputation[solver] < 0) {
-            state.reputation[solver] = 0;
+        if (newRep == 0 && currentRep > 0) {
             // forge-lint: disable-next-line(unsafe-typecast)
             emit Slashed(solver, uint256(-delta * int256(SLASH_FACTOR) / 100));
         }
@@ -198,21 +185,19 @@ library FlashloanAbstraction {
 // Contract: HybridExecutionCore
 // @title HybridExecutionCore
 // @notice Intent core; CLZ opts; multi-flashloan; v4 math in routing; Fusaka bounded.
-contract HybridExecutionCore {
+contract HybridExecutionCore is TransientReentrancyGuard {
 
     using FixedPointMathLib for uint256;
     using SafeCastLib for uint256;
 
     error ExecutionFailed();
     error InvalidIntent();
-    error NonReentrant();
     error Unauthorized();
 
     event IntentResolved(uint256 intentId, address solver, uint256 value);
     event BatchExecuted(uint256 batchId, address[] solvers);
 
     address public immutable owner;
-    uint256 private reentrancyGuard = 1;
 
     mapping(uint256 => bytes) internal intents;
     mapping(uint256 => address) internal resolvers;
@@ -228,13 +213,6 @@ contract HybridExecutionCore {
         _;
     }
 
-    modifier nonReentrant() {
-        if (reentrancyGuard == 2) revert NonReentrant();
-        reentrancyGuard = 2;
-        _;
-        reentrancyGuard = 1;
-    }
-
     constructor(address _zkVerifier, address _paymaster, address[] memory _providers) {
         owner = msg.sender;
         zkVerifier = _zkVerifier;
@@ -248,6 +226,10 @@ contract HybridExecutionCore {
     }
 
     function resolveIntent(uint256 intentId, address solver, bytes calldata execData) external nonReentrant {
+        _resolveIntent(intentId, solver, execData);
+    }
+
+    function _resolveIntent(uint256 intentId, address solver, bytes calldata execData) internal {
         ReputationSystem.gateSolver(reputationState, solver);
         if (resolvers[intentId] != address(0)) revert ExecutionFailed();
         if (execData.length > 16780000 / 16) revert ExecutionFailed();
@@ -261,18 +243,11 @@ contract HybridExecutionCore {
         // FlashloanAbstraction.executeFlashloan(flashloanProviders, token, amount, execData);
 
         // Create proxy (unused but kept for interface compatibility)
-        address proxy = address(new EIP7702Proxy());
-        assembly { pop(proxy) } // silence unused variable warning
         bool success;
-        bytes memory retData;
         assembly {
             let ptr := mload(0x40)
             calldatacopy(ptr, execData.offset, execData.length)
             success := delegatecall(gas(), solver, ptr, execData.length, 0, 0)
-            let size := returndatasize()
-            retData := mload(0x40)
-            mstore(0x40, add(retData, add(size, 0x20)))
-            returndatacopy(retData, 0, size)
         }
         if (!success) revert ExecutionFailed();
 
@@ -281,12 +256,16 @@ contract HybridExecutionCore {
         ReputationSystem.updateReputation(reputationState, solver, 10);
     }
 
-    function batchResolve(uint256[] calldata intentIds, address[] calldata solvers) external nonReentrant {
-        if (intentIds.length != solvers.length) revert InvalidIntent();
+    function batchResolve(uint256[] calldata intentIds, address[] calldata solvers, bytes[] calldata execDatas)
+        external
+        nonReentrant
+    {
+        if (intentIds.length != solvers.length || intentIds.length != execDatas.length) revert InvalidIntent();
         if (intentIds.length > 60000000 / 200000) revert ExecutionFailed();
         bytes32 rawHash = keccak256(abi.encodePacked(intentIds));
         uint256 batchId = 255 - LibBit.clz_(uint256(rawHash));
         for (uint256 i = 0; i < intentIds.length;) {
+            _resolveIntent(intentIds[i], solvers[i], execDatas[i]);
             unchecked {
                 ++i;
             }

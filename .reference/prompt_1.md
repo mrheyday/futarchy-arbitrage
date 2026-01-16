@@ -11,43 +11,43 @@ swapExactIn
 Sample Working Input:
 <input>
 {
-  "paths": [
-    {
-      "exactAmountIn": "100000000000000",
-      "minAmountOut": "9048241701256655",
-      "steps": [
-        {
-          "isBuffer": true,
-          "pool": "0x7c16f0185a26db0ae7a9377f23bc18ea7ce5d644",
-          "tokenOut": "0x7c16f0185a26db0ae7a9377f23bc18ea7ce5d644"
-        },
-        {
-          "isBuffer": false,
-          "pool": "0xd1d7fa8871d84d0e77020fc28b7cd5718c446522",
-          "tokenOut": "0xaf204776c7245bf4147c2612bf6e5972ee483701"
-        }
-      ],
-      "tokenIn": "0x9c58bacc331c9aa871afd802db6379a98e80cedb"
-    }
-  ],
-  "deadline": "9007199254740991",
-  "wethIsEth": false,
-  "userData": "0x"
+"paths": [
+{
+"exactAmountIn": "100000000000000",
+"minAmountOut": "9048241701256655",
+"steps": [
+{
+"isBuffer": true,
+"pool": "0x7c16f0185a26db0ae7a9377f23bc18ea7ce5d644",
+"tokenOut": "0x7c16f0185a26db0ae7a9377f23bc18ea7ce5d644"
+},
+{
+"isBuffer": false,
+"pool": "0xd1d7fa8871d84d0e77020fc28b7cd5718c446522",
+"tokenOut": "0xaf204776c7245bf4147c2612bf6e5972ee483701"
+}
+],
+"tokenIn": "0x9c58bacc331c9aa871afd802db6379a98e80cedb"
+}
+],
+"deadline": "9007199254740991",
+"wethIsEth": false,
+"userData": "0x"
 }
 </input>
 
 Sample Working Output:
 <output>
 {
-  "pathAmountsOut": [
-    "9102836629643480"
-  ],
-  "tokensOut": [
-    "0xaf204776c7245bf4147c2612bf6e5972ee483701"
-  ],
-  "amountsOut": [
-    "9102836629643480"
-  ]
+"pathAmountsOut": [
+"9102836629643480"
+],
+"tokensOut": [
+"0xaf204776c7245bf4147c2612bf6e5972ee483701"
+],
+"amountsOut": [
+"9102836629643480"
+]
 }
 </output>
 
@@ -108,6 +108,7 @@ result = simulate_split(
     os.environ["WALLET_ADDRESS"],
 )
 ```
+
 """
 
 from typing import Dict, Any, List, Optional
@@ -118,71 +119,67 @@ from decimal import Decimal
 from .config.abis.futarchy import FUTARCHY_ROUTER_ABI
 from ..tenderly_api import TenderlyClient
 
-__all__ = [
-    "build_split_tx",
-    "simulate_split",
-    "parse_split_results",
+**all** = [
+"build_split_tx",
+"simulate_split",
+"parse_split_results",
 ]
 
-
-def _get_router(w3: Web3, router_addr: str):
-    """Return FutarchyRouter contract instance."""
-    return w3.eth.contract(address=w3.to_checksum_address(router_addr), abi=FUTARCHY_ROUTER_ABI)
-
+def \_get_router(w3: Web3, router_addr: str):
+"""Return FutarchyRouter contract instance."""
+return w3.eth.contract(address=w3.to_checksum_address(router_addr), abi=FUTARCHY_ROUTER_ABI)
 
 def build_split_tx(
-    w3: Web3,
-    client: TenderlyClient,
-    router_addr: str,
-    proposal_addr: str,
-    collateral_addr: str,
-    amount_wei: int,
-    sender: str,
+w3: Web3,
+client: TenderlyClient,
+router_addr: str,
+proposal_addr: str,
+collateral_addr: str,
+amount_wei: int,
+sender: str,
 ) -> Dict[str, Any]:
-    """Encode splitPosition calldata and wrap into a Tenderly tx dict."""
-    router = _get_router(w3, router_addr)
-    data = router.encodeABI(
-        fn_name="splitPosition",
-        args=[
-            w3.to_checksum_address(proposal_addr),
-            w3.to_checksum_address(collateral_addr),
-            int(amount_wei),
-        ],
-    )
-    return client.build_tx(router.address, data, sender)
-
+"""Encode splitPosition calldata and wrap into a Tenderly tx dict."""
+router = \_get_router(w3, router_addr)
+data = router.encodeABI(
+fn_name="splitPosition",
+args=[
+w3.to_checksum_address(proposal_addr),
+w3.to_checksum_address(collateral_addr),
+int(amount_wei),
+],
+)
+return client.build_tx(router.address, data, sender)
 
 def simulate_split(
-    w3: Web3,
-    client: TenderlyClient,
-    router_addr: str,
-    proposal_addr: str,
-    collateral_addr: str,
-    amount_wei: int,
-    sender: str,
+w3: Web3,
+client: TenderlyClient,
+router_addr: str,
+proposal_addr: str,
+collateral_addr: str,
+amount_wei: int,
+sender: str,
 ) -> Optional[Dict[str, Any]]:
-    """Convenience function: build tx → simulate → return result dict."""
-    tx = build_split_tx(
-        w3,
-        client,
-        router_addr,
-        proposal_addr,
-        collateral_addr,
-        amount_wei,
-        sender,
-    )
-    result = client.simulate([tx])
-    if result and result.get("simulation_results"):
-        parse_split_results(result["simulation_results"], w3)
-    else:
-        print("Simulation failed or returned no results.")
-    return result
-
+"""Convenience function: build tx → simulate → return result dict."""
+tx = build_split_tx(
+w3,
+client,
+router_addr,
+proposal_addr,
+collateral_addr,
+amount_wei,
+sender,
+)
+result = client.simulate([tx])
+if result and result.get("simulation_results"):
+parse_split_results(result["simulation_results"], w3)
+else:
+print("Simulation failed or returned no results.")
+return result
 
 def parse_split_results(results: List[Dict[str, Any]], w3: Web3) -> None:
-    """Pretty-print each simulation result from splitPosition bundle."""
-    for idx, sim in enumerate(results):
-        print(f"\n--- Split Simulation Result #{idx + 1} ---")
+"""Pretty-print each simulation result from splitPosition bundle."""
+for idx, sim in enumerate(results):
+print(f"\n--- Split Simulation Result #{idx + 1} ---")
 
         if sim.get("error"):
             print("Tenderly simulation error:", sim["error"].get("message", "Unknown error"))
@@ -212,25 +209,22 @@ def parse_split_results(results: List[Dict[str, Any]], w3: Web3) -> None:
         else:
             print("(No balance change info)")
 
-
 # ---------- CLI entry for quick testing ----------
 
-def _build_w3_from_env() -> Web3:
-    """Return a Web3 instance using RPC_URL (fallback to GNOSIS_RPC_URL)."""
-    rpc_url = os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
-    if rpc_url is None:
-        raise EnvironmentError("Set RPC_URL or GNOSIS_RPC_URL in environment.")
-    w3 = Web3(Web3.HTTPProvider(rpc_url))
-    # Inject POA middleware for Gnosis
-    from web3.middleware import geth_poa_middleware
-    w3.middleware_onion.inject(geth_poa_middleware, layer=0)
-    return w3
+def \_build_w3_from_env() -> Web3:
+"""Return a Web3 instance using RPC_URL (fallback to GNOSIS_RPC_URL)."""
+rpc_url = os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
+if rpc_url is None:
+raise EnvironmentError("Set RPC_URL or GNOSIS_RPC_URL in environment.")
+w3 = Web3(Web3.HTTPProvider(rpc_url)) # Inject POA middleware for Gnosis
+from web3.middleware import geth_poa_middleware
+w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+return w3
 
-
-def main():  # pragma: no cover
-    """Quick manual test: python -m ...split_position --amount 1"""
-    import argparse
-    from dotenv import load_dotenv
+def main(): # pragma: no cover
+"""Quick manual test: python -m ...split_position --amount 1"""
+import argparse
+from dotenv import load_dotenv
 
     load_dotenv()
 
@@ -270,7 +264,7 @@ def main():  # pragma: no cover
         amount_wei,
         sender,
     )
-    
+
     tx = results["simulation_results"][0]["transaction"]
     # Successful transaction
     print("Swap transaction did NOT revert.")
@@ -279,8 +273,7 @@ def main():  # pragma: no cover
     output_hex = call_trace.get("output")
     print("output_hex = ", output_hex)
 
-
-if __name__ == "__main__":  # pragma: no cover
-    main()
+if **name** == "**main**": # pragma: no cover
+main()
 
 </code>

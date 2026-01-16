@@ -3,6 +3,7 @@
 This note documents the attempts and findings while trying to discover initialized tick boundaries for a Swapr/Algebra pool on Gnosis, and why straightforward methods returned no results.
 
 ## Context
+
 - RPC URL: `https://special-capable-log.xdai.quiknode.pro/...`
 - Pool: `SWAPR_POOL_YES_ADDRESS = 0x1328888335542433e2D5122A388045d6C76E7edd`
 - DataStorageOperator discovered: `0xAe7b5F6Bb7e79029Ff0B7AcF9FEA37fC1f461cf7`
@@ -15,6 +16,7 @@ This note documents the attempts and findings while trying to discover initializ
 All commands were executed via `scripts/tick_reader.py` in `futarchy_env` with `PYTHONNOUSERSITE=1`.
 
 ## What We Tried
+
 - Direct tick read at nearest spaced tick:
   - `ticks(47040)` returned `initialized=False` with all zero fields.
 - Inner cumulatives around current tick (±5×spacing):
@@ -32,6 +34,7 @@ All commands were executed via `scripts/tick_reader.py` in `futarchy_env` with `
   - Result: `event_boundaries_count = 0` — no boundaries discovered from events.
 
 Example run output (abridged):
+
 ```
 Finding nearest initialized boundaries around current tick…
 [bitmap-up] ... (100.0%)
@@ -51,6 +54,7 @@ Scanning events for boundary ticks…
 ```
 
 ## Why This Can Happen (Hypotheses)
+
 - Algebra deployment specifics:
   - Some Algebra forks keep the tick bitmap in a separate DataStorageOperator with a different interface or storage layout; others may not use a public bitmap at all.
   - The `tickTable(int16)` function may exist but remain zeroed in this deployment; initialized state might be tracked differently.
@@ -63,6 +67,7 @@ Scanning events for boundary ticks…
   - If positions are astronomically wide, boundaries could be extremely far; however, scans covered effectively the full int24 compressed range with zeros, so this is unlikely the root cause here.
 
 ## Script Enhancements Implemented
+
 - Bitmap scanner with:
   - Pool or DSO source (`--bitmap-source {pool|dso|auto}`), progress, verbose per‑word logging, and max‑range control.
 - Parallel sequential probing (`--threads`) for `ticks(t)` stepping.
@@ -70,6 +75,7 @@ Scanning events for boundary ticks…
 - Safety guards to keep tick/bitmap scans within the int24 domain.
 
 ## Next Steps (Recommended)
+
 1. Verify ABIs on a block explorer for both the pool and its DataStorageOperator:
    - Confirm the exact event signatures and whether `Mint/Burn` include `bottomTick/topTick` on THIS deployment.
    - Check if the DSO exposes a different function for the tick bitmap (e.g., alternative names or additional parameters).
@@ -82,14 +88,18 @@ Scanning events for boundary ticks…
    - Use TheGraph/subgraph (if available for this deployment) or a lightweight local indexer to recover historical boundaries.
 
 ## Handy Commands Used
+
 - Bitmap, DSO, max range (with progress):
+
 ```
 python scripts/tick_reader.py \
   --rpc-url "$RPC_URL" --address "$SWAPR_POOL_YES_ADDRESS" \
   --find-boundaries --use-bitmap --bitmap-source dso \
   --bitmap-only --bitmap-max-words 4096 --threads 24 --progress --json
 ```
+
 - Event scan, parallel, full range:
+
 ```
 python scripts/tick_reader.py \
   --rpc-url "$RPC_URL" --address "$SWAPR_POOL_YES_ADDRESS" \
@@ -97,5 +107,5 @@ python scripts/tick_reader.py \
 ```
 
 ## Conclusion
-Despite multiple approaches (direct tick reads, inner cumulatives, pool and DSO bitmaps, and parallel event scans), we did not observe any initialized tick boundaries via on‑chain reads for this specific Swapr/Algebra pool address using the current ABI. The most plausible explanations are deployment‑specific differences in where/how tick initialization is recorded (bitmap and/or events) or ABI/event mismatches. Verifying the exact pool/DSO ABIs and event behavior on a block explorer is the highest‑leverage next step.
 
+Despite multiple approaches (direct tick reads, inner cumulatives, pool and DSO bitmaps, and parallel event scans), we did not observe any initialized tick boundaries via on‑chain reads for this specific Swapr/Algebra pool address using the current ABI. The most plausible explanations are deployment‑specific differences in where/how tick initialization is recorded (bitmap and/or events) or ABI/event mismatches. Verifying the exact pool/DSO ABIs and event behavior on a block explorer is the highest‑leverage next step.

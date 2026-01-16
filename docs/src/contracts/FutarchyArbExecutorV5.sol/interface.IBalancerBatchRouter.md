@@ -1,14 +1,14 @@
 # IBalancerBatchRouter
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyArbExecutorV5.sol)
 
-------------------------
-Balancer BatchRouter (swapExactIn) – typed interface for BUY step 6
-------------------------
+---
 
+## Balancer BatchRouter (swapExactIn) – typed interface for BUY step 6
 
 ## Functions
-### swapExactIn
 
+### swapExactIn
 
 ```solidity
 function swapExactIn(
@@ -23,6 +23,7 @@ function swapExactIn(
 ```
 
 ## Structs
+
 ### SwapPathStep
 
 ```solidity
@@ -43,4 +44,3 @@ struct SwapPathExactAmountIn {
     uint256 minAmountOut;
 }
 ```
-

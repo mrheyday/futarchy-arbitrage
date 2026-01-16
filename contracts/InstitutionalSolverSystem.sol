@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.33;
 
+import {LibBLS} from "./LibBLS.sol";
+import {LibP256} from "./LibP256.sol";
+import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {FixedPointMathLib} from "solady-clz/FixedPointMathLib.sol";
 import {LibBit} from "solady-clz/LibBit.sol";
 import {LibSort} from "solady-utils/LibSort.sol";
@@ -12,14 +15,13 @@ import {SafeCastLib} from "solady-utils/SafeCastLib.sol";
  * @dev Integrates all modules: Auction, Reputation, Flashloan, ZK, MEV, Compliance, etc.
  * Implements Osaka EVM CLZ-enhanced DeFi integration
  */
-contract InstitutionalSolverSystem {
+contract InstitutionalSolverSystem is TransientReentrancyGuard {
 
     using FixedPointMathLib for uint256;
     using SafeCastLib for uint256;
 
     // ============ Errors ============
     error Unauthorized();
-    error NonReentrant();
     error InvalidIntent();
     error ExecutionFailed();
     error InvalidBid();
@@ -38,10 +40,16 @@ contract InstitutionalSolverSystem {
     event ReputationUpdated(address indexed solver, int256 delta);
     event BatchExecuted(uint256 indexed batchId, address[] solvers);
     event TreasuryDeposit(address indexed token, uint256 amount, uint256 logAmount);
+    event ZKVerifierUpdated(address indexed newVerifier);
+    event PaymasterUpdated(address indexed newPaymaster);
+    event FlashloanProviderAdded(address indexed provider);
+    event ComplianceFlagsSet(address indexed entity, uint256 flags);
+    event TreasuryAccessAuthorized(address indexed account);
+    event BLSKeyRegistered(address indexed account, uint256[2] pubKey);
+    event P256KeyRegistered(address indexed account, uint256 x, uint256 y);
 
     // ============ State Variables ============
     address public immutable owner;
-    uint256 private reentrancyGuard = 1;
 
     address public zkVerifier;
     address public paymaster;
@@ -70,6 +78,7 @@ contract InstitutionalSolverSystem {
     mapping(address => int256) internal reputation;
     uint256 internal constant MIN_REPUTATION = 100;
     uint256 internal constant SLASH_FACTOR = 50;
+    uint256 internal constant FUSAKA_GAS_LIMIT = 60_000_000;
 
     // Compliance state
     mapping(address => uint256) internal complianceFlags;
@@ -84,17 +93,16 @@ contract InstitutionalSolverSystem {
     mapping(address => uint256) internal treasuryBalances;
     mapping(address => bool) internal treasuryAuthorized;
 
+    // BLS Keys (Osaka/Pectra)
+    mapping(address => uint256[2]) public blsPublicKeys; // G1 Points
+
+    // P256 Keys (EIP-7212 / Passkeys)
+    mapping(address => uint256[2]) public p256PublicKeys; // [X, Y]
+
     // ============ Modifiers ============
     modifier onlyOwner() {
         if (msg.sender != owner) revert Unauthorized();
         _;
-    }
-
-    modifier nonReentrant() {
-        if (reentrancyGuard == 2) revert NonReentrant();
-        reentrancyGuard = 2;
-        _;
-        reentrancyGuard = 1;
     }
 
     // ============ Constructor ============
@@ -115,6 +123,10 @@ contract InstitutionalSolverSystem {
     }
 
     function resolveIntent(uint256 intentId, address solver, bytes calldata execData) external nonReentrant {
+        _resolveIntent(intentId, solver, execData);
+    }
+
+    function _resolveIntent(uint256 intentId, address solver, bytes calldata execData) internal {
         // Gate solver reputation
         // forge-lint: disable-next-line(unsafe-typecast)
         if (reputation[solver] < int256(MIN_REPUTATION)) revert ReputationSlash();
@@ -144,15 +156,18 @@ contract InstitutionalSolverSystem {
         updateReputationInternal(solver, 10);
     }
 
-    function batchResolve(uint256[] calldata intentIds, address[] calldata solvers) external nonReentrant {
-        if (intentIds.length != solvers.length) revert InvalidIntent();
-        if (intentIds.length > 60000000 / 200000) revert ExecutionFailed();
+    function batchResolve(uint256[] calldata intentIds, address[] calldata solvers, bytes[] calldata execDatas)
+        external
+        nonReentrant
+    {
+        if (intentIds.length != solvers.length || intentIds.length != execDatas.length) revert InvalidIntent();
+        if (intentIds.length > FUSAKA_GAS_LIMIT / 200000) revert ExecutionFailed();
 
         bytes32 rawHash = keccak256(abi.encodePacked(intentIds));
         uint256 batchId = 255 - LibBit.clz_(uint256(rawHash));
 
         for (uint256 i = 0; i < intentIds.length;) {
-            // Process each intent (simplified)
+            _resolveIntent(intentIds[i], solvers[i], execDatas[i]);
             unchecked {
                 ++i;
             }
@@ -196,57 +211,38 @@ contract InstitutionalSolverSystem {
         AuctionState storage auction = auctions[auctionId];
         if (auction.isOpen) revert AuctionClosed();
 
-        // Build array of effective bids for sorting
-        uint256[] memory effectiveBids = new uint256[](solvers.length);
-        uint256 validCount = 0;
-
-        for (uint256 i = 0; i < solvers.length;) {
-            Bid storage bid = auction.bids[solvers[i]];
-            if (!bid.revealed) {
-                unchecked {
-                    ++i;
-                }
-                continue;
-            }
-
-            // CLZ log-scaling: Effective = value * (255 - LibBit.clz_(value)) / 256
-            uint256 leadingZeros = LibBit.clz_(bid.revealValue);
-            uint256 logApprox = 255 - leadingZeros;
-            uint256 effectiveBid = bid.revealValue.mulDiv(logApprox, 256);
-            effectiveBids[validCount++] = effectiveBid;
-            unchecked {
-                ++i;
-            }
-        }
-
-        if (validCount == 0) revert InvalidBid();
-
-        // Sort bids in descending order using LibSort
-        uint256[] memory sortedBids = new uint256[](validCount);
-        for (uint256 i = 0; i < validCount;) {
-            sortedBids[i] = effectiveBids[i];
-            unchecked {
-                ++i;
-            }
-        }
-        LibSort.insertionSort(sortedBids);
-
-        // Find highest bid (last element after ascending sort)
-        uint256 maxBid = sortedBids[validCount - 1];
+        uint256 maxBid = 0;
         address[] memory ties = new address[](solvers.length);
         uint256 tieCount = 0;
 
-        // Collect all solvers with max bid
-        for (uint256 i = 0; i < validCount;) {
-            if (effectiveBids[i] == maxBid) {
-                ties[tieCount++] = solvers[i];
+        for (uint256 i = 0; i < solvers.length;) {
+            address solver = solvers[i];
+            Bid storage bid = auction.bids[solver];
+            if (bid.revealed) {
+                // CLZ log-scaling: Effective = value * (255 - LibBit.clz_(value)) / 256
+                uint256 leadingZeros = LibBit.clz_(bid.revealValue);
+                uint256 logApprox = 255 - leadingZeros;
+                uint256 effectiveBid = bid.revealValue.mulDiv(logApprox, 256);
+
+                if (effectiveBid > maxBid) {
+                    maxBid = effectiveBid;
+                    tieCount = 1;
+                    ties[0] = solver;
+                } else if (effectiveBid == maxBid) {
+                    if (effectiveBid > 0) {
+                        ties[tieCount] = solver;
+                        unchecked {
+                            ++tieCount;
+                        }
+                    }
+                }
             }
             unchecked {
                 ++i;
             }
         }
 
-        if (tieCount == 0) revert InvalidBid();
+        if (maxBid == 0) revert InvalidBid();
 
         if (tieCount > 1) {
             // Tiebreak using CLZ entropy - lowest CLZ wins
@@ -282,10 +278,12 @@ contract InstitutionalSolverSystem {
         // forge-lint: disable-next-line(unsafe-typecast)
         int256 scaledDelta = delta * int256(logScale) / 256;
 
-        reputation[solver] += scaledDelta;
-        emit ReputationUpdated(solver, scaledDelta);
+        int256 currentRep = reputation[solver];
+        int256 newRep = currentRep + scaledDelta;
+        if (newRep < 0) newRep = 0;
 
-        if (reputation[solver] < 0) reputation[solver] = 0;
+        if (newRep != currentRep) reputation[solver] = newRep;
+        emit ReputationUpdated(solver, scaledDelta);
     }
 
     function updateReputation(address solver, int256 delta) external onlyOwner {
@@ -302,7 +300,8 @@ contract InstitutionalSolverSystem {
         uint256 leadingZeros = LibBit.clz_(amount);
         if (255 - leadingZeros < 10) revert FlashloanFailed();
 
-        for (uint256 i = 0; i < flashloanProviders.length;) {
+        uint256 len = flashloanProviders.length;
+        for (uint256 i = 0; i < len;) {
             (bool success,) = flashloanProviders[i].call(
                 abi.encodeWithSignature("flashLoan(address,uint256,bytes)", token, amount, data)
             );
@@ -316,12 +315,14 @@ contract InstitutionalSolverSystem {
 
     function addFlashloanProvider(address provider) external onlyOwner {
         flashloanProviders.push(provider);
+        emit FlashloanProviderAdded(provider);
     }
 
     // ============ Compliance Module ============
 
     function setComplianceFlags(address entity, uint256 flags) external onlyOwner {
         complianceFlags[entity] = flags;
+        emit ComplianceFlagsSet(entity, flags);
     }
 
     function checkCompliance(address entity, uint256 requiredFlags) public view returns (bool) {
@@ -356,6 +357,7 @@ contract InstitutionalSolverSystem {
 
     function authorizeTreasuryAccess(address account) external onlyOwner {
         treasuryAuthorized[account] = true;
+        emit TreasuryAccessAuthorized(account);
     }
 
     // ============ Utility Functions ============
@@ -375,10 +377,58 @@ contract InstitutionalSolverSystem {
 
     function updateZKVerifier(address newVerifier) external onlyOwner {
         zkVerifier = newVerifier;
+        emit ZKVerifierUpdated(newVerifier);
     }
 
     function updatePaymaster(address newPaymaster) external onlyOwner {
         paymaster = newPaymaster;
+        emit PaymasterUpdated(newPaymaster);
+    }
+
+    // ============ BLS Functions (Osaka) ============
+
+    function registerBLSKey(uint256[2] calldata pubKey) external {
+        blsPublicKeys[msg.sender] = pubKey;
+        emit BLSKeyRegistered(msg.sender, pubKey);
+    }
+
+    function verifySolverBLS(address solver, uint256[4] calldata signature, uint256[4] calldata message)
+        external
+        view
+        returns (bool)
+    {
+        return LibBLS.verifySignature(blsPublicKeys[solver], signature, message);
+    }
+
+    function verifyBatchBLS(
+        address[] calldata solvers,
+        uint256[4] calldata aggregatedSignature,
+        uint256[4] calldata message
+    ) external view returns (bool) {
+        uint256[2][] memory pubKeys = new uint256[2][](solvers.length);
+        for (uint256 i = 0; i < solvers.length;) {
+            pubKeys[i] = blsPublicKeys[solvers[i]];
+            unchecked {
+                ++i;
+            }
+        }
+
+        uint256[2] memory aggPubKey = LibBLS.aggregatePublicKeys(pubKeys);
+        return LibBLS.verifySignature(aggPubKey, aggregatedSignature, message);
+    }
+
+    // ============ P256 Functions (EIP-7212) ============
+
+    function registerP256Key(uint256 x, uint256 y) external {
+        p256PublicKeys[msg.sender] = [x, y];
+        emit P256KeyRegistered(msg.sender, x, y);
+    }
+
+    function verifySolverP256(address solver, bytes32 hash, uint256 r, uint256 s) external view returns (bool) {
+        uint256[2] memory pubKey = p256PublicKeys[solver];
+        if (pubKey[0] == 0 && pubKey[1] == 0) return false;
+
+        return LibP256.verifySignature(hash, r, s, pubKey[0], pubKey[1]);
     }
 
     // ============ Solver Ranking Functions ============
@@ -390,10 +440,7 @@ contract InstitutionalSolverSystem {
      * @param topN Number of top solvers to return
      * @return topSolvers Array of top N solver addresses sorted by reputation
      */
-    function getTopSolversByReputation(
-        address[] memory solverList,
-        uint256 topN
-    )
+    function getTopSolversByReputation(address[] memory solverList, uint256 topN)
         external
         view
         returns (address[] memory topSolvers)
@@ -407,15 +454,6 @@ contract InstitutionalSolverSystem {
             int256 rep = reputation[solverList[i]];
             // forge-lint: disable-next-line(unsafe-typecast)
             reputations[i] = rep > 0 ? uint256(rep) : 0;
-            unchecked {
-                ++i;
-            }
-        }
-
-        // Sort indices based on reputation using LibSort
-        uint256[] memory indices = new uint256[](solverList.length);
-        for (uint256 i = 0; i < solverList.length;) {
-            indices[i] = i;
             unchecked {
                 ++i;
             }

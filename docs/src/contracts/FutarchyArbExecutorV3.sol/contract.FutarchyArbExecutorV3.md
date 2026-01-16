@@ -1,17 +1,16 @@
 # FutarchyArbExecutorV3
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyArbExecutorV3.sol)
 
-
 ## Functions
-### execute10
 
+### execute10
 
 ```solidity
 function execute10(address[10] calldata targets, bytes[10] calldata calldatas, uint256 count) external payable;
 ```
 
 ### executeOne
-
 
 ```solidity
 function executeOne(address target, bytes calldata data) external payable returns (bytes memory);
@@ -23,27 +22,23 @@ Full SELL flow with dynamic merge and optional liquidation into plain sDAI.
 
 Must be invoked via 7702 (so msg.sender == address(this)).
 
-
 ```solidity
 function sellConditional(SellParams calldata p) external;
 ```
 
-### _ensureAllowance
-
+### \_ensureAllowance
 
 ```solidity
 function _ensureAllowance(IERC20 token, address spender, uint256 need) internal;
 ```
 
-### _safeCall
-
+### \_safeCall
 
 ```solidity
 function _safeCall(address target, bytes memory data, uint256 value) internal;
 ```
 
-### _patchedCalldata
-
+### \_patchedCalldata
 
 ```solidity
 function _patchedCalldata(
@@ -55,8 +50,7 @@ function _patchedCalldata(
 ) internal pure returns (bytes memory cd);
 ```
 
-### _revertWith
-
+### \_revertWith
 
 ```solidity
 function _revertWith(bytes memory ret) private pure;
@@ -64,12 +58,12 @@ function _revertWith(bytes memory ret) private pure;
 
 ### receive
 
-
 ```solidity
 receive() external payable;
 ```
 
 ## Events
+
 ### SellExecuted
 
 ```solidity
@@ -89,10 +83,11 @@ event SellExecuted(
 ```
 
 ## Structs
+
 ### CalldataPatch
+
 A template for an exact-in swap; the contract will patch `amountIn`
 (and optionally `minOut`) at the given byte offsets before calling `target`.
-
 
 ```solidity
 struct CalldataPatch {
@@ -148,4 +143,3 @@ struct SellParams {
     int256 minNetSdai; // require(end - start >= minNetSdai)
 }
 ```
-

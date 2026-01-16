@@ -20,6 +20,12 @@ Usage with .env (backward compatible):
 
 from __future__ import annotations
 
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Initialize logger
+logger = setup_logger("arbitrage_bot_v2", level=10)  # DEBUG level
+
 import argparse
 import json
 import os
@@ -556,7 +562,7 @@ class ArbitrageBot:
                     balance_ether = self.w3.from_wei(balance_wei, 'ether')
                     balances[name] = float(balance_ether)
                 except Exception as e:
-                    print(f"Warning: Could not fetch {name} balance: {e}")
+                    logger.warning(f" Could not fetch {name} balance: {e}")
                     balances[name] = 0.0
         return balances
     
@@ -736,7 +742,7 @@ class ArbitrageBot:
             else:
                 # Check if it's a "min profit not met" error which is expected
                 if "min profit not met" in result.stderr:
-                    print("⚠️  Trade skipped: Min profit threshold not met")
+                    logger.warning("  Trade skipped: Min profit threshold not met")
                     return False, None
                 else:
                     print(f"✗ Trade failed with exit code {result.returncode}")

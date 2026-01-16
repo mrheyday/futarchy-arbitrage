@@ -2,12 +2,12 @@
 
 You deployed `FutarchyArbExecutorV4` at:
 
-* **address**: `0xb74a98b75B4efde911Bb95F7a2A0E7Bc3376e15B`
-* **deployer**: `0x91c612a37b8365C2db937388d7b424fe03D62850`
-* **tx\_hash**: `0x26583a085cf01b432e12b4f3c5adc8fc30899f288af665fa4c905337f0d43070`
-* **gas\_used**: `2,294,545`
-* **timestamp**: `2025‑08‑11T14:37:25.515898`
-* **ABI**: (provided; includes `runTrade`, `TradeExecuted`, `runner()`, and the full Sell/Buy flows)
+- **address**: `0xb74a98b75B4efde911Bb95F7a2A0E7Bc3376e15B`
+- **deployer**: `0x91c612a37b8365C2db937388d7b424fe03D62850`
+- **tx_hash**: `0x26583a085cf01b432e12b4f3c5adc8fc30899f288af665fa4c905337f0d43070`
+- **gas_used**: `2,294,545`
+- **timestamp**: `2025‑08‑11T14:37:25.515898`
+- **ABI**: (provided; includes `runTrade`, `TradeExecuted`, `runner()`, and the full Sell/Buy flows)
 
 Given this, here’s the revised plan and the updated module.
 
@@ -22,15 +22,13 @@ Given this, here’s the revised plan and the updated module.
    b) **EOA → Balancer BatchRouter.swapExactIn** (direct, unchanged behavior)
 
 3. **ABI handling**: by default, the module will:
-
-   * Load the **full ABI you provided** from `FUTARCHY_EXECUTOR_ABI_JSON` (recommended), or
-   * Fall back to a **minimal ABI** (only `runTrade` and `TradeExecuted`) if you don’t supply a file.
-   * Address defaults to your deployed address unless overridden.
+   - Load the **full ABI you provided** from `FUTARCHY_EXECUTOR_ABI_JSON` (recommended), or
+   - Fall back to a **minimal ABI** (only `runTrade` and `TradeExecuted`) if you don’t supply a file.
+   - Address defaults to your deployed address unless overridden.
 
 4. **No brittle runtime patching**: we encode exact amounts into the router calldata and set:
-
-   * `patchIndex = 255 (PATCH_NONE)`
-   * `minOutOffset = 2^256 − 1`
+   - `patchIndex = 255 (PATCH_NONE)`
+   - `minOutOffset = 2^256 − 1`
      If you later want slippage‑bps patching via offsets, we’ll add a reliable offset encoder.
 
 5. **Reuses Balancer pathing** from `src/trades/balancer_swap.py` so the router address, ABI and pool layout live in one place.
@@ -486,20 +484,20 @@ print("router tx:", txh2)
 
 ## Notes specific to your deployment
 
-* `runTrade` is **guarded by `onlyRunner`** in Solidity; the Python path enforces this by default (`must_be_runner=True`). If your runner is not the same EOA that will submit normal transactions (outside 7702), set `must_be_runner=False` or pass a different `sender`.
+- `runTrade` is **guarded by `onlyRunner`** in Solidity; the Python path enforces this by default (`must_be_runner=True`). If your runner is not the same EOA that will submit normal transactions (outside 7702), set `must_be_runner=False` or pass a different `sender`.
 
-* The module defaults to your deployed address **0xb74a98…15B**, but you can override with `FUTARCHY_EXECUTOR_ADDRESS` or the constructor argument if you deploy new instances per environment.
+- The module defaults to your deployed address **0xb74a98…15B**, but you can override with `FUTARCHY_EXECUTOR_ADDRESS` or the constructor argument if you deploy new instances per environment.
 
-* Using the **full ABI** you supplied ensures future event decoding beyond `TradeExecuted` will continue to work without code changes.
+- Using the **full ABI** you supplied ensures future event decoding beyond `TradeExecuted` will continue to work without code changes.
 
 ---
 
 ## What changed from the prior version
 
-* The default **contract address** is now hard‑wired to your deployed instance, with env/arg overrides.
-* The executor can **load your full ABI** from a JSON file at runtime (recommended); otherwise it falls back to a minimal ABI to keep the surface area small.
-* Added **`fetch_runner()`** and optional permission check before `runTrade`.
-* Imports are **robust** to both `trades.balancer_swap` and plain `balancer_swap` layouts.
+- The default **contract address** is now hard‑wired to your deployed instance, with env/arg overrides.
+- The executor can **load your full ABI** from a JSON file at runtime (recommended); otherwise it falls back to a minimal ABI to keep the surface area small.
+- Added **`fetch_runner()`** and optional permission check before `runTrade`.
+- Imports are **robust** to both `trades.balancer_swap` and plain `balancer_swap` layouts.
 
 ---
 

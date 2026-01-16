@@ -1,4 +1,5 @@
 [# content moved from 01_keystore.md]
+
 # 01 – Keystore
 
 ## Goal
@@ -40,14 +41,14 @@ Implement secure keystore helpers for encrypting/decrypting private keys, readin
 - Wrong password → explicit error without leaking info.
 - Disk write interruption → use temp file then rename.
 - Never print private key unless `--insecure-plain` is explicitly set.
- - HD note: mnemonic is not stored; it must be provided each time or managed by a higher-level vault in later subtasks.
+- HD note: mnemonic is not stored; it must be provided each time or managed by a higher-level vault in later subtasks.
 
 ## Acceptance Criteria
 
 - Can securely create keystore for a random or provided key.
 - Can decrypt a keystore via CLI and output address (not key by default).
 - No plaintext leaks unless explicitly requested.
- - Can derive a child key from mnemonic + derivation path and create a keystore for that child key.
+- Can derive a child key from mnemonic + derivation path and create a keystore for that child key.
 
 ## Implementation Status
 
@@ -109,7 +110,7 @@ Single-shot derivation with in-memory mnemonic + password:
 
 The keystore password can be derived deterministically from `PRIVATE_KEY` in `.env` — no `WALLET_KEYSTORE_PASSWORD` required.
 
-1) Create a `.env.pk` containing a fresh `PRIVATE_KEY`:
+1. Create a `.env.pk` containing a fresh `PRIVATE_KEY`:
 
 ```bash
 python - << 'PY'
@@ -120,13 +121,13 @@ print('Wrote .env.pk')
 PY
 ```
 
-2) Create a keystore using only `.env.pk` (no password flags):
+2. Create a keystore using only `.env.pk` (no password flags):
 
 ```bash
 python -m src.setup.cli keystore-create --private-key-env PRIVATE_KEY --env-file .env.pk --out build/env_only_test
 ```
 
-3) Decrypt the keystore using only `.env.pk` (no password flags):
+3. Decrypt the keystore using only `.env.pk` (no password flags):
 
 ```bash
 FILE=$(ls -t build/env_only_test/*.json | head -n1)
@@ -134,5 +135,6 @@ python -m src.setup.cli keystore-decrypt --file "$FILE" --env-file .env.pk --pri
 ```
 
 Notes:
+
 - The keystore password is derived from `PRIVATE_KEY` in-memory; do not delete `.env.pk` if you plan to decrypt later.
 - You can replace `.env.pk` with any `.env` file that only contains `PRIVATE_KEY=0x...` and the commands still work.

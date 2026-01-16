@@ -128,7 +128,23 @@ __all__ = [
     "parse_simulated_swap_results",
     "parse_broadcasted_swap_results",
     "_search_call_trace",
+    "get_balancer_pool_id",
 ]
+
+def get_balancer_pool_id(w3: Web3, pool_address: str) -> str:
+    """Fetch the Pool ID from a Balancer pool contract."""
+    pool = w3.eth.contract(
+        address=w3.to_checksum_address(pool_address),
+        abi=[{
+            "inputs": [],
+            "name": "getPoolId",
+            "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
+            "stateMutability": "view",
+            "type": "function"
+        }]
+    )
+    pool_id = pool.functions.getPoolId().call()
+    return "0x" + pool_id.hex()
 
 def _search_call_trace(node: dict[str, Any], target: str) -> dict[str, Any] | None:
     """Depth-first search for the first call to *target* in Tenderly call-trace."""

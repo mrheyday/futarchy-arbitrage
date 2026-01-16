@@ -3,6 +3,7 @@
 ## ✅ Deployment Confirmed Successful
 
 ### Contract Details
+
 - **Contract**: FutarchyBatchExecutorMinimal
 - **Address**: `0x65eb5a03635c627a0f254707712812B234753F31`
 - **Network**: Gnosis Chain (Chain ID: 100)
@@ -18,6 +19,7 @@
    - Status: Clean deployment
 
 2. **Infrastructure Verification**:
+
    ```
    ✅ Contract found at 0x65eb5a03635c627a0f254707712812B234753F31
    ✅ Contract size: 1379 bytes
@@ -34,6 +36,7 @@
 The deployed FutarchyBatchExecutorMinimal supports:
 
 1. **execute10** - Execute up to 10 calls in a batch
+
    ```solidity
    function execute10(
        address[10] calldata targets,
@@ -53,6 +56,7 @@ The deployed FutarchyBatchExecutorMinimal supports:
 ### Key Achievement
 
 Successfully resolved the 0xEF opcode issue by:
+
 - Using fixed-size arrays limited to 10 elements
 - Avoiding dynamic arrays that trigger Yul optimizer safety stubs
 - Maintaining essential batching functionality for arbitrage operations
@@ -66,6 +70,7 @@ Successfully resolved the 0xEF opcode issue by:
 ### Environment Configuration
 
 Add to your environment file:
+
 ```bash
 export IMPLEMENTATION_ADDRESS=0x65eb5a03635c627a0f254707712812B234753F31
 export FUTARCHY_BATCH_EXECUTOR_ADDRESS=0x65eb5a03635c627a0f254707712812B234753F31

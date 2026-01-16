@@ -271,9 +271,11 @@ contract PredictionArbExecutorV1 {
         address yes_currency,
         address no_currency,
         address,
-        /* yes_pool */ // for fee discovery (optional; 0 => default)
+        /* yes_pool */
+        // for fee discovery (optional; 0 => default)
         address,
-        /* no_pool */ // for fee discovery (optional; 0 => default)
+        /* no_pool */
+        // for fee discovery (optional; 0 => default)
         address swapr_router,
         uint256 amount_conditional_out,
         int256 min_out_final

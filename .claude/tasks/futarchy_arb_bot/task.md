@@ -1,17 +1,20 @@
 # Futarchy Arbitrage Bot Task
 
 ## Objective
+
 Create an automated arbitrage bot that monitors price discrepancies between Balancer and Swapr pools for futarchy markets and executes profitable trades using the FutarchyArbExecutorV5 contract.
 
 ## Requirements
 
 ### Core Functionality
+
 - Monitor prices from Swapr YES/NO pools and Balancer pool at configurable intervals
 - Calculate ideal price based on prediction market probabilities
 - Determine arbitrage opportunities when price deviations exceed tolerance
 - Execute trades via the `arbitrage_executor` module
 
 ### Price Discovery Logic
+
 1. Fetch spot prices from:
    - Swapr YES pool (conditional YES token)
    - Swapr NO pool (conditional NO token)
@@ -19,6 +22,7 @@ Create an automated arbitrage bot that monitors price discrepancies between Bala
    - Balancer pool (composite token)
 
 2. Calculate ideal Balancer price:
+
    ```
    ideal_price = pred_yes_price * yes_price + (1 - pred_yes_price) * no_price
    ```
@@ -32,6 +36,7 @@ Create an automated arbitrage bot that monitors price discrepancies between Bala
    - Pass this to executor as the `--cheaper` parameter
 
 ### CLI Configuration
+
 ```bash
 python -m src.arbitrage_bot \
   --env .env.0x9590dAF4d5cd4009c3F9767C5E7668175cFd37CF \
@@ -43,6 +48,7 @@ python -m src.arbitrage_bot \
 ```
 
 ### Integration Points
+
 - Use `src.executor.arbitrage_executor` for trade execution
 - Reuse price fetching logic from `src.helpers.swapr_price` and `src.helpers.balancer_price`
 - Support both dry-run (simulation) and live execution modes
@@ -70,6 +76,7 @@ python -m src.arbitrage_bot \
    - Support clean shutdown on interrupt
 
 ## Success Criteria
+
 - Bot correctly identifies arbitrage opportunities
 - Executes trades using the simplified `arbitrage_executor` interface
 - Respects tolerance and min-profit thresholds

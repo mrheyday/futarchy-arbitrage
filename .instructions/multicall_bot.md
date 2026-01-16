@@ -20,12 +20,14 @@ The FutarchyArbitrageExecutorV2 contract provides a clean, owner-only multicall 
 #### 1. FutarchyArbitrageExecutorV2 Contract (`contracts/FutarchyArbitrageExecutorV2.sol`)
 
 **Core Functions:**
+
 - `multicall(Call[] calldata calls)` - Execute multiple calls with failure handling
 - `executeArbitrage(calls, profitToken, minProfit)` - Execute arbitrage with profit verification
 - `withdrawToken(token, amount)` - Withdraw tokens from contract
 - `approveToken(token, spender, amount)` - Approve token spending
 
 **Current Deployment:**
+
 - Address: `0x474024acDA78D7827a94817d3b6C9794F3716AF2`
 - Owner: `0x91c612a37b8365C2db937388d7b424fe03D62850`
 - Network: Gnosis Chain
@@ -57,25 +59,27 @@ class MulticallV2Builder:
 1. **Send sDAI to executor contract** (manual transfer)
 
 2. **Build multicall for arbitrage:**
+
    ```python
    from src.commands.multicall_v2 import MulticallV2Builder
-   
+
    builder = MulticallV2Builder(executor_address, w3)
-   
+
    # Build the sequence
    builder.add_approve(sdai_token, futarchy_router, amount)
    builder.add_futarchy_split(futarchy_router, proposal, sdai_token, amount)
    builder.add_approve(sdai_yes_token, swapr_router, amount_yes)
    builder.add_swapr_swap(swapr_router, sdai_yes_token, company_yes_token, amount_yes, min_out)
    # Similar for NO tokens...
-   
+
    calls = builder.build()
    ```
 
 3. **Execute arbitrage with profit verification:**
+
    ```python
    executor.functions.executeArbitrage(
-       calls, 
+       calls,
        company_token,  # profit token
        min_profit      # minimum required profit
    ).transact()
@@ -135,13 +139,14 @@ FUTARCHY_PROPOSAL_ADDRESS=0x9590dAF4d5cd4009c3F9767C5E7668175cFd37CF
 
 The V2 multicall executor integrates seamlessly with existing arbitrage strategies:
 
-1. **src/arbitrage_commands/simple_bot.py** - Monitor price discrepancies 
+1. **src/arbitrage_commands/simple_bot.py** - Monitor price discrepancies
 2. **src/arbitrage_commands/complex_bot.py** - Price discovery and side determination
 3. **src/arbitrage_commands/buy_cond.py** - Conditional token trading logic
 
 **Integration Pattern:**
+
 1. Build multicall data using `MulticallV2Builder`
-2. Submit to executor with `executeArbitrage()` 
+2. Submit to executor with `executeArbitrage()`
 3. Automatic profit verification and transfer
 
 ## Advantages of V2 Multicall Pattern
@@ -171,6 +176,7 @@ The V2 multicall executor integrates seamlessly with existing arbitrage strategi
 ## Deployment Information
 
 **V2 Contract Successfully Deployed & Verified:**
+
 - **Address:** `0x474024acDA78D7827a94817d3b6C9794F3716AF2`
 - **Transaction:** `0xda2c83d9df4a163369ecbd7aa68fe0539c8d2007fc7faa332d8f007c2d7fc67e`
 - **Block:** 41088232
@@ -196,7 +202,7 @@ calls = builder.build()
 
 # Execute with profit verification
 executor.functions.executeArbitrage(
-    calls, 
+    calls,
     company_token,  # profit token
     min_profit      # minimum required profit
 ).transact()
@@ -205,8 +211,9 @@ executor.functions.executeArbitrage(
 ## File Organization
 
 **Clean root structure after V1 cleanup:**
+
 - `contracts/` - V2 contract only
-- `scripts/` - Deployment, verification, and testing scripts  
+- `scripts/` - Deployment, verification, and testing scripts
 - `src/commands/multicall_v2.py` - V2 multicall builder
 - `src/arbitrage_commands/` - Trading strategy bots
 - `deployment_info_v2.json` - Current deployment metadata

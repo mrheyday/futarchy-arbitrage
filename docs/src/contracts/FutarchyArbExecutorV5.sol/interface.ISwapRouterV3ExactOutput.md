@@ -1,16 +1,17 @@
 # ISwapRouterV3ExactOutput
+
 [Git Source](https://github.com/mrheyday/futarchy-arbitrage/blob/3f6e42fea160d7850ce3871a8e0a54ee09ce7bfa/contracts/FutarchyArbExecutorV5.sol)
 
-
 ## Functions
-### exactOutputSingle
 
+### exactOutputSingle
 
 ```solidity
 function exactOutputSingle(ExactOutputSingleParams calldata params) external payable returns (uint256 amountIn);
 ```
 
 ## Structs
+
 ### ExactOutputSingleParams
 
 ```solidity
@@ -25,4 +26,3 @@ struct ExactOutputSingleParams {
     uint160 sqrtPriceLimitX96;
 }
 ```
-
