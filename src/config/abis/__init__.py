@@ -62,4 +62,4 @@ __all__ = [
     
     # Swapr/Algebra
     'SWAPR_ROUTER_ABI',
-] 
+]

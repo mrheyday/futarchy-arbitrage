@@ -21,7 +21,7 @@ import os
 import json
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple, TypedDict
+from typing import Any, NamedTuple, TypedDict
 
 from web3 import Web3
 from eth_typing import ChecksumAddress
@@ -61,7 +61,7 @@ BALANCER_VAULT_ADDRESS_DEFAULT = "0xba1333333333a1ba1108e8412f11850a5c319ba9"  #
 
 # ---- Minimal ABI (fallback) --------------------------------------------------
 # Use full ABI via FUTARCHY_EXECUTOR_ABI_JSON when possible.
-FUTARCHY_MIN_ABI: List[Dict[str, Any]] = [
+FUTARCHY_MIN_ABI: list[dict[str, Any]] = [
     {
         "type": "function",
         "stateMutability": "nonpayable",
@@ -110,7 +110,7 @@ PATCH_NONE: int = 255
 UINT256_MAX: int = (1 << 256) - 1
 
 
-def _load_futarchy_abi(explicit_abi: Optional[List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
+def _load_futarchy_abi(explicit_abi: list[dict[str, Any]] | None) -> list[dict[str, Any]]:
     """
     Prefer an explicit ABI passed by the caller, else load from FUTARCHY_EXECUTOR_ABI_JSON,
     else use the minimal ABI fallback.
@@ -121,7 +121,7 @@ def _load_futarchy_abi(explicit_abi: Optional[List[Dict[str, Any]]]) -> List[Dic
     p = os.getenv("FUTARCHY_EXECUTOR_ABI_JSON")
     if p:
         try:
-            with open(p, "r") as f:
+            with open(p) as f:
                 obj = json.load(f)
             return obj["abi"] if isinstance(obj, dict) and "abi" in obj else obj
         except Exception as e:
@@ -136,14 +136,14 @@ class Call:
     data: str
     value: int = 0
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         # Adapt this shape to your 7702 bundler if it expects different keys.
         return {"to": self.to, "data": self.data, "value": self.value}
 
 
 class Execute10BatchDict(TypedDict):
-    targets: List[ChecksumAddress]
-    calldatas: List[bytes]  # Changed from List[str] to List[bytes]
+    targets: list[ChecksumAddress]
+    calldatas: list[bytes]  # Changed from List[str] to List[bytes]
     count: int
     tokenIn: ChecksumAddress
     tokenOut: ChecksumAddress
@@ -165,11 +165,11 @@ class Tx7702Executor:
     def __init__(
         self,
         w3: Web3,
-        arb_executor_addr: Optional[str] = None,
-        router_addr: Optional[str] = None,
-        vault_addr: Optional[str] = None,
+        arb_executor_addr: str | None = None,
+        router_addr: str | None = None,
+        vault_addr: str | None = None,
         *,
-        arb_abi: Optional[List[Dict[str, Any]]] = None,
+        arb_abi: list[dict[str, Any]] | None = None,
         deadline: int = MAX_DEADLINE,
         weth_is_eth: bool = False,
         user_data: bytes = b"",
@@ -187,7 +187,7 @@ class Tx7702Executor:
         self.router = _get_router(w3, router_addr)
         self.vault = self._resolve_vault_address(vault_addr)
     
-    def _resolve_vault_address(self, vault_addr: Optional[str]) -> ChecksumAddress:
+    def _resolve_vault_address(self, vault_addr: str | None) -> ChecksumAddress:
         """Resolve Balancer Vault address from explicit param, env var, or default."""
         # Try explicit parameter or environment variable first
         candidate = vault_addr or os.getenv("BALANCER_VAULT_ADDRESS")
@@ -299,19 +299,19 @@ class Tx7702Executor:
 
     # ------------------------------ 7702 bundles -------------------------------
 
-    def build_7702_bundle_sell(self, amount_in_wei: int, min_amount_out_wei: int) -> List[Call]:
+    def build_7702_bundle_sell(self, amount_in_wei: int, min_amount_out_wei: int) -> list[Call]:
         swap = self._encode_router_swap_sell(amount_in_wei, min_amount_out_wei)
         b = self._build_execute10_batch(swap, COMPANY_TOKEN, SDAI, amount_in_wei, min_amount_out_wei)
         return [self._build_runtrade_call(b)]
 
-    def build_7702_bundle_buy(self, amount_in_wei: int, min_amount_out_wei: int) -> List[Call]:
+    def build_7702_bundle_buy(self, amount_in_wei: int, min_amount_out_wei: int) -> list[Call]:
         swap = self._encode_router_swap_buy(amount_in_wei, min_amount_out_wei)
         b = self._build_execute10_batch(swap, SDAI, COMPANY_TOKEN, amount_in_wei, min_amount_out_wei)
         return [self._build_runtrade_call(b)]
 
     # --------------------------- normal tx: runTrade ---------------------------
 
-    def fetch_runner(self) -> Optional[str]:
+    def fetch_runner(self) -> str | None:
         try:
             return self.arb.functions.runner().call()
         except Exception:
@@ -325,10 +325,10 @@ class Tx7702Executor:
         min_amount_out_wei: int,
         *,
         must_be_runner: bool = True,
-        gas: Optional[int] = None,
-        gas_price_wei: Optional[int] = None,
-        nonce: Optional[int] = None,
-        chain_id: Optional[int] = None,
+        gas: int | None = None,
+        gas_price_wei: int | None = None,
+        nonce: int | None = None,
+        chain_id: int | None = None,
     ) -> str:
         if must_be_runner:
             r = self.fetch_runner()
@@ -346,10 +346,10 @@ class Tx7702Executor:
         min_amount_out_wei: int,
         *,
         must_be_runner: bool = True,
-        gas: Optional[int] = None,
-        gas_price_wei: Optional[int] = None,
-        nonce: Optional[int] = None,
-        chain_id: Optional[int] = None,
+        gas: int | None = None,
+        gas_price_wei: int | None = None,
+        nonce: int | None = None,
+        chain_id: int | None = None,
     ) -> str:
         if must_be_runner:
             r = self.fetch_runner()
@@ -364,10 +364,10 @@ class Tx7702Executor:
         sender: str,
         private_key: str,
         batch: Execute10BatchDict,
-        gas: Optional[int],
-        gas_price_wei: Optional[int],
-        nonce: Optional[int],
-        chain_id: Optional[int],
+        gas: int | None,
+        gas_price_wei: int | None,
+        nonce: int | None,
+        chain_id: int | None,
     ) -> str:
         # Convert TypedDict to tuple format expected by the ABI
         batch_tuple = (
@@ -410,10 +410,10 @@ class Tx7702Executor:
         amount_in_wei: int,
         min_amount_out_wei: int,
         *,
-        gas: Optional[int] = None,
-        gas_price_wei: Optional[int] = None,
-        nonce: Optional[int] = None,
-        chain_id: Optional[int] = None,
+        gas: int | None = None,
+        gas_price_wei: int | None = None,
+        nonce: int | None = None,
+        chain_id: int | None = None,
     ) -> str:
         tx = build_sell_gno_to_sdai_swap_tx(self.w3, amount_in_wei, min_amount_out_wei, sender)
         if gas is not None:          tx["gas"] = gas
@@ -437,10 +437,10 @@ class Tx7702Executor:
         amount_in_wei: int,
         min_amount_out_wei: int,
         *,
-        gas: Optional[int] = None,
-        gas_price_wei: Optional[int] = None,
-        nonce: Optional[int] = None,
-        chain_id: Optional[int] = None,
+        gas: int | None = None,
+        gas_price_wei: int | None = None,
+        nonce: int | None = None,
+        chain_id: int | None = None,
     ) -> str:
         tx = build_buy_gno_to_sdai_swap_tx(self.w3, amount_in_wei, min_amount_out_wei, sender)
         if gas is not None:          tx["gas"] = gas
@@ -453,7 +453,7 @@ class Tx7702Executor:
 
     # ------------------------------- utilities --------------------------------
     
-    def preflight_balancer_spend_check(self, token_addr: str) -> Dict[str, int]:
+    def preflight_balancer_spend_check(self, token_addr: str) -> dict[str, int]:
         """Check token balance and allowances before attempting a trade."""
         token_abi = [
             {
@@ -485,7 +485,7 @@ class Tx7702Executor:
             "router_address": self.router.address,
         }
 
-    def decode_trade_executed(self, receipt) -> Optional[Tuple[int, int]]:
+    def decode_trade_executed(self, receipt) -> tuple[int, int] | None:
         """Return (amountIn, amountOut) from the first TradeExecuted event, if present."""
         try:
             evts = self.arb.events.TradeExecuted().process_receipt(receipt)

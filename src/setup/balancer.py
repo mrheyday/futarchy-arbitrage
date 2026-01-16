@@ -47,7 +47,6 @@ import json
 import time
 from decimal import Decimal
 from pathlib import Path
-from typing import List
 
 from eth_account import Account
 from eth_account.messages import encode_structured_data
@@ -98,7 +97,7 @@ ERC20_ABI = [
 
 # ---------------------------------------------------------------------------
 
-def _load_router_abi() -> List[dict]:
+def _load_router_abi() -> list[dict]:
     """Read the Balancer router ABI shipped with the project."""
     root = Path(__file__).resolve().parents[1]  # adapt if needed
     abi_path = root / "config" / "batch_router_abi.json"

@@ -9,7 +9,7 @@ atomic operation.
 import os
 import sys
 import time
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any
 from decimal import Decimal, InvalidOperation
 
 from web3 import Web3
@@ -63,7 +63,7 @@ def build_working_swapr_call(
     amount_in: int,
     recipient: str,
     exact_type: str = "IN"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a working Swapr call using proven encoding from test scripts."""
     deadline = int(time.time()) + 600
     
@@ -100,8 +100,8 @@ def build_working_swapr_call(
 
 def build_buy_conditional_bundle(
     amount_sdai: Decimal,
-    simulation_results: Optional[Dict[str, Any]] = None
-) -> List[Dict[str, Any]]:
+    simulation_results: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
     """
     Build bundled transaction for buy conditional flow.
     
@@ -237,7 +237,7 @@ def dry_run_bundle(
         raise
 
 
-def simulate_buy_conditional_bundle(amount: Decimal) -> Dict[str, Any]:
+def simulate_buy_conditional_bundle(amount: Decimal) -> dict[str, Any]:
     """
     Perform the 3-step simulation approach for buy conditional flow.
     
@@ -255,7 +255,7 @@ def simulate_buy_conditional_bundle(amount: Decimal) -> Dict[str, Any]:
     amount_wei = w3.to_wei(amount, 'ether')
     
     # Helper function to run a simulation
-    def run_simulation(bundle_calls: List[Dict]) -> bytes:
+    def run_simulation(bundle_calls: list[dict]) -> bytes:
         # Get calldata for executeWithResults
         execute_selector = w3.keccak(text="executeWithResults((address,uint256,bytes)[])")[:4]
         calls_data = [(call['target'], call['value'], call['data']) for call in bundle_calls]
@@ -388,7 +388,7 @@ def simulate_buy_conditional_bundle(amount: Decimal) -> Dict[str, Any]:
 def buy_conditional_simple(
     amount: Decimal,
     skip_balancer: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute buy conditional flow using proven EIP-7702 implementation.
     This is a simplified version that works without complex simulation.
@@ -556,7 +556,7 @@ def buy_conditional_simple(
 def buy_conditional_bundled(
     amount: Decimal,
     broadcast: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute buy conditional flow using EIP-7702 bundled transactions.
     

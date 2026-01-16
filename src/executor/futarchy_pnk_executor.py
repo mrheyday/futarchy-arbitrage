@@ -21,7 +21,6 @@ import glob
 import json
 import os
 from pathlib import Path
-from typing import Optional, Tuple
 from decimal import Decimal
 
 from dotenv import load_dotenv
@@ -32,7 +31,7 @@ from eth_account import Account
 DEPLOYMENTS_GLOB = "deployments/deployment_executor_v5_*.json"
 
 
-def load_env(env_file: Optional[str]) -> None:
+def load_env(env_file: str | None) -> None:
     base_env = Path(".env")
     if base_env.exists():
         load_dotenv(base_env)
@@ -41,12 +40,12 @@ def load_env(env_file: Optional[str]) -> None:
         load_dotenv(env_file, override=True)
 
 
-def discover_v5_address() -> Tuple[Optional[str], str]:
+def discover_v5_address() -> tuple[str | None, str]:
     files = sorted(glob.glob(DEPLOYMENTS_GLOB))
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             addr = data.get("address")
             if addr:
@@ -114,7 +113,7 @@ def _load_v5_abi() -> list:
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             abi = data.get("abi")
             if abi:
@@ -162,7 +161,7 @@ _ERC20_MIN_ABI = [
 ZERO_ADDR = Web3.to_checksum_address("0x0000000000000000000000000000000000000000")
 
 
-def _first_env(*names: str) -> Optional[str]:
+def _first_env(*names: str) -> str | None:
     for k in names:
         v = os.getenv(k)
         if v:

@@ -15,7 +15,7 @@ account = Account.from_key(private_key)
 
 # Load deployment info
 try:
-    with open('deployment_info_v2.json', 'r') as f:
+    with open('deployment_info_v2.json') as f:
         deployment_info = json.load(f)
         EXECUTOR_ADDRESS = deployment_info['address']
         EXECUTOR_ABI = deployment_info['abi']

@@ -10,7 +10,7 @@ from web3 import Web3
 
 # Load deployment info
 try:
-    with open('deployment_info_v2.json', 'r') as f:
+    with open('deployment_info_v2.json') as f:
         deployment_info = json.load(f)
 except FileNotFoundError:
     print("Error: deployment_info_v2.json not found. Deploy contract first.")
@@ -20,7 +20,7 @@ contract_address = deployment_info['address']
 print(f"Verifying contract at: {contract_address}")
 
 # Read contract source
-with open('contracts/FutarchyArbitrageExecutorV2.sol', 'r') as f:
+with open('contracts/FutarchyArbitrageExecutorV2.sol') as f:
     source_code = f.read()
 
 # Gnosisscan API endpoint

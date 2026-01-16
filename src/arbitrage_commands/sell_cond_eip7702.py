@@ -9,7 +9,7 @@ split into conditionals, swap to conditional sDAI on Swapr, and merge back to sD
 import os
 import sys
 import time
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any
 from decimal import Decimal
 from web3 import Web3
 from eth_account import Account
@@ -94,7 +94,7 @@ def build_working_swapr_call(
     amount_in: int,
     recipient: str,
     exact_type: str = "IN"
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Build a working Swapr call using proven encoding from buy_cond_eip7702."""
     deadline = int(time.time()) + 600
     
@@ -133,7 +133,7 @@ def build_balancer_buy_company_call(
     amount_sdai: int,
     min_company_out: int,
     recipient: str
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Build Balancer swap call for buying Company with sDAI.
     Uses swapExactIn with two-hop path through buffer pool.
@@ -172,7 +172,7 @@ def build_sell_conditional_bundle(
     amount_sdai: Decimal,
     skip_merge: bool = False,
     optimize_approvals: bool = True
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Build bundled transaction for sell conditional flow.
     
@@ -279,7 +279,7 @@ def build_sell_conditional_bundle(
 def sell_conditional_simple(
     amount_sdai: Decimal,
     skip_merge: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute sell conditional flow using proven EIP-7702 implementation.
     This is a simplified version that works without complex simulation.
@@ -403,7 +403,7 @@ def sell_conditional_simple(
         }
 
 
-def check_approvals() -> Dict[str, bool]:
+def check_approvals() -> dict[str, bool]:
     """
     Check current approval statuses for all tokens involved.
     

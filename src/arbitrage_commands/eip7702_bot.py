@@ -19,7 +19,7 @@ import os
 import sys
 import time
 import argparse
-from typing import Dict, Optional, Tuple, Any
+from typing import Any
 from decimal import Decimal
 from web3 import Web3
 from eth_account import Account
@@ -52,19 +52,19 @@ def make_web3() -> Web3:
     return Web3(Web3.HTTPProvider(rpc_url))
 
 
-def fetch_swapr(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_swapr(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for an Algebra pool."""
     price, base, quote = swapr_price(w3, pool)
     return base, quote, str(price)
 
 
-def fetch_balancer(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_balancer(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for a Balancer pool."""
     price, base, quote = bal_price(w3, pool)
     return base, quote, str(price)
 
 
-def fetch_all_prices(w3: Web3) -> Dict[str, float]:
+def fetch_all_prices(w3: Web3) -> dict[str, float]:
     """
     Fetch all relevant prices for arbitrage calculation.
     
@@ -118,7 +118,7 @@ def fetch_all_prices(w3: Web3) -> Dict[str, float]:
 # --------------------------------------------------------------------------- #
 
 
-def determine_action(balancer_price: float, ideal_price: float, tolerance: float) -> Optional[str]:
+def determine_action(balancer_price: float, ideal_price: float, tolerance: float) -> str | None:
     """
     Determine whether to buy or sell based on price discrepancy.
     
@@ -148,7 +148,7 @@ def determine_action(balancer_price: float, ideal_price: float, tolerance: float
         return 'sell'  # Company cheap on Balancer, sell conditional
 
 
-def estimate_profit(action: str, amount: float, prices: Dict[str, float]) -> float:
+def estimate_profit(action: str, amount: float, prices: dict[str, float]) -> float:
     """
     Estimate expected profit before execution.
     
@@ -179,7 +179,7 @@ def estimate_profit(action: str, amount: float, prices: Dict[str, float]) -> flo
 # --------------------------------------------------------------------------- #
 
 
-def check_balances(w3: Web3, account_address: str) -> Dict[str, Any]:
+def check_balances(w3: Web3, account_address: str) -> dict[str, Any]:
     """
     Verify sufficient balances before trading.
     
@@ -250,7 +250,7 @@ def execute_arbitrage(
     action: str, 
     amount: Decimal, 
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute arbitrage using EIP-7702 bundled transactions.
     
@@ -303,7 +303,7 @@ def run_bot(
     interval: int, 
     tolerance: float, 
     dry_run: bool = False,
-    max_iterations: Optional[int] = None
+    max_iterations: int | None = None
 ) -> None:
     """
     Main bot loop that monitors and executes arbitrage.

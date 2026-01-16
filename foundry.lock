@@ -1,0 +1,8 @@
+{
+  "lib/solady": {
+    "branch": {
+      "name": "clz",
+      "rev": "ff6256a18851749e765355b3e21dc9bfa417255b"
+    }
+  }
+}

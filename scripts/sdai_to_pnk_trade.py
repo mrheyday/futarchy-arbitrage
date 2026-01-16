@@ -25,7 +25,6 @@ from __future__ import annotations
 import os
 import argparse
 from decimal import Decimal
-from typing import List
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -108,7 +107,7 @@ def main():
     acct = w3.eth.account.from_key(priv)
     recipient = Web3.to_checksum_address(args.recipient or acct.address)
     router_addr = Web3.to_checksum_address(args.router)
-    path: List[str] = [Web3.to_checksum_address(p) for p in args.path]
+    path: list[str] = [Web3.to_checksum_address(p) for p in args.path]
 
     sdai = w3.eth.contract(address=Web3.to_checksum_address(SDAI), abi=ERC20_MIN_ABI)
     router = w3.eth.contract(address=router_addr, abi=UNIV2_ROUTER_ABI)

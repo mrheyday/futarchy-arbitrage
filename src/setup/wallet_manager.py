@@ -4,7 +4,9 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Iterable, Tuple
+from typing import Any
+
+from collections.abc import Iterable
 
 from eth_account import Account
 from eth_utils import to_checksum_address
@@ -29,11 +31,11 @@ def ensure_dir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def load_index(index_path: Path) -> List[Dict[str, Any]]:
+def load_index(index_path: Path) -> list[dict[str, Any]]:
     if not index_path.exists():
         return []
     try:
-        with open(index_path, "r") as f:
+        with open(index_path) as f:
             data = json.load(f)
         if isinstance(data, list):
             return data
@@ -44,17 +46,17 @@ def load_index(index_path: Path) -> List[Dict[str, Any]]:
     return []
 
 
-def save_index(index_path: Path, records: List[Dict[str, Any]]) -> None:
+def save_index(index_path: Path, records: list[dict[str, Any]]) -> None:
     ensure_dir(index_path.parent)
     payload = {"wallets": records}
     with open(index_path, "w") as f:
         json.dump(payload, f, indent=2)
 
 
-def upsert_record(records: List[Dict[str, Any]], rec: Dict[str, Any]) -> List[Dict[str, Any]]:
+def upsert_record(records: list[dict[str, Any]], rec: dict[str, Any]) -> list[dict[str, Any]]:
     addr = _norm_addr(rec["address"])
     replaced = False
-    out: List[Dict[str, Any]] = []
+    out: list[dict[str, Any]] = []
     for r in records:
         if _norm_addr(r.get("address", "0x0")) == addr:
             out.append(rec)
@@ -66,8 +68,8 @@ def upsert_record(records: List[Dict[str, Any]], rec: Dict[str, Any]) -> List[Di
     return out
 
 
-def scan_keystores(keystore_dir: Path) -> List[Dict[str, Any]]:
-    results: List[Dict[str, Any]] = []
+def scan_keystores(keystore_dir: Path) -> list[dict[str, Any]]:
+    results: list[dict[str, Any]] = []
     if not keystore_dir.exists():
         return results
     for p in sorted(keystore_dir.glob("0x*.json")):
@@ -84,7 +86,7 @@ def scan_keystores(keystore_dir: Path) -> List[Dict[str, Any]]:
     return results
 
 
-def record_for(address: str, ks_path: Path, *, source: str, derivation_path: Optional[str] = None, tags: Optional[List[str]] = None) -> Dict[str, Any]:
+def record_for(address: str, ks_path: Path, *, source: str, derivation_path: str | None = None, tags: list[str] | None = None) -> dict[str, Any]:
     rec = {
         "address": _norm_addr(address),
         "keystore_path": str(ks_path),
@@ -97,9 +99,9 @@ def record_for(address: str, ks_path: Path, *, source: str, derivation_path: Opt
     return rec
 
 
-def derive_hd_batch(mnemonic: str, path_base: str, start: int, count: int, password: str, out_dir: Path, *, tags: Optional[List[str]] = None, emit_env: bool = False, insecure_plain: bool = False) -> List[Dict[str, Any]]:
+def derive_hd_batch(mnemonic: str, path_base: str, start: int, count: int, password: str, out_dir: Path, *, tags: list[str] | None = None, emit_env: bool = False, insecure_plain: bool = False) -> list[dict[str, Any]]:
     Account.enable_unaudited_hdwallet_features()
-    records: List[Dict[str, Any]] = []
+    records: list[dict[str, Any]] = []
     for i in range(start, start + count):
         path = f"{path_base}/{i}"
         priv_hex, address = derive_privkey_from_mnemonic(mnemonic, path)
@@ -111,8 +113,8 @@ def derive_hd_batch(mnemonic: str, path_base: str, start: int, count: int, passw
     return records
 
 
-def create_random_wallets(count: int, password: str, out_dir: Path, *, tags: Optional[List[str]] = None, emit_env: bool = False, insecure_plain: bool = False) -> List[Dict[str, Any]]:
-    records: List[Dict[str, Any]] = []
+def create_random_wallets(count: int, password: str, out_dir: Path, *, tags: list[str] | None = None, emit_env: bool = False, insecure_plain: bool = False) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
     for _ in range(count):
         acct = Account.create()
         priv_hex = "0x" + bytes(acct.key).hex()
@@ -125,8 +127,8 @@ def create_random_wallets(count: int, password: str, out_dir: Path, *, tags: Opt
     return records
 
 
-def import_private_keys(keys: Iterable[str], password: str, out_dir: Path, *, tags: Optional[List[str]] = None, emit_env: bool = False, insecure_plain: bool = False) -> List[Dict[str, Any]]:
-    records: List[Dict[str, Any]] = []
+def import_private_keys(keys: Iterable[str], password: str, out_dir: Path, *, tags: list[str] | None = None, emit_env: bool = False, insecure_plain: bool = False) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
     for k in keys:
         k = k.strip()
         if not k:

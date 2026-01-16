@@ -7,7 +7,7 @@ state in bundled transaction execution for the Pectra arbitrage bot.
 
 import os
 import time
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any
 from decimal import Decimal
 from web3 import Web3
 from eth_abi import encode, decode
@@ -20,7 +20,7 @@ TRANSFER_EVENT_SIGNATURE = Web3.keccak(text="Transfer(address,address,uint256)")
 ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 
-def encode_approval_call(token: str, spender: str, amount: int) -> Dict[str, Any]:
+def encode_approval_call(token: str, spender: str, amount: int) -> dict[str, Any]:
     """
     Encode an ERC20 approval call.
     
@@ -43,7 +43,7 @@ def encode_approval_call(token: str, spender: str, amount: int) -> Dict[str, Any
     }
 
 
-def encode_split_position_call(router: str, proposal: str, collateral: str, amount: int) -> Dict[str, Any]:
+def encode_split_position_call(router: str, proposal: str, collateral: str, amount: int) -> dict[str, Any]:
     """
     Encode a FutarchyRouter splitPosition call.
     
@@ -70,7 +70,7 @@ def encode_split_position_call(router: str, proposal: str, collateral: str, amou
     }
 
 
-def encode_merge_positions_call(router: str, proposal: str, collateral: str, amount: int) -> Dict[str, Any]:
+def encode_merge_positions_call(router: str, proposal: str, collateral: str, amount: int) -> dict[str, Any]:
     """
     Encode a FutarchyRouter mergePositions call.
     
@@ -103,7 +103,7 @@ def encode_swapr_exact_in_params(
     amount_in: int,
     amount_out_min: int,
     recipient: str,
-    deadline: Optional[int] = None
+    deadline: int | None = None
 ) -> bytes:
     """
     Encode parameters for Swapr exactInputSingle call.
@@ -135,8 +135,8 @@ def encode_swapr_exact_in_call(
     amount_in: int,
     amount_out_min: int,
     recipient: str,
-    deadline: Optional[int] = None
-) -> Dict[str, Any]:
+    deadline: int | None = None
+) -> dict[str, Any]:
     """
     Encode a Swapr exactInputSingle swap call.
     
@@ -166,7 +166,7 @@ def encode_swapr_exact_out_params(
     amount_out: int,
     amount_in_max: int,
     recipient: str,
-    deadline: Optional[int] = None
+    deadline: int | None = None
 ) -> bytes:
     """
     Encode parameters for Swapr exactOutputSingle call.
@@ -198,8 +198,8 @@ def encode_swapr_exact_out_call(
     amount_out: int,
     amount_in_max: int,
     recipient: str,
-    deadline: Optional[int] = None
-) -> Dict[str, Any]:
+    deadline: int | None = None
+) -> dict[str, Any]:
     """
     Encode a Swapr exactOutputSingle swap call.
     
@@ -231,8 +231,8 @@ def encode_balancer_swap_call(
     amount: int,
     sender: str,
     recipient: str,
-    deadline: Optional[int] = None
-) -> Dict[str, Any]:
+    deadline: int | None = None
+) -> dict[str, Any]:
     """
     Encode a Balancer V2 swap call.
     
@@ -286,7 +286,7 @@ def encode_balancer_swap_call(
     }
 
 
-def parse_swap_result(result_bytes: bytes, swap_type: str) -> Dict[str, Any]:
+def parse_swap_result(result_bytes: bytes, swap_type: str) -> dict[str, Any]:
     """
     Parse swap result from executeWithResults output.
     
@@ -313,7 +313,7 @@ def parse_swap_result(result_bytes: bytes, swap_type: str) -> Dict[str, Any]:
         return {'error': f'Failed to decode: {str(e)}'}
 
 
-def parse_bundle_results(results_bytes: bytes, operation_map: Dict[int, Tuple[str, str]]) -> Dict[str, Any]:
+def parse_bundle_results(results_bytes: bytes, operation_map: dict[int, tuple[str, str]]) -> dict[str, Any]:
     """
     Parse complete bundle results from executeWithResults.
     
@@ -374,7 +374,7 @@ def parse_bundle_results(results_bytes: bytes, operation_map: Dict[int, Tuple[st
         return {'error': f'Failed to parse bundle results: {str(e)}'}
 
 
-def extract_swap_outputs(parsed_results: Dict[str, Any]) -> Tuple[int, int]:
+def extract_swap_outputs(parsed_results: dict[str, Any]) -> tuple[int, int]:
     """
     Extract YES and NO swap output amounts from parsed results.
     
@@ -404,7 +404,7 @@ def extract_swap_outputs(parsed_results: Dict[str, Any]) -> Tuple[int, int]:
     return yes_amount, no_amount
 
 
-def calculate_liquidation_amount(yes_amount: int, no_amount: int, yes_used: int, no_used: int) -> Tuple[int, str]:
+def calculate_liquidation_amount(yes_amount: int, no_amount: int, yes_used: int, no_used: int) -> tuple[int, str]:
     """
     Calculate liquidation amount for imbalanced conditional tokens.
     
@@ -435,7 +435,7 @@ def build_liquidation_calls(
     token_type: str,
     swapr_router: str,
     futarchy_router: str
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """
     Build liquidation calls for imbalanced conditional sDAI.
     
@@ -532,7 +532,7 @@ def decode_revert_reason(error_data) -> str:
     return f"Unknown error (selector: 0x{selector.hex()})"
 
 
-def calculate_bundle_gas_params(w3: Web3, priority_multiplier: float = 1.5) -> Dict[str, int]:
+def calculate_bundle_gas_params(w3: Web3, priority_multiplier: float = 1.5) -> dict[str, int]:
     """
     Calculate gas parameters for bundle transaction.
     
@@ -562,7 +562,7 @@ def verify_bundle_profitability(
     gas_used: int,
     gas_price: int,
     w3: Web3
-) -> Tuple[Decimal, bool]:
+) -> tuple[Decimal, bool]:
     """
     Calculate net profit from bundle execution.
     
@@ -622,9 +622,9 @@ def simulate_bundle_with_state_tracking(
     w3: Web3,
     account_address: str,
     implementation_address: str,
-    bundle_calls: List[Dict[str, Any]],
-    tokens_to_track: List[str]
-) -> Dict[str, Any]:
+    bundle_calls: list[dict[str, Any]],
+    tokens_to_track: list[str]
+) -> dict[str, Any]:
     """
     Simulate bundle execution and track token balance changes.
     
@@ -720,10 +720,10 @@ def simulate_bundle_with_state_tracking(
 
 
 def extract_outputs_from_state_changes(
-    balance_changes: Dict[str, int],
+    balance_changes: dict[str, int],
     yes_token: str,
     no_token: str
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Extract YES and NO token outputs from balance changes.
     
@@ -743,8 +743,8 @@ def extract_outputs_from_state_changes(
 
 
 def build_bundle_for_minimal_executor(
-    calls: List[Dict[str, Any]]
-) -> Tuple[List[str], List[bytes], int]:
+    calls: list[dict[str, Any]]
+) -> tuple[list[str], list[bytes], int]:
     """
     Convert call dictionaries to arrays for execute10.
     

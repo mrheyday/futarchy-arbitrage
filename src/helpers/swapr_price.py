@@ -17,7 +17,6 @@ from __future__ import annotations
 import sys
 import os
 from decimal import Decimal
-from typing import Tuple, Optional
 
 # If this script is run directly, ensure the project root is in sys.path
 # so that 'config' module can be found.
@@ -72,8 +71,8 @@ def get_pool_price(
     w3: Web3,
     pool_address: str,
     *,
-    base_token_index: Optional[int] = None,
-) -> Tuple[Decimal, str, str]:
+    base_token_index: int | None = None,
+) -> tuple[Decimal, str, str]:
     """
     Spot price of *base* token (index ``base_token_index``) in terms of the
     quote token for any Algebra pool.

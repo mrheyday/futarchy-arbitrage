@@ -25,7 +25,7 @@ import time
 import requests
 import json
 from decimal import Decimal
-from typing import Any, Dict, Optional
+from typing import Any
 from datetime import datetime
 
 from eth_account import Account
@@ -80,7 +80,7 @@ def _to_wei(amount: Decimal, decimals: int = 18) -> int:
     return int(amount * (10 ** decimals))
 
 
-def _compute_order_uid(order: Dict[str, Any], owner: str) -> str:
+def _compute_order_uid(order: dict[str, Any], owner: str) -> str:
     """Compute the order UID according to CowSwap's formula."""
     # Encode packed order data
     order_data = encode(
@@ -129,7 +129,7 @@ def _get_domain_separator() -> bytes:
     return keccak(encoded_domain)
 
 
-def _get_struct_hash(order: Dict[str, Any]) -> bytes:
+def _get_struct_hash(order: dict[str, Any]) -> bytes:
     """Get the struct hash for the order."""
     order_type_hash = keccak(text="Order(address sellToken,address buyToken,address receiver,uint256 sellAmount,uint256 buyAmount,uint32 validTo,bytes32 appData,uint256 feeAmount,string kind,bool partiallyFillable,string sellTokenBalance,string buyTokenBalance)")
     
@@ -166,10 +166,10 @@ def build_order(
     buy_token: str,
     sell_amount: Decimal,
     *,
-    buy_amount: Optional[Decimal] = None,
+    buy_amount: Decimal | None = None,
     valid_for: int = 20 * 60,
     app_data: str = "0x0000000000000000000000000000000000000000000000000000000000000000",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Return a dict ready to be signed / submitted to CowSwap.
 
@@ -195,7 +195,7 @@ def build_order(
     return order
 
 
-def sign_order(order: Dict[str, Any]) -> str:
+def sign_order(order: dict[str, Any]) -> str:
     """
     Sign the order using EIP-712.
     """
@@ -209,7 +209,7 @@ def sign_order(order: Dict[str, Any]) -> str:
     return signature.signature.hex()
 
 
-def submit_order(order: Dict[str, Any], signature: str) -> str:
+def submit_order(order: dict[str, Any], signature: str) -> str:
     """
     POST the signed *order* and return CowSwap's order UID.
     """
@@ -278,7 +278,7 @@ def submit_order(order: Dict[str, Any], signature: str) -> str:
     return uid_from_response
 
 
-def get_order(uid: str) -> Dict[str, Any]:
+def get_order(uid: str) -> dict[str, Any]:
     """Fetch order details / status by UID."""
     url = f"{COW_API_URL}/orders/{uid}"
     

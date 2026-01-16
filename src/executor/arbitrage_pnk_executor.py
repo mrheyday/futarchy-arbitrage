@@ -35,7 +35,6 @@ import glob
 import json
 import os
 from pathlib import Path
-from typing import Optional, Tuple
 from decimal import Decimal
 
 from dotenv import load_dotenv
@@ -56,7 +55,7 @@ from src.helpers.balancer_swap import (
 DEPLOYMENTS_GLOB = "deployments/deployment_executor_v5_*.json"
 
 
-def load_env(env_file: Optional[str]) -> None:
+def load_env(env_file: str | None) -> None:
     # Load base .env first if present; then allow provided env file to override keys
     base_env = Path(".env")
     if base_env.exists():
@@ -65,7 +64,7 @@ def load_env(env_file: Optional[str]) -> None:
         load_dotenv(env_file, override=True)
 
 
-def discover_v5_address() -> Tuple[Optional[str], str]:
+def discover_v5_address() -> tuple[str | None, str]:
     # Prefer  env vars
     env_keys = ["FUTARCHY_ARB_EXECUTOR_V5", "EXECUTOR_V5_ADDRESS"]
     for k in env_keys:
@@ -78,7 +77,7 @@ def discover_v5_address() -> Tuple[Optional[str], str]:
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             addr = data.get("address")
             if addr:
@@ -145,7 +144,7 @@ def _load_v5_abi() -> list:
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             abi = data.get("abi")
             if abi:
@@ -211,7 +210,7 @@ _ERC20_MIN_ABI = [
 ZERO_ADDR = Web3.to_checksum_address("0x0000000000000000000000000000000000000000")
 
 
-def _first_env(*names: str) -> Optional[str]:
+def _first_env(*names: str) -> str | None:
     for k in names:
         v = os.getenv(k)
         if v:
@@ -280,7 +279,7 @@ def _exec_step12_sell_pnk(
     v5_address: str,
     amount_in_eth: str,
     yes_has_lower_price: bool,  # kept for interface parity; ignored in PNK path
-    min_profit_wei: Optional[int],
+    min_profit_wei: int | None,
 ) -> str:
     """SELL flow using PNK-specific on-chain entrypoint (internal sDAI->WETH->PNK)."""
     abi = _load_v5_abi()

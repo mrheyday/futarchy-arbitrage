@@ -33,7 +33,7 @@ def compile_contract(contract_path):
         print(f"Note: {e}")
     
     # Read contract
-    with open(contract_path, 'r') as f:
+    with open(contract_path) as f:
         contract_source = f.read()
     
     # Compile

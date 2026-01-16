@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.33;
 
 /**
  * @title FutarchyBatchExecutorV2
  * @notice Implementation contract for EIP-7702 batched futarchy arbitrage operations
  * @dev Redesigned to avoid dynamic arrays which generate 0xEF opcodes
- * 
+ *
  * This version uses a hybrid approach:
  * - Fixed-size arrays for common operations (up to 20 calls)
  * - Specialized functions for futarchy-specific operations
  */
 contract FutarchyBatchExecutorV2 {
+
     // Events
     event CallExecuted(uint256 index, address target, bool success);
     event BatchExecuted(uint256 callsExecuted);
@@ -41,15 +42,18 @@ contract FutarchyBatchExecutorV2 {
         bytes[20] calldata calldatas
     ) external payable onlySelf {
         if (count > 20) revert InvalidCount();
-        
-        for (uint256 i = 0; i < count; i++) {
+
+        for (uint256 i = 0; i < count;) {
             if (targets[i] != address(0)) {
                 (bool success,) = targets[i].call{value: values[i]}(calldatas[i]);
                 if (!success) revert CallFailed(i);
                 emit CallExecuted(i, targets[i], success);
             }
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(count);
     }
 
@@ -67,19 +71,19 @@ contract FutarchyBatchExecutorV2 {
         address[20] calldata targets,
         uint256[20] calldata values,
         bytes[20] calldata calldatas
-    ) external payable onlySelf returns (
-        bool[20] memory success,
-        bytes[20] memory results
-    ) {
+    ) external payable onlySelf returns (bool[20] memory success, bytes[20] memory results) {
         if (count > 20) revert InvalidCount();
-        
-        for (uint256 i = 0; i < count; i++) {
+
+        for (uint256 i = 0; i < count;) {
             if (targets[i] != address(0)) {
                 (success[i], results[i]) = targets[i].call{value: values[i]}(calldatas[i]);
                 emit CallExecuted(i, targets[i], success[i]);
             }
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(count);
     }
 
@@ -93,13 +97,16 @@ contract FutarchyBatchExecutorV2 {
         bytes[11] calldata calldatas
     ) external payable onlySelf returns (bytes[11] memory results) {
         // Execute all 11 operations for buy conditional flow
-        for (uint256 i = 0; i < 11; i++) {
+        for (uint256 i = 0; i < 11;) {
             (bool success, bytes memory result) = targets[i].call{value: values[i]}(calldatas[i]);
             if (!success) revert CallFailed(i);
             results[i] = result;
             emit CallExecuted(i, targets[i], success);
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(11);
     }
 
@@ -116,10 +123,11 @@ contract FutarchyBatchExecutorV2 {
         uint256 count
     ) external onlySelf {
         if (count > 5) revert InvalidCount();
-        
-        for (uint256 i = 0; i < count; i++) {
-            if (tokens[i] != address(0)) {
-                _approve(tokens[i], spenders[i], amounts[i]);
+
+        for (uint256 i = 0; i < count;) {
+            if (tokens[i] != address(0)) _approve(tokens[i], spenders[i], amounts[i]);
+            unchecked {
+                ++i;
             }
         }
     }
@@ -128,29 +136,29 @@ contract FutarchyBatchExecutorV2 {
      * @notice Internal function to handle token approvals
      */
     function _approve(address token, address spender, uint256 amount) internal {
-        (bool success, bytes memory data) = token.call(
-            abi.encodeWithSignature("approve(address,uint256)", spender, amount)
-        );
-        
+        (bool success, bytes memory data) =
+            token.call(abi.encodeWithSignature("approve(address,uint256)", spender, amount));
+
         if (!success) revert CallFailed(0);
-        
+
         // Check return value if present
         if (data.length > 0) {
             bool approved = abi.decode(data, (bool));
             if (!approved) revert CallFailed(0);
         }
-        
+
         emit ApprovalSet(token, spender, amount);
     }
 
     /**
      * @notice Execute a single call (for simple operations)
      */
-    function executeOne(
-        address target,
-        uint256 value,
-        bytes calldata data
-    ) external payable onlySelf returns (bytes memory) {
+    function executeOne(address target, uint256 value, bytes calldata data)
+        external
+        payable
+        onlySelf
+        returns (bytes memory)
+    {
         (bool success, bytes memory result) = target.call{value: value}(data);
         if (!success) revert CallFailed(0);
         emit CallExecuted(0, target, success);
@@ -161,4 +169,5 @@ contract FutarchyBatchExecutorV2 {
      * @notice Receive ETH
      */
     receive() external payable {}
+
 }

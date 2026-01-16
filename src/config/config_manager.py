@@ -7,7 +7,7 @@ and integrates with the KeyManager for secure key derivation.
 
 from supabase import create_client, Client
 import os
-from typing import Dict, Any, Optional, List
+from typing import Any
 from datetime import datetime
 import json
 import logging
@@ -40,7 +40,7 @@ class ConfigManager:
         self.supabase: Client = create_client(self.supabase_url, self.supabase_key)
         self.key_manager = KeyManager(self.master_key)
         
-    def get_bot_config(self, bot_name: str) -> Dict[str, Any]:
+    def get_bot_config(self, bot_name: str) -> dict[str, Any]:
         """Get complete configuration for a bot.
         
         Args:
@@ -79,7 +79,7 @@ class ConfigManager:
         config = self.get_bot_config(bot_name)
         return self.key_manager.get_account(config)
     
-    def list_active_bots(self) -> List[Dict[str, Any]]:
+    def list_active_bots(self) -> list[dict[str, Any]]:
         """List all active bots.
         
         Returns:
@@ -92,8 +92,8 @@ class ConfigManager:
         return response.data
     
     def register_bot(self, bot_name: str, bot_type: str, 
-                    config: Optional[Dict[str, Any]] = None,
-                    derivation_path: Optional[str] = None) -> Dict[str, Any]:
+                    config: dict[str, Any] | None = None,
+                    derivation_path: str | None = None) -> dict[str, Any]:
         """Register a new bot in the system.
         
         Args:
@@ -134,7 +134,7 @@ class ConfigManager:
         logger.info(f"Registered bot '{bot_name}' with address {wallet_address}")
         return response.data[0]
     
-    def update_config(self, bot_name: str, config_updates: Dict[str, Any],
+    def update_config(self, bot_name: str, config_updates: dict[str, Any],
                      merge: bool = True):
         """Update bot configuration.
         
@@ -209,7 +209,7 @@ class ConfigManager:
         )
         return response.data[0]
     
-    def get_bot_assignments(self, bot_name: str) -> List[Dict[str, Any]]:
+    def get_bot_assignments(self, bot_name: str) -> list[dict[str, Any]]:
         """Get all market assignments for a bot.
         
         Args:
@@ -226,7 +226,7 @@ class ConfigManager:
         
         return response.data
     
-    def list_all_bots(self) -> List[Dict[str, Any]]:
+    def list_all_bots(self) -> list[dict[str, Any]]:
         """List all bots (active and inactive).
         
         Returns:
@@ -235,7 +235,7 @@ class ConfigManager:
         response = self.supabase.table('bot_configurations').select("*").execute()
         return response.data
     
-    def _get_default_config(self, bot_type: str) -> Dict[str, Any]:
+    def _get_default_config(self, bot_type: str) -> dict[str, Any]:
         """Get default configuration for a bot type.
         
         Args:
@@ -295,7 +295,7 @@ class ConfigManager:
         
         return base_config
     
-    def _deep_merge(self, base: Dict[str, Any], updates: Dict[str, Any]) -> Dict[str, Any]:
+    def _deep_merge(self, base: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
         """Deep merge two dictionaries.
         
         Args:
@@ -338,14 +338,14 @@ class ConfigManager:
             
         logger.info(f"Exported configuration for bot '{bot_name}' to {filepath}")
     
-    def import_bot_config(self, filepath: str, new_bot_name: Optional[str] = None):
+    def import_bot_config(self, filepath: str, new_bot_name: str | None = None):
         """Import bot configuration from a JSON file.
         
         Args:
             filepath: Path to the configuration file
             new_bot_name: Optional new name for the bot (uses name from file if not provided)
         """
-        with open(filepath, 'r') as f:
+        with open(filepath) as f:
             import_config = json.load(f)
         
         bot_name = new_bot_name or import_config['bot_name']

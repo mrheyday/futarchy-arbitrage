@@ -17,7 +17,7 @@ import os
 import json
 import argparse
 import sys
-from typing import Dict, Any, Optional, List
+from typing import Any
 from supabase import create_client, Client
 
 # Target address patterns to search for (no default addresses)
@@ -53,7 +53,7 @@ class MarketDataFetcher:
         print(f"Connecting to Supabase: {supabase_url}")
         self.supabase: Client = create_client(supabase_url, supabase_key)
     
-    def fetch_market_event(self, market_event_id: str) -> Optional[Dict[str, Any]]:
+    def fetch_market_event(self, market_event_id: str) -> dict[str, Any] | None:
         """Fetch a specific market event by ID.
         
         Args:
@@ -75,7 +75,7 @@ class MarketDataFetcher:
             print(f"Error fetching market event {market_event_id}: {e}")
             return None
     
-    def fetch_all_market_events(self) -> List[Dict[str, Any]]:
+    def fetch_all_market_events(self) -> list[dict[str, Any]]:
         """Fetch all market events.
         
         Returns:
@@ -89,7 +89,7 @@ class MarketDataFetcher:
             print(f"Error fetching market events: {e}")
             return []
     
-    def search_addresses_in_metadata(self, metadata: Dict[str, Any]) -> Dict[str, str]:
+    def search_addresses_in_metadata(self, metadata: dict[str, Any]) -> dict[str, str]:
         """Search for target address keys in metadata.
         
         Args:
@@ -124,7 +124,7 @@ class MarketDataFetcher:
         search_recursive(metadata)
         return found_addresses
     
-    def analyze_market_event(self, market_event: Dict[str, Any]) -> Dict[str, Any]:
+    def analyze_market_event(self, market_event: dict[str, Any]) -> dict[str, Any]:
         """Analyze a market event for target addresses.
         
         Args:
@@ -151,7 +151,7 @@ class MarketDataFetcher:
         
         return result
     
-    def _create_metadata_preview(self, metadata: Dict[str, Any], max_depth: int = 3) -> Dict[str, Any]:
+    def _create_metadata_preview(self, metadata: dict[str, Any], max_depth: int = 3) -> dict[str, Any]:
         """Create a preview of metadata structure without full content.
         
         Args:
@@ -174,7 +174,7 @@ class MarketDataFetcher:
         
         return preview_recursive(metadata)
     
-    def search_all_markets(self) -> List[Dict[str, Any]]:
+    def search_all_markets(self) -> list[dict[str, Any]]:
         """Search all market events for target addresses.
         
         Returns:
@@ -192,7 +192,7 @@ class MarketDataFetcher:
         
         return results
     
-    def extract_addresses_from_metadata(self, metadata: Dict[str, Any]) -> Dict[str, str]:
+    def extract_addresses_from_metadata(self, metadata: dict[str, Any]) -> dict[str, str]:
         """Extract addresses from metadata and map them to environment variable names.
         
         Args:
@@ -231,7 +231,7 @@ class MarketDataFetcher:
         
         return addresses
     
-    def update_env_file(self, env_file_path: str, addresses: Dict[str, str]) -> None:
+    def update_env_file(self, env_file_path: str, addresses: dict[str, str]) -> None:
         """Update environment file with extracted addresses.
         
         Args:
@@ -241,7 +241,7 @@ class MarketDataFetcher:
         import re
         
         # Read current env file
-        with open(env_file_path, 'r') as f:
+        with open(env_file_path) as f:
             content = f.read()
         
         # Update each address
@@ -279,7 +279,7 @@ class MarketDataFetcher:
         print(f"\nEnvironment file {env_file_path} updated successfully!")
 
 
-def print_analysis_results(results: List[Dict[str, Any]]):
+def print_analysis_results(results: list[dict[str, Any]]):
     """Print analysis results in a readable format."""
     if not results:
         print("No market events found containing the target addresses.")

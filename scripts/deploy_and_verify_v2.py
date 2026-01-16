@@ -46,7 +46,7 @@ def compile_contract():
         pass  # Already installed
     
     # Read contract source
-    with open('contracts/FutarchyArbitrageExecutorV2.sol', 'r') as f:
+    with open('contracts/FutarchyArbitrageExecutorV2.sol') as f:
         contract_source = f.read()
     
     print("\n📦 Compiling contract...")

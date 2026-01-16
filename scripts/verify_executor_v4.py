@@ -28,7 +28,7 @@ print(f"Verifying FutarchyArbExecutorV4 at {CONTRACT_ADDRESS}")
 
 # Read contract source
 contract_path = Path(__file__).parent.parent / "contracts" / "FutarchyArbExecutorV4.sol"
-with open(contract_path, "r") as f:
+with open(contract_path) as f:
     source_code = f.read()
 
 print(f"Contract source loaded: {len(source_code)} chars")

@@ -13,8 +13,8 @@ Usage
     SWAPR_POOL_NO_ADDRESS=0x… \
     BALANCER_POOL_ADDRESS=0x… \
     python -m src.arbitrage_commands.simple_bot \
-        --amount  500          \ # sDAI you are willing to deploy
-        --interval 300         \ # seconds between checks
+        --amount  500          \\ # sDAI you are willing to deploy
+        --interval 300         \\ # seconds between checks
         --tolerance 0.3          # % deviation that triggers a trade
 """
 from __future__ import annotations

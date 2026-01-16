@@ -1,4 +1,4 @@
-from typing import Dict, Any, Tuple, NamedTuple, List
+from typing import Any, NamedTuple, TypedDict
 from decimal import Decimal
 from web3 import Web3
 from eth_abi import encode
@@ -11,7 +11,7 @@ class CallBlock(NamedTuple):
 class ConditionalCommands:
     
     @staticmethod
-    def execute(command: str, args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def execute(command: str, args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Execute a conditional token command and return a call block for multicall.
         
@@ -38,7 +38,7 @@ class ConditionalCommands:
             raise ValueError(f"Unknown command: {command}")
     
     @staticmethod
-    def _split_position(args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def _split_position(args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Split collateral tokens into conditional YES/NO tokens.
         
@@ -72,7 +72,7 @@ class ConditionalCommands:
         )
     
     @staticmethod
-    def _merge_position(args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def _merge_position(args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Merge conditional YES/NO tokens back into collateral tokens.
         
@@ -106,7 +106,7 @@ class ConditionalCommands:
         )
     
     @staticmethod
-    def _wrap_tokens(args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def _wrap_tokens(args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Wrap regular tokens into wrapped tokens (e.g., GNO -> WXDAI).
         
@@ -134,7 +134,7 @@ class ConditionalCommands:
         )
     
     @staticmethod
-    def _unwrap_tokens(args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def _unwrap_tokens(args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Unwrap wrapped tokens back to regular tokens.
         
@@ -162,7 +162,7 @@ class ConditionalCommands:
         )
     
     @staticmethod
-    def _approve_token(args: Dict[str, Any], config: Dict[str, Any]) -> CallBlock:
+    def _approve_token(args: dict[str, Any], config: dict[str, Any]) -> CallBlock:
         """
         Approve token spending.
         
@@ -193,7 +193,7 @@ class ConditionalCommands:
         )
     
     @staticmethod
-    def build_split_sequence(amount: int, config: Dict[str, str]) -> List[CallBlock]:
+    def build_split_sequence(amount: int, config: dict[str, str]) -> list[CallBlock]:
         """
         Build a complete sequence for splitting tokens.
         
@@ -225,7 +225,7 @@ class ConditionalCommands:
         return calls
     
     @staticmethod
-    def build_merge_sequence(amount: int, config: Dict[str, str]) -> List[CallBlock]:
+    def build_merge_sequence(amount: int, config: dict[str, str]) -> list[CallBlock]:
         """
         Build a complete sequence for merging conditional tokens.
         

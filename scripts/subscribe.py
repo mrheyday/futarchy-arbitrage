@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import argparse
 import asyncio
@@ -8,7 +7,6 @@ import os
 import signal
 import sys
 import time
-from typing import Optional
 
 import websockets
 import requests

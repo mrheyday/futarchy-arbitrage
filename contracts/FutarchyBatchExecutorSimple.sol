@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.33;
 
 /**
  * @title FutarchyBatchExecutorSimple
@@ -7,6 +7,12 @@ pragma solidity 0.8.17;
  * @dev This is a minimal version that avoids features that generate 0xEF opcodes
  */
 contract FutarchyBatchExecutorSimple {
+
+    // Custom errors
+    error OnlySelf();
+    error LengthMismatch();
+    error CallFailed();
+
     // Events
     event CallExecuted(uint256 index, bool success);
     event BatchExecuted(uint256 callsExecuted);
@@ -18,25 +24,27 @@ contract FutarchyBatchExecutorSimple {
      * @param values Array of ETH values
      * @param calldatas Array of calldata
      */
-    function execute(
-        address[] calldata targets,
-        uint256[] calldata values,
-        bytes[] calldata calldatas
-    ) external payable {
+    function execute(address[] calldata targets, uint256[] calldata values, bytes[] calldata calldatas)
+        external
+        payable
+    {
         // Ensure the caller is the contract itself (EIP-7702 self-execution)
-        require(msg.sender == address(this), "Only self");
-        
+        if (msg.sender != address(this)) revert OnlySelf();
+
         // Ensure arrays have same length
-        require(targets.length == values.length, "Length mismatch");
-        require(targets.length == calldatas.length, "Length mismatch");
-        
+        if (targets.length != values.length) revert LengthMismatch();
+        if (targets.length != calldatas.length) revert LengthMismatch();
+
         // Execute all calls
-        for (uint256 i = 0; i < targets.length; i++) {
+        for (uint256 i = 0; i < targets.length;) {
             (bool success,) = targets[i].call{value: values[i]}(calldatas[i]);
-            require(success, "Call failed");
+            if (!success) revert CallFailed();
             emit CallExecuted(i, success);
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(targets.length);
     }
 
@@ -47,24 +55,27 @@ contract FutarchyBatchExecutorSimple {
      * @param calldatas Array of calldata
      * @return results Array of return data
      */
-    function executeWithResults(
-        address[] calldata targets,
-        uint256[] calldata values,
-        bytes[] calldata calldatas
-    ) external payable returns (bytes[] memory results) {
-        require(msg.sender == address(this), "Only self");
-        require(targets.length == values.length, "Length mismatch");
-        require(targets.length == calldatas.length, "Length mismatch");
-        
+    function executeWithResults(address[] calldata targets, uint256[] calldata values, bytes[] calldata calldatas)
+        external
+        payable
+        returns (bytes[] memory results)
+    {
+        if (msg.sender != address(this)) revert OnlySelf();
+        if (targets.length != values.length) revert LengthMismatch();
+        if (targets.length != calldatas.length) revert LengthMismatch();
+
         results = new bytes[](targets.length);
-        
-        for (uint256 i = 0; i < targets.length; i++) {
+
+        for (uint256 i = 0; i < targets.length;) {
             (bool success, bytes memory result) = targets[i].call{value: values[i]}(calldatas[i]);
-            require(success, "Call failed");
+            if (!success) revert CallFailed();
             results[i] = result;
             emit CallExecuted(i, success);
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(targets.length);
     }
 
@@ -72,4 +83,5 @@ contract FutarchyBatchExecutorSimple {
      * @notice Simple receive function
      */
     receive() external payable {}
+
 }

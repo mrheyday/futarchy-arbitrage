@@ -6,7 +6,7 @@ import os
 import hashlib
 import tempfile
 from pathlib import Path
-from typing import Optional, Dict, Any, Tuple
+from typing import Any
 
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
@@ -25,7 +25,7 @@ def _normalize_privkey_hex(pk: str) -> str:
     return "0x" + pk
 
 
-def resolve_password(cli_pass: Optional[str], pass_env: Optional[str], pk_env_name: Optional[str] = None) -> str:
+def resolve_password(cli_pass: str | None, pass_env: str | None, pk_env_name: str | None = None) -> str:
     """Resolve keystore password from CLI or environment variable name.
 
     Precedence: cli_pass > env[pass_env] > env["WALLET_KEYSTORE_PASSWORD"].
@@ -52,23 +52,23 @@ def resolve_password(cli_pass: Optional[str], pass_env: Optional[str], pk_env_na
     )
 
 
-def encrypt_private_key(private_key_hex: str, password: str) -> Tuple[Dict[str, Any], str]:
+def encrypt_private_key(private_key_hex: str, password: str) -> tuple[dict[str, Any], str]:
     """Encrypt a private key into a keystore JSON and return (keystore, checksum address)."""
     priv = _normalize_privkey_hex(private_key_hex)
     acct: LocalAccount = Account.from_key(priv)
-    keystore: Dict[str, Any] = Account.encrypt(priv, password)
+    keystore: dict[str, Any] = Account.encrypt(priv, password)
     address = to_checksum_address(acct.address)
     return keystore, address
 
 
-def decrypt_keystore(keystore_json: Dict[str, Any], password: str) -> str:
+def decrypt_keystore(keystore_json: dict[str, Any], password: str) -> str:
     """Decrypt a keystore JSON and return the 0x-prefixed private key hex string."""
     key_bytes = Account.decrypt(keystore_json, password)
     # Ensure plain bytes before hex() to avoid leading '0x' from HexBytes.hex()
     return "0x" + bytes(key_bytes).hex()
 
 
-def write_json_atomic(path: Path, data: Dict[str, Any]) -> None:
+def write_json_atomic(path: Path, data: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_fd, tmp_path = tempfile.mkstemp(prefix="keystore_", suffix=".tmp", dir=str(path.parent))
     try:
@@ -85,8 +85,8 @@ def write_json_atomic(path: Path, data: Dict[str, Any]) -> None:
             pass
 
 
-def read_json(path: Path) -> Dict[str, Any]:
-    with open(path, "r") as f:
+def read_json(path: Path) -> dict[str, Any]:
+    with open(path) as f:
         return json.load(f)
 
 
@@ -95,14 +95,14 @@ def keystore_filename(address: str) -> str:
     return f"{addr}.json"
 
 
-def write_keystore(out_dir: Path, address: str, keystore_json: Dict[str, Any]) -> Path:
+def write_keystore(out_dir: Path, address: str, keystore_json: dict[str, Any]) -> Path:
     filename = keystore_filename(address)
     dest = out_dir / filename
     write_json_atomic(dest, keystore_json)
     return dest
 
 
-def read_keystore(path: Path) -> Dict[str, Any]:
+def read_keystore(path: Path) -> dict[str, Any]:
     return read_json(path)
 
 
@@ -127,7 +127,7 @@ def write_env_private_key(out_dir: Path, address: str, private_key_hex: str) -> 
     return env_path
 
 
-def derive_privkey_from_mnemonic(mnemonic: str, path: str) -> Tuple[str, str]:
+def derive_privkey_from_mnemonic(mnemonic: str, path: str) -> tuple[str, str]:
     """Derive a private key and address from a BIP-32/44 path using a BIP-39 mnemonic.
 
     Returns (private_key_hex, checksum_address).

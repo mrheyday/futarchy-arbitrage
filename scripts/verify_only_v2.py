@@ -17,7 +17,7 @@ def encode_constructor_args(deployer_address):
 def main():
     # Load deployment info
     try:
-        with open('deployment_info_v2.json', 'r') as f:
+        with open('deployment_info_v2.json') as f:
             deployment_info = json.load(f)
     except FileNotFoundError:
         print("❌ deployment_info_v2.json not found")
@@ -30,7 +30,7 @@ def main():
     print(f"👤 Deployer: {deployer_address}")
     
     # Read contract source
-    with open('contracts/FutarchyArbitrageExecutorV2.sol', 'r') as f:
+    with open('contracts/FutarchyArbitrageExecutorV2.sol') as f:
         source_code = f.read()
     
     # Check API key
