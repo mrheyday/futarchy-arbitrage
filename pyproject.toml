@@ -5,38 +5,127 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "futarchy-arbitrage"
 version = "1.0.0"
-description = "Futarchy arbitrage bot for Gnosis Chain"
+description = "Futarchy arbitrage bot for Gnosis Chain - exploits price discrepancies between Balancer and Swapr pools"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10,<3.15"
+license = {text = "MIT"}
+authors = [
+    {name = "Futarchy Team", email = "dev@futarchy.fi"}
+]
+keywords = ["futarchy", "arbitrage", "gnosis-chain", "defi", "mev", "balancer", "swapr"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
 dependencies = [
-    "web3==6.11.1",
-    "eth-account==0.11.3",
-    "eth-utils",
-    "eth-keys",
-    "requests",
-    "python-dotenv",
-    "supabase",
-    "tabulate",
+    "web3>=7.0.0",
+    "eth-account>=0.13.0",
+    "eth-utils>=4.0.0",
+    "eth-keys>=0.5.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+    "supabase>=2.0.0",
+    "tabulate>=0.9.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "black",
-    "isort",
-    "mypy",
-    "flake8",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "flake8>=6.1.0",
+    "pylint>=2.17.0",
 ]
+eip7702 = [
+    # EIP-7702 specific dependencies (if any)
+    "eth-tester>=0.9.0",
+]
+all = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "mypy>=1.5.0",
+    "flake8>=6.1.0",
+    "pylint>=2.17.0",
+    "eth-tester>=0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/futarchy-fi/futarchy-arbitrage"
+Documentation = "https://github.com/futarchy-fi/futarchy-arbitrage/blob/master/README.md"
+Repository = "https://github.com/futarchy-fi/futarchy-arbitrage"
+Issues = "https://github.com/futarchy-fi/futarchy-arbitrage/issues"
+
+[project.scripts]
+futarchy-bot = "src.arbitrage_commands.simple_bot:main"
+futarchy-eip7702 = "src.arbitrage_commands.eip7702_bot:main"
 
 [tool.black]
 line-length = 120
-target-version = ['py39']
+target-version = ['py310', 'py311', 'py312', 'py313', 'py314']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | futarchy_env
+  | build
+  | dist
+  | out
+  | lib
+)/
+'''
 
 [tool.isort]
 profile = "black"
 line_length = 120
+skip_glob = ["venv/*", "futarchy_env/*", "lib/*", "out/*"]
 
 [tool.mypy]
 python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+exclude = [
+    "venv",
+    "futarchy_env",
+    "lib",
+    "out",
+    "build",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/venv/*",
+    "*/futarchy_env/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

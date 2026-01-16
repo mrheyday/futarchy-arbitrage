@@ -12,8 +12,89 @@ This is a futarchy arbitrage bot for Gnosis Chain that monitors price discrepanc
 
 ## Environment Setup
 
+### Automated Setup (Recommended)
+
+The project includes an automated setup script that handles Python environment creation, dependency installation, and toolchain setup.
+
+#### Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/futarchy-fi/futarchy-arbitrage.git
+cd futarchy-arbitrage
+
+# Run automated setup
+./setup.sh
+```
+
+#### What the Setup Script Does
+
+1. **Python Version Detection**
+   - Validates Python 3.9.23 (or 3.9.x) is installed
+   - Provides platform-specific installation instructions if not found
+   - Uses `.python-version` file for version pinning
+
+2. **Virtual Environment Creation**
+   - Creates `futarchy_env/` virtual environment
+   - Prompts before overwriting existing environments
+   - Activates environment automatically
+
+3. **Dependency Installation**
+   - Upgrades pip, setuptools, and wheel
+   - Installs from `requirements.txt`
+   - Installs package in editable mode via `pyproject.toml`
+   - Optionally installs dev dependencies (pytest, black, mypy)
+
+4. **Solidity Toolchain Setup**
+   - Checks for `solc` (Solidity compiler)
+   - Optionally installs solc 0.8.33
+   - Checks for Foundry (forge)
+   - Optionally installs Foundry toolchain
+
+#### Manual Setup
+
+If you prefer manual setup or the automated script fails:
+
+```bash
+# Create virtual environment
+python3.9 -m venv futarchy_env
+
+# Activate environment
+source futarchy_env/bin/activate
+
+# Install dependencies
+pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+pip install -e .
+
+# Install dev dependencies (optional)
+pip install -e ".[dev]"
+
+# Install Foundry (for Solidity compilation)
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+
+### Python Version Management
+
+The project requires Python 3.9.x. We recommend using `pyenv` for managing Python versions:
+
+```bash
+# Install pyenv (macOS)
+brew install pyenv
+
+# Install Python 3.9.23
+pyenv install 3.9.23
+pyenv local 3.9.23
+
+# Run setup
+./setup.sh
+```
+
+### Environment Variables
+
 The project uses Python virtual environments. Two common environments are used:
-- `futarchy_env/` - Main virtual environment
+- `futarchy_env/` - Main virtual environment (created by setup.sh)
 - `venv/` - Alternative virtual environment
 
 Environment files follow the pattern `.env.0x<address>` where the address corresponds to different futarchy market addresses.
