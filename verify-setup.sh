@@ -15,12 +15,16 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 
 SUCCESS=0
 WARNINGS=0
 FAILURES=0
 
 check_pass() {
+<<<<<<< Updated upstream
 	echo -e "${GREEN}✓${NC} $1"
 	((SUCCESS++))
 }
@@ -40,6 +44,8 @@ WARNINGS=0
 FAILURES=0
 
 check_pass() {
+=======
+>>>>>>> Stashed changes
     echo -e "${GREEN}✓${NC} $1"
     ((SUCCESS++))
 }
@@ -52,11 +58,15 @@ check_warn() {
 check_fail() {
     echo -e "${RED}✗${NC} $1"
     ((FAILURES++))
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
 # Check Python version
 echo "Checking Python installation..."
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 if command -v python3 &>/dev/null; then
 	PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
@@ -69,6 +79,8 @@ if command -v python3 &>/dev/null; then
 else
 	check_fail "Python 3 not found"
 =======
+=======
+>>>>>>> Stashed changes
 if command -v python3 &> /dev/null; then
     PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
     REQUIRED_VERSION="3.9"
@@ -79,6 +91,9 @@ if command -v python3 &> /dev/null; then
     fi
 else
     check_fail "Python 3 not found"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -86,6 +101,7 @@ fi
 echo ""
 echo "Checking virtual environment..."
 if [ -d "futarchy_env" ]; then
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	check_pass "Virtual environment 'futarchy_env' exists"
 
@@ -134,6 +150,8 @@ else
 fi
 
 =======
+=======
+>>>>>>> Stashed changes
     check_pass "Virtual environment 'futarchy_env' exists"
     
     # Check if venv is activated
@@ -180,11 +198,15 @@ else
     check_warn "solc not found (using Foundry's built-in solc)"
 fi
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 # Check Git submodules
 echo ""
 echo "Checking Git submodules..."
 if [ -d "lib/solady/.git" ]; then
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	check_pass "Solady submodule initialized"
 
@@ -200,6 +222,8 @@ if [ -d "lib/solady/.git" ]; then
 else
 	check_fail "Solady submodule not initialized (run: git submodule update --init --recursive)"
 =======
+=======
+>>>>>>> Stashed changes
     check_pass "Solady submodule initialized"
     
     # Check if on clz branch
@@ -213,6 +237,9 @@ else
     cd ../..
 else
     check_fail "Solady submodule not initialized (run: git submodule update --init --recursive)"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -220,6 +247,7 @@ fi
 echo ""
 echo "Checking configuration files..."
 if [ -f "foundry.toml" ]; then
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	check_pass "foundry.toml exists"
 
@@ -245,6 +273,8 @@ if [ -f ".python-version" ]; then
 else
 	check_warn ".python-version file not found"
 =======
+=======
+>>>>>>> Stashed changes
     check_pass "foundry.toml exists"
     
     # Check for Osaka EVM
@@ -268,6 +298,9 @@ if [ -f ".python-version" ]; then
     check_pass ".python-version file exists (specifies $PYTHON_VERSION_FILE)"
 else
     check_warn ".python-version file not found"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -277,9 +310,15 @@ echo "Checking environment files..."
 ENV_FILES=$(find . -maxdepth 1 -name ".env.0x*" | wc -l)
 if [ "$ENV_FILES" -gt 0 ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	check_pass "Found $ENV_FILES environment file(s)"
 else
 	check_warn "No .env.0x* files found (market-specific configuration)"
+=======
+    check_pass "Found $ENV_FILES environment file(s)"
+else
+    check_warn "No .env.0x* files found (market-specific configuration)"
+>>>>>>> Stashed changes
 =======
     check_pass "Found $ENV_FILES environment file(s)"
 else
@@ -292,15 +331,21 @@ echo ""
 echo "Checking compiled contracts..."
 if [ -d "out" ] && [ "$(ls -A out 2>/dev/null)" ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	CONTRACT_COUNT=$(find out -name "*.json" | wc -l)
 	check_pass "Contracts compiled ($CONTRACT_COUNT artifacts)"
 else
 	check_warn "No compiled contracts found (run: forge build)"
 =======
+=======
+>>>>>>> Stashed changes
     CONTRACT_COUNT=$(find out -name "*.json" | wc -l)
     check_pass "Contracts compiled ($CONTRACT_COUNT artifacts)"
 else
     check_warn "No compiled contracts found (run: forge build)"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -311,9 +356,15 @@ DOCS=("docs/API_MAP.md" "docs/SCRIPTS_INDEX.md" "docs/BUILD_SUMMARY.md" "docs/CL
 DOC_COUNT=0
 for doc in "${DOCS[@]}"; do
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	if [ -f "$doc" ]; then
 		((DOC_COUNT++))
 	fi
+=======
+    if [ -f "$doc" ]; then
+        ((DOC_COUNT++))
+    fi
+>>>>>>> Stashed changes
 =======
     if [ -f "$doc" ]; then
         ((DOC_COUNT++))
@@ -329,20 +380,27 @@ echo "Verification Summary:"
 echo -e "${GREEN}✓ Passed: $SUCCESS${NC}"
 if [ "$WARNINGS" -gt 0 ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	echo -e "${YELLOW}⚠ Warnings: $WARNINGS${NC}"
 fi
 if [ "$FAILURES" -gt 0 ]; then
 	echo -e "${RED}✗ Failed: $FAILURES${NC}"
 =======
+=======
+>>>>>>> Stashed changes
     echo -e "${YELLOW}⚠ Warnings: $WARNINGS${NC}"
 fi
 if [ "$FAILURES" -gt 0 ]; then
     echo -e "${RED}✗ Failed: $FAILURES${NC}"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 echo ""
 
 if [ "$FAILURES" -eq 0 ]; then
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	echo -e "${GREEN}✅ Environment is ready for development!${NC}"
 	exit 0
@@ -357,6 +415,8 @@ else
 	echo "  - Compile contracts: forge build"
 	exit 1
 =======
+=======
+>>>>>>> Stashed changes
     echo -e "${GREEN}✅ Environment is ready for development!${NC}"
     exit 0
 else

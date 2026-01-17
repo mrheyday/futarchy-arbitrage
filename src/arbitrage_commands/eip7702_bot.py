@@ -28,9 +28,12 @@ from eth_account import Account
 from src.config.logging_config import setup_logger, log_trade, log_price_check
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # Import alerts
 from src.monitoring.telegram_alerts import create_alerter_from_env
 =======
+=======
+>>>>>>> Stashed changes
 # Import tracing
 from src.helpers.tracing import (
     get_tracer,
@@ -39,6 +42,9 @@ from src.helpers.tracing import (
     trace_event,
     auto_instrument_requests,
 )
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 # Import price fetching utilities
@@ -54,15 +60,21 @@ from src.helpers.bundle_helpers import get_token_balance
 from src.config.network import DEFAULT_RPC_URLS
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # Initialize logger
 logger = setup_logger("eip7702_bot", level=10)  # DEBUG level
 =======
+=======
+>>>>>>> Stashed changes
 # Initialize logger and tracer
 logger = setup_logger("eip7702_bot", level=10)  # DEBUG level
 tracer = get_tracer(service_name="eip7702-arb-bot")
 
 # Auto-instrument HTTP requests for tracing
 auto_instrument_requests()
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 # Constants
@@ -302,6 +314,7 @@ def execute_arbitrage(
         Transaction result dictionary
     """
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     try:
         if action == 'buy':
             # Buy conditional tokens and sell Company on Balancer
@@ -367,6 +380,43 @@ def execute_arbitrage(
             
             # Record outcome
             if result.get('status') == 'success':
+=======
+    # Determine cheaper token based on action
+    cheaper_token = "yes" if action == 'buy' else "no"
+    
+    with trace_trade_execution(action.upper(), amount, cheaper_token, flow_type="eip7702"):
+        try:
+            trace_event("arbitrage_started", 
+                       action=action, 
+                       amount=str(amount), 
+                       dry_run=dry_run)
+            
+            if action == 'buy':
+                # Buy conditional tokens and sell Company on Balancer
+                logger.info(f"Executing BUY conditional with {amount} sDAI")
+                with tracer.start_span("buy_conditional_flow"):
+                    result = buy_conditional_simple(
+                        amount_sdai=amount,
+                        skip_balancer=False  # Include Balancer swap
+                    )
+            elif action == 'sell':
+                # Buy Company on Balancer and sell conditional tokens
+                logger.info(f"Executing SELL conditional with {amount} sDAI")
+                with tracer.start_span("sell_conditional_flow"):
+                    # Skip merge to stay within 10-operation limit
+                    # This leaves us with conditional sDAI that can be merged later
+                    result = sell_conditional_simple(
+                        amount_sdai=amount,
+                        skip_merge=True  # Skip merge to stay within 10 ops
+                    )
+                    if result.get('status') == 'success':
+                        logger.info("Note: Conditional sDAI tokens held (merge skipped for 10-op limit)")
+            else:
+                raise ValueError(f"Unknown action: {action}")
+            
+            # Record outcome
+            if result.get('status') == 'success':
+>>>>>>> Stashed changes
                 trace_event("arbitrage_success", 
                            tx_hash=result.get('tx_hash', 'N/A'),
                            gas_used=str(result.get('gas_used', 0)))
@@ -381,6 +431,9 @@ def execute_arbitrage(
                 'status': 'error',
                 'error': str(e)
             }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 
@@ -426,6 +479,7 @@ def run_bot(
     logger.info(f"Mode: {'DRY RUN' if dry_run else 'LIVE'}")
     logger.debug("")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     
     # Send bot start notification
     if telegram:
@@ -444,6 +498,8 @@ def run_bot(
             logger.error(f"Failed to send Telegram alert: {e}")
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     
     while max_iterations is None or iteration < max_iterations:
         try:
@@ -457,6 +513,7 @@ def run_bot(
                 continue
             
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             # Fetch current prices
             prices = fetch_all_prices(w3)
             
@@ -466,6 +523,8 @@ def run_bot(
             logger.debug(f"BAL  pool: 1 {prices['bal_base']} = {prices['balancer_price']:.6f} {prices['bal_quote']}")
             logger.debug(f"Ideal price: {prices['ideal_price']:.6f}")
 =======
+=======
+>>>>>>> Stashed changes
             # Fetch current prices with tracing
             with trace_price_check("futarchy_market", 
                                   balancer_price=Decimal(str(0)),
@@ -485,6 +544,9 @@ def run_bot(
                     "price.yes": str(prices['yes_price']),
                     "price.no": str(prices['no_price']),
                 })
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             
             # Calculate opportunity
@@ -511,6 +573,7 @@ def run_bot(
                         logger.info(f"  TX: {result.get('tx_hash')}")
                         logger.info(f"  Gas used: {result.get('gas_used')}")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         
                         # Send Telegram alert for successful trade
                         if telegram:
@@ -529,6 +592,8 @@ def run_bot(
                                 logger.error(f"Failed to send Telegram alert: {e}")
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
                         
                         # Show final balances
                         if action == 'buy':
@@ -539,6 +604,7 @@ def run_bot(
                         consecutive_errors = 0
                     else:
                         logger.error(f" Arbitrage failed: {result.get('error', 'Unknown error')}")
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
                         
                         # Send Telegram alert for failed trade
@@ -551,6 +617,8 @@ def run_bot(
                             except Exception as e:
                                 logger.error(f"Failed to send Telegram alert: {e}")
                         
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
                         consecutive_errors += 1

@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 "web3>=7.0.0",
 "eth-account>=0.13.0",
 "eth-utils>=4.0.0",
@@ -19,6 +20,8 @@ dependencies = [
 "supabase",
 "tabulate",
 =======
+=======
+>>>>>>> Stashed changes
   "web3==6.11.1",
   "eth-account==0.11.3",
   "eth-utils",
@@ -27,11 +30,15 @@ dependencies = [
   "python-dotenv",
   "supabase",
   "tabulate",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "black", "isort", "mypy", "flake8"]
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 [project.scripts]
@@ -46,6 +53,8 @@ futarchy-deploy-solver = "scripts.deploy_institutional_solver:main"
 
 # Verification Tools
 futarchy-verify = "scripts.verify_contract:main"
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 

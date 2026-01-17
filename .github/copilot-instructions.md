@@ -14,10 +14,14 @@ Gnosis Chain arbitrage bot that exploits price discrepancies between **Balancer*
 =======
 ### Core Trading Flow
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ```
 ideal_price = prediction_price × yes_price + (1 - prediction_price) × no_price
 ```
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 
 The bot monitors Balancer and Swapr pools, detecting when **both** YES and NO prices diverge from this ideal. Two flows:
@@ -38,6 +42,8 @@ The bot monitors Balancer and Swapr pools, detecting when **both** YES and NO pr
 | **Prediction Arbitrage** | `arbitrage_bot_v2.py` | `PredictionArbExecutorV1.sol` | Prediction token trades (new) |
 | **Institutional Solver** | `unified_bot.py` | `InstitutionalSolverSystem.sol` | Multi-market coordination (new) |
 =======
+=======
+>>>>>>> Stashed changes
 
 - **Buy flow** (`buy_cond.py`): Split sDAI → swap to conditional Company tokens → merge → sell on Balancer
 - **Sell flow** (`sell_cond.py`): Buy Company on Balancer → split → swap conditional tokens → merge sDAI
@@ -80,6 +86,7 @@ For PNK markets, multi-hop routing through WETH: `sDAI → WETH (Balancer Vault)
 EIP-7702 uses `PectraWrapper.sol` for delegation; sequential uses Tenderly simulation then multi-tx execution. Prediction arbitrage adds V1 executor for non-conditional markets. Institutional Solver enables centralized multi-market orchestration.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ### PNK/Kleros Markets (Special Case)
 
 No direct sDAI↔PNK pool exists. Route: `sDAI → WETH (Balancer Vault batchSwap) → PNK (Swapr v2)`.
@@ -97,6 +104,13 @@ src/helpers/                # Building blocks (swaps, splits, merges, EIP-7702 b
 src/config/                 # Network, contracts, ABIs, tokens
 src/setup/                  # Market data fetching from Supabase
 contracts/                  # Solidity V2→V5 executors, PectraWrapper, SafetyModule
+=======
+### Environment Setup
+
+```bash
+source futarchy_env/bin/activate
+source .env.0x<PROPOSAL_ADDRESS>  # Market-specific addresses
+>>>>>>> Stashed changes
 ```
 
 ## Environment & Workflow
@@ -118,6 +132,9 @@ Environment files (`.env.0x...`) contain pool/token addresses for each futarchy 
 
 ### Running Bots
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ```bash
 python -m src.setup.fetch_market_data --proposal --update-env .env.0x<PROPOSAL_ADDRESS>
@@ -191,6 +208,9 @@ The project has migrated to Python 3.14 with `uv` package manager for faster bui
 =======
 ### Solidity Contracts
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 ```bash
 # Install dependencies with uv (fast, parallel)

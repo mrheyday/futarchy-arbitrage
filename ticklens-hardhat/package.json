@@ -22,6 +22,9 @@
     "hardhat": "^2.23.0"
 =======
     "hardhat": "^2.22.9"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   }
 }

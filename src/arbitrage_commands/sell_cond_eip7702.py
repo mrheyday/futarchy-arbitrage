@@ -131,6 +131,7 @@ def build_sell_conditional_bundle(
     # 9. Merge sDAI
     calls.append(encode_merge(FUTARCHY_ROUTER, proposal, collateral_token, amount_in))
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     return calls
 
@@ -252,6 +253,10 @@ def sell_conditional_simple(
             "error": str(e),
             "tx_hash": None,
         }
+=======
+    
+    return calls
+>>>>>>> Stashed changes
 =======
     
     return calls

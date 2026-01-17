@@ -17,6 +17,7 @@ function getAccounts() {
 module.exports = {
   solidity: {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     version: "0.8.33",
     settings: { optimizer: { enabled: true, runs: 1000000 } },
     via_ir: true
@@ -24,6 +25,14 @@ module.exports = {
   networks: {
     gnosis: {
       url: GNOSIS_RPC || "https://rpc.gnosischain.com",
+=======
+    version: "0.8.20",
+    settings: { optimizer: { enabled: true, runs: 1000000 } },
+  },
+  networks: {
+    gnosis: {
+      url: RPC_FALLBACK || "https://rpc.gnosischain.com",
+>>>>>>> Stashed changes
 =======
     version: "0.8.20",
     settings: { optimizer: { enabled: true, runs: 1000000 } },
@@ -48,11 +57,15 @@ module.exports = {
   },
   etherscan: {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     apiKey: {
       gnosis: GNOSISSCAN_API_KEY || "",
       base: BASESCAN_API_KEY || "",
       base_sepolia: BASESCAN_API_KEY || "",
     },
+=======
+    apiKey: { gnosis: GNOSISSCAN_API_KEY || "" },
+>>>>>>> Stashed changes
 =======
     apiKey: { gnosis: GNOSISSCAN_API_KEY || "" },
 >>>>>>> Stashed changes
@@ -63,6 +76,7 @@ module.exports = {
         urls: {
           apiURL: "https://api.gnosisscan.io/api",
           browserURL: "https://gnosisscan.io",
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
         },
       },
@@ -80,6 +94,8 @@ module.exports = {
         urls: {
           apiURL: "https://api-sepolia.basescan.org/api",
           browserURL: "https://sepolia.basescan.org",
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         },

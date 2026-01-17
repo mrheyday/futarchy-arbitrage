@@ -395,10 +395,17 @@ contract InstitutionalSolverSystem is TransientReentrancyGuard {
         emit BLSKeyRegistered(msg.sender, pubKey);
     }
 
+<<<<<<< Updated upstream
     function verifySolverBLS(address solver, uint256[4] calldata signature, uint256[4] calldata message)
         external
         view
         returns (bool)
+=======
+    function verifySolverBLS(address solver, uint256[4] calldata signature, uint256[4] calldata message) 
+        external 
+        view 
+        returns (bool) 
+>>>>>>> Stashed changes
     {
         return LibBLS.verifySignature(blsPublicKeys[solver], signature, message);
     }

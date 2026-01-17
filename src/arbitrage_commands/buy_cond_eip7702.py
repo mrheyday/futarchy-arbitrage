@@ -82,6 +82,7 @@ def build_buy_conditional_bundle(
     recipient: str
 ) -> List[Dict[str, Any]]:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     """
     Build the sequence of calls for Buy Conditional Arb.
     Flow: Split sDAI -> Swap YES/NO sDAI to Company -> Merge Company -> Sell Company for sDAI
@@ -216,6 +217,9 @@ def buy_conditional_simple(
         }
 =======
     """
+=======
+    """
+>>>>>>> Stashed changes
     Build the sequence of calls for Buy Conditional Arb.
     Flow: Split sDAI -> Swap YES/NO sDAI to Company -> Merge Company -> Sell Company for sDAI
     """
@@ -236,5 +240,9 @@ def buy_conditional_simple(
     
     # ... (Add remaining steps: Swap NO, Merge, Sell on Balancer)
     
+<<<<<<< Updated upstream
+    return calls
+>>>>>>> Stashed changes
+=======
     return calls
 >>>>>>> Stashed changes

@@ -11,7 +11,11 @@ echo "🚀 Setting up Futarchy Arbitrage Bot environment..."
 REQUIRED_PYTHON="3.9"
 if [ -f ".python-version" ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	REQUIRED_PYTHON=$(cat .python-version | cut -d. -f1,2)
+=======
+    REQUIRED_PYTHON=$(cat .python-version | cut -d. -f1,2)
+>>>>>>> Stashed changes
 =======
     REQUIRED_PYTHON=$(cat .python-version | cut -d. -f1,2)
 >>>>>>> Stashed changes
@@ -22,6 +26,7 @@ echo "📦 Checking for Python ${REQUIRED_PYTHON}..."
 # Try to find the best Python version
 PYTHON_CMD=""
 for cmd in python${REQUIRED_PYTHON} python3.9 python3; do
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	if command -v "$cmd" &>/dev/null; then
 		VERSION=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
@@ -39,6 +44,8 @@ if [ -z "$PYTHON_CMD" ]; then
 	echo "  macOS: brew install python@${REQUIRED_PYTHON}"
 	exit 1
 =======
+=======
+>>>>>>> Stashed changes
     if command -v "$cmd" &> /dev/null; then
         VERSION=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
         if [[ "$VERSION" == "$REQUIRED_PYTHON"* ]]; then
@@ -62,23 +69,30 @@ echo "✅ Found Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
 # Check for venv module
 echo "📦 Checking for venv module..."
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 if ! $PYTHON_CMD -m venv --help &>/dev/null; then
 	echo "❌ Python venv module not found!"
 	echo "Please install it:"
 	echo "  Ubuntu/Debian: sudo apt-get install python${REQUIRED_PYTHON}-venv"
 	exit 1
 =======
+=======
+>>>>>>> Stashed changes
 if ! $PYTHON_CMD -m venv --help &> /dev/null; then
     echo "❌ Python venv module not found!"
     echo "Please install it:"
     echo "  Ubuntu/Debian: sudo apt-get install python${REQUIRED_PYTHON}-venv"
     exit 1
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
 # Create virtual environment
 VENV_DIR="futarchy_env"
 if [ -d "$VENV_DIR" ]; then
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 	echo "⚠️  Virtual environment '$VENV_DIR' already exists."
 	read -p "Do you want to recreate it? (y/N): " -n 1 -r
@@ -95,6 +109,8 @@ if [ ! -d "$VENV_DIR" ]; then
 	echo "🔧 Creating virtual environment in '$VENV_DIR'..."
 	$PYTHON_CMD -m venv "$VENV_DIR"
 =======
+=======
+>>>>>>> Stashed changes
     echo "⚠️  Virtual environment '$VENV_DIR' already exists."
     read -p "Do you want to recreate it? (y/N): " -n 1 -r
     echo
@@ -109,6 +125,9 @@ fi
 if [ ! -d "$VENV_DIR" ]; then
     echo "🔧 Creating virtual environment in '$VENV_DIR'..."
     $PYTHON_CMD -m venv "$VENV_DIR"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -125,9 +144,15 @@ pip install --upgrade pip
 echo "📦 Installing dependencies from requirements.txt..."
 if [ -f "requirements.txt" ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	pip install -r requirements.txt
 else
 	echo "⚠️  requirements.txt not found, skipping dependency installation"
+=======
+    pip install -r requirements.txt
+else
+    echo "⚠️  requirements.txt not found, skipping dependency installation"
+>>>>>>> Stashed changes
 =======
     pip install -r requirements.txt
 else
@@ -138,6 +163,7 @@ fi
 # Install development dependencies if pyproject.toml exists
 if [ -f "pyproject.toml" ]; then
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	echo "📦 Installing package in editable mode..."
 	pip install -e .
 
@@ -147,6 +173,8 @@ if [ -f "pyproject.toml" ]; then
 		pip install -e ".[dev]"
 	fi
 =======
+=======
+>>>>>>> Stashed changes
     echo "📦 Installing package in editable mode..."
     pip install -e .
     
@@ -155,11 +183,15 @@ if [ -f "pyproject.toml" ]; then
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         pip install -e ".[dev]"
     fi
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
 # Check for Solidity compiler
 echo "🔧 Checking for Solidity compiler..."
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 if ! command -v solc &>/dev/null; then
 	echo "⚠️  Solidity compiler (solc) not found!"
@@ -175,6 +207,8 @@ if ! command -v solc &>/dev/null; then
 else
 	echo "✅ Found solc: $(solc --version | head -1)"
 =======
+=======
+>>>>>>> Stashed changes
 if ! command -v solc &> /dev/null; then
     echo "⚠️  Solidity compiler (solc) not found!"
     read -p "Do you want to install solc 0.8.24? (y/N): " -n 1 -r
@@ -188,6 +222,9 @@ if ! command -v solc &> /dev/null; then
     fi
 else
     echo "✅ Found solc: $(solc --version | head -1)"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 fi
 
@@ -205,7 +242,11 @@ echo "  4. Run the bot:"
 echo "     python -m src.arbitrage_commands.simple_bot --amount 0.01 --interval 120 --tolerance 0.2"
 echo ""
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 echo "For more information, see README.md and CLAUDE.md"
+=======
+echo "For more information, see README.md and CLAUDE.md"
+>>>>>>> Stashed changes
 =======
 echo "For more information, see README.md and CLAUDE.md"
 >>>>>>> Stashed changes

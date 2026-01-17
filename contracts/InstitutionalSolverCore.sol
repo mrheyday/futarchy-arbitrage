@@ -135,11 +135,19 @@ library ReputationSystem {
         uint256 logScale = 255 - leadingZeros;
         // forge-lint: disable-next-line(unsafe-typecast)
         int256 scaledDelta = delta * int256(logScale) / 256;
+<<<<<<< Updated upstream
 
         int256 currentRep = state.reputation[solver];
         int256 newRep = currentRep + scaledDelta;
         if (newRep < 0) newRep = 0;
 
+=======
+        
+        int256 currentRep = state.reputation[solver];
+        int256 newRep = currentRep + scaledDelta;
+        if (newRep < 0) newRep = 0;
+        
+>>>>>>> Stashed changes
         if (newRep != currentRep) state.reputation[solver] = newRep;
         emit ReputationUpdated(solver, scaledDelta);
         if (newRep == 0 && currentRep > 0) {

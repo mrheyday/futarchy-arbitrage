@@ -48,6 +48,7 @@ python3 scripts/example_compilation.py FutarchyArbExecutorV5
 ### Contract Deployment
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 | Script                                 | Purpose                      | Contract                    | Notes                             |
 | -------------------------------------- | ---------------------------- | --------------------------- | --------------------------------- |
 | `deploy_executor_v5_precompiled.py` ⭐ | **Deploy V5 (pre-compiled)** | FutarchyArbExecutorV5       | **NEW** - Uses artifacts/, faster |
@@ -58,6 +59,8 @@ python3 scripts/example_compilation.py FutarchyArbExecutorV5
 | `deploy_ticklens.py`                   | Deploy TickLens utility      | TickLens                    | Tick data reading                 |
 | `deploy_and_verify_v2.py`              | Deploy + verify V2           | FutarchyArbitrageExecutorV2 | Legacy                            |
 =======
+=======
+>>>>>>> Stashed changes
 | Script                           | Purpose                     | Contract                    | Notes                            |
 | -------------------------------- | --------------------------- | --------------------------- | -------------------------------- |
 | `deploy_executor_v4.py`          | Deploy V4 executor          | FutarchyArbExecutorV4       | EIP-7702 support                 |
@@ -66,6 +69,9 @@ python3 scripts/example_compilation.py FutarchyArbExecutorV5
 | `deploy_institutional_solver.py` | Deploy institutional solver | InstitutionalSolverSystem   | Full solver system               |
 | `deploy_ticklens.py`             | Deploy TickLens utility     | TickLens                    | Tick data reading                |
 | `deploy_and_verify_v2.py`        | Deploy + verify V2          | FutarchyArbitrageExecutorV2 | Legacy                           |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 ### Verification Scripts

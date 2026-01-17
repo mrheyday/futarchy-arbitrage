@@ -324,7 +324,10 @@ python -m src.monitoring.slack_alerts --start-block latest
 
 **Alert Types:**
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - 🚨 SlippageCircuitTripped - Trade blocked due to excessive slippage (>5%)
@@ -335,7 +338,10 @@ python -m src.monitoring.slack_alerts --start-block latest
 
 **Documentation:**
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - [Slack Alerts Quick Start](docs/SLACK_ALERTS_QUICKSTART.md)
@@ -376,7 +382,10 @@ forge coverage
 
 **Test Results:** 104/104 passing (100%)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 - FutarchyArbExecutorV5: 26 tests ✅
