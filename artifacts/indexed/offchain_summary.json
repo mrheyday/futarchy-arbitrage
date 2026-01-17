@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-01-17T04:10:06.320444",
+  "summary": {
+    "total_contracts": 10,
+    "total_functions": 100,
+    "total_events": 45,
+    "total_errors": 85,
+    "total_bytecode_size": 53945
+  },
+  "contract_list": [
+    "FutarchyArbExecutorV5",
+    "FutarchyArbExecutorV4",
+    "FutarchyArbExecutorV3",
+    "FutarchyArbitrageExecutorV2",
+    "PectraWrapper",
+    "SafetyModule",
+    "InstitutionalSolverSystem",
+    "PredictionArbExecutorV1",
+    "FutarchyBatchExecutor",
+    "FutarchyBatchExecutorV2"
+  ],
+  "clz_libraries": [
+    "LibBit",
+    "LibSort",
+    "FixedPointMathLib",
+    "SafeCastLib"
+  ]
+}

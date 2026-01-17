@@ -1,0 +1,1083 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "calculateSlippage",
+      "inputs": [
+        {
+          "name": "expected",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "checkTradeAllowed",
+      "inputs": [
+        {
+          "name": "expectedOutput",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "minOutput",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "profitLoss",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "cooldownSeconds",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyLossLimit",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyProfitLoss",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyResetTimestamp",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "emergencyPause",
+      "inputs": [
+        {
+          "name": "reason",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getSafetyStatus",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "isPaused",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "timeUntilNextTrade",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "currentDailyPL",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "timeUntilDailyReset",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lastTradeTimestamp",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxGasPrice",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxSlippageBps",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "resetDailyCounter",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "unpause",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updateParameters",
+      "inputs": [
+        {
+          "name": "_maxSlippageBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_maxGasPrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_dailyLossLimit",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_cooldownSeconds",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DailyLossCircuitTripped",
+      "inputs": [
+        {
+          "name": "loss",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "EmergencyPause",
+      "inputs": [
+        {
+          "name": "triggeredBy",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "EmergencyUnpause",
+      "inputs": [
+        {
+          "name": "triggeredBy",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "GasCircuitTripped",
+      "inputs": [
+        {
+          "name": "gasPrice",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ParametersUpdated",
+      "inputs": [
+        {
+          "name": "maxSlippage",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxGasPrice",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "dailyLossLimit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "cooldownSeconds",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SlippageCircuitTripped",
+      "inputs": [
+        {
+          "name": "slippage",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TradeRecorded",
+      "inputs": [
+        {
+          "name": "profitLoss",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CooldownActive",
+      "inputs": [
+        {
+          "name": "timeRemaining",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "DailyLossLimitExceeded",
+      "inputs": [
+        {
+          "name": "totalLoss",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "GasPriceTooHigh",
+      "inputs": [
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "max",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidParameter",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlyOwner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Paused",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SlippageExceeded",
+      "inputs": [
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "max",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    }
+  ],
+  "bytecode": {
+    "object": "0x60808060405234606a575f80546001600160a01b031916331790556101f460015564174876e800600255678ac7230489e80000600355603c600455426201518081019081106056576007556107e7908161006f8239f35b634e487b7160e01b5f52601160045260245ffd5b5f80fdfe6080806040526004361015610012575f80fd5b5f3560e01c90816319f18dee1461071e575080632aedada6146106845780633788f0d21461064d5780633de39c11146106305780633f4ba83a146105de5780634a92c260146105b55780635c975abb14610591578063779e306b146105745780637f2671c1146105575780638da5cb5b14610530578063b8221bc414610513578063c4aa7395146104f6578063cf5b4fd51461042f578063d7778ea3146101eb578063ee1eab4f14610163578063f2fde38b146100f85763f76e8dec146100d7575f80fd5b346100f4575f3660031901126100f4576020600654604051908152f35b5f80fd5b346100f45760203660031901126100f4576004356001600160a01b038116908190036100f4575f546001600160a01b0381163303610154578115610145576001600160a01b031916175f55005b630309cb8760e51b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b346100f45760803660031901126100f4575f54604435906024359060043590606435906001600160a01b03163303610154576127108211610145577fbca959adb5aa52aaea5a17838313a61bebf160bf6064e31593c79c8432c79fea9360809383600155806002558160035582600455604051938452602084015260408301526060820152a1005b346100f45760603660031901126100f4576004356044359060ff5f5460a01c166104205761021b60243582610745565b90612710820291808304612710149015171561036a5761023a91610752565b600154908181116103dc5782600254803a11610397575060075442101561037e575b600654818101905f838312911290801582169115161761036a575f811280610352575b61030a57600554801515806102f6575b6102cd577f250a4795ecff634e860362fcd7b91353ab383a95cfe7c1d980bd7e5bac830a2460408484600655426005558151908152426020820152a1005b6102e4906102df429160045490610738565b610745565b63c1ab61a160e01b5f5260045260245ffd5b5061030360045482610738565b421061028f565b600354907f461e01f77289362e18e772c6ccbd3131535d2bd2067aaf796c4919d7d31c7b9d60408051838152846020820152a1631791d4b160e21b5f5260045260245260445ffd5b50600160ff1b811461036a57600354815f031161027f565b634e487b7160e01b5f52601160045260245ffd5b5f60065562015180420180421161036a5760075561025c565b7f137d9699275c3cc5de164540580901f12d6019130ad1a2cbaa82e0e5accc140f604080513a8152836020820152a1639411833360e01b5f523a60045260245260445ffd5b7f5f6a4aad38cac04ae230bda190659662a4032c84cd31966a0d71aa9250edd0d460408051838152846020820152a16371c4efed60e01b5f5260045260245260445ffd5b6313d0ff5960e31b5f5260045ffd5b346100f45760203660031901126100f45760043567ffffffffffffffff81116100f457366023820112156100f45780600401359067ffffffffffffffff82116100f45736602483830101116100f4575f54906001600160a01b0382163303610154577fc50068396f19981cb0435611d2c97dde7b6882fdc3185a9fb8080fa756b3974d91600160a01b9060ff60a01b1916175f5582602460405192602084528260208501520160408301375f604084830101526040813394601f80199101168101030190a2005b346100f4575f3660031901126100f4576020600154604051908152f35b346100f4575f3660031901126100f4576020600454604051908152f35b346100f4575f3660031901126100f4575f546040516001600160a01b039091168152602090f35b346100f4575f3660031901126100f4576020600754604051908152f35b346100f4575f3660031901126100f4576020600354604051908152f35b346100f4575f3660031901126100f457602060ff5f5460a01c166040519015158152f35b346100f45760403660031901126100f45760206105d6602435600435610770565b604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03811633036101545760ff60a01b19165f55337f306ca22c455fe433ebbf0542bbf947ea6a725495f9e1043db2a47e3c579403855f80a2005b346100f4575f3660031901126100f4576020600254604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03163303610154575f60065562015180420180421161036a57600755005b346100f4575f3660031901126100f457608060ff5f5460a01c166005548015158061070a575b15610703576106bf6106c69160045490610738565b4290610745565b6006546007548042105f146106fb576106e0904290610745565b915b6040519315158452602084015260408301526060820152f35b505f916106e2565b505f6106c6565b5061071760045482610738565b42106106aa565b346100f4575f3660031901126100f4576020906005548152f35b9190820180921161036a57565b9190820391821161036a57565b811561075c570490565b634e487b7160e01b5f52601260045260245ffd5b9081156107ab57818110156107ab576107899082610745565b90612710820291808304612710149015171561036a576107a891610752565b90565b50505f9056fea26469706673582212206bc28eb940e19bd161680d89a8271f8b25db48931176fea42d9f6173b5001d1f64736f6c63430008210033",
+    "sourceMap": "438:7958:15:-:0;;;;;;;2424:18;438:7958;;-1:-1:-1;;;;;;438:7958:15;2432:10;438:7958;;;2515:3;438:7958;;2561:8;2547:22;438:7958;2612:8;2595:25;438:7958;2686:2;2668:20;438:7958;2748:15;2264:5;;;;;-1:-1:-1;2264:5:15;;2726:47;438:7958;;;;;;;;2264:5;;;;2424:18;2264:5;;2668:20;2264:5;;2424:18;2264:5;438:7958;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080806040526004361015610012575f80fd5b5f3560e01c90816319f18dee1461071e575080632aedada6146106845780633788f0d21461064d5780633de39c11146106305780633f4ba83a146105de5780634a92c260146105b55780635c975abb14610591578063779e306b146105745780637f2671c1146105575780638da5cb5b14610530578063b8221bc414610513578063c4aa7395146104f6578063cf5b4fd51461042f578063d7778ea3146101eb578063ee1eab4f14610163578063f2fde38b146100f85763f76e8dec146100d7575f80fd5b346100f4575f3660031901126100f4576020600654604051908152f35b5f80fd5b346100f45760203660031901126100f4576004356001600160a01b038116908190036100f4575f546001600160a01b0381163303610154578115610145576001600160a01b031916175f55005b630309cb8760e51b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b346100f45760803660031901126100f4575f54604435906024359060043590606435906001600160a01b03163303610154576127108211610145577fbca959adb5aa52aaea5a17838313a61bebf160bf6064e31593c79c8432c79fea9360809383600155806002558160035582600455604051938452602084015260408301526060820152a1005b346100f45760603660031901126100f4576004356044359060ff5f5460a01c166104205761021b60243582610745565b90612710820291808304612710149015171561036a5761023a91610752565b600154908181116103dc5782600254803a11610397575060075442101561037e575b600654818101905f838312911290801582169115161761036a575f811280610352575b61030a57600554801515806102f6575b6102cd577f250a4795ecff634e860362fcd7b91353ab383a95cfe7c1d980bd7e5bac830a2460408484600655426005558151908152426020820152a1005b6102e4906102df429160045490610738565b610745565b63c1ab61a160e01b5f5260045260245ffd5b5061030360045482610738565b421061028f565b600354907f461e01f77289362e18e772c6ccbd3131535d2bd2067aaf796c4919d7d31c7b9d60408051838152846020820152a1631791d4b160e21b5f5260045260245260445ffd5b50600160ff1b811461036a57600354815f031161027f565b634e487b7160e01b5f52601160045260245ffd5b5f60065562015180420180421161036a5760075561025c565b7f137d9699275c3cc5de164540580901f12d6019130ad1a2cbaa82e0e5accc140f604080513a8152836020820152a1639411833360e01b5f523a60045260245260445ffd5b7f5f6a4aad38cac04ae230bda190659662a4032c84cd31966a0d71aa9250edd0d460408051838152846020820152a16371c4efed60e01b5f5260045260245260445ffd5b6313d0ff5960e31b5f5260045ffd5b346100f45760203660031901126100f45760043567ffffffffffffffff81116100f457366023820112156100f45780600401359067ffffffffffffffff82116100f45736602483830101116100f4575f54906001600160a01b0382163303610154577fc50068396f19981cb0435611d2c97dde7b6882fdc3185a9fb8080fa756b3974d91600160a01b9060ff60a01b1916175f5582602460405192602084528260208501520160408301375f604084830101526040813394601f80199101168101030190a2005b346100f4575f3660031901126100f4576020600154604051908152f35b346100f4575f3660031901126100f4576020600454604051908152f35b346100f4575f3660031901126100f4575f546040516001600160a01b039091168152602090f35b346100f4575f3660031901126100f4576020600754604051908152f35b346100f4575f3660031901126100f4576020600354604051908152f35b346100f4575f3660031901126100f457602060ff5f5460a01c166040519015158152f35b346100f45760403660031901126100f45760206105d6602435600435610770565b604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03811633036101545760ff60a01b19165f55337f306ca22c455fe433ebbf0542bbf947ea6a725495f9e1043db2a47e3c579403855f80a2005b346100f4575f3660031901126100f4576020600254604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03163303610154575f60065562015180420180421161036a57600755005b346100f4575f3660031901126100f457608060ff5f5460a01c166005548015158061070a575b15610703576106bf6106c69160045490610738565b4290610745565b6006546007548042105f146106fb576106e0904290610745565b915b6040519315158452602084015260408301526060820152f35b505f916106e2565b505f6106c6565b5061071760045482610738565b42106106aa565b346100f4575f3660031901126100f4576020906005548152f35b9190820180921161036a57565b9190820391821161036a57565b811561075c570490565b634e487b7160e01b5f52601260045260245ffd5b9081156107ab57818110156107ab576107899082610745565b90612710820291808304612710149015171561036a576107a891610752565b90565b50505f9056fea26469706673582212206bc28eb940e19bd161680d89a8271f8b25db48931176fea42d9f6173b5001d1f64736f6c63430008210033",
+    "sourceMap": "438:7958:15:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;2063:29;438:7958;;;;;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;-1:-1:-1;;;;;438:7958:15;;;;;;;;;;-1:-1:-1;;;;;438:7958:15;;2943:10;:19;2939:43;;7137:22;;7133:53;;-1:-1:-1;;;;;;438:7958:15;;;;;7133:53;5921:18;;;438:7958;7168:18;438:7958;;7168:18;2939:43;2971:11;;;438:7958;2971:11;438:7958;;2971:11;438:7958;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;438:7958:15;2943:10;:19;2939:43;;2218:5;5879:33;;5875:64;;6120:83;438:7958;;;;;;;5992:26;438:7958;;6028:32;438:7958;;;;;;;;;;;;;;;;;;;;;6120:83;438:7958;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;;;;;3041:27;;3712:26;438:7958;;3712:26;;:::i;:::-;2218:5;;;;;;;;;;;;;;;;3710:65;;;:::i;:::-;438:7958;;3789:28;;;;3785:181;;438:7958;4021:11;438:7958;4007:11;;:25;4003:166;;438:7958;4243:19;438:7958;4224:15;:38;;4220:149;;438:7958;4436:15;438:7958;;;;;;;;;;;;;;;;;;;;;;;4536:17;;:61;;;438:7958;4532:225;;4819:18;438:7958;4819:22;;;:80;;;438:7958;4815:241;;5203:42;438:7958;;;4436:15;438:7958;4224:15;4819:18;438:7958;;;;;;4224:15;438:7958;;;;5203:42;438:7958;4815:241;4939:56;4224:15;4940:36;4224:15;438:7958;;;4940:36;;:::i;:::-;4939:56;:::i;:::-;5016:29;;;438:7958;5016:29;438:7958;;;;5016:29;4819:80;438:7958;4863:36;438:7958;;4863:36;;:::i;:::-;4224:15;4845:54;4819:80;;4532:225;4657:14;438:7958;;4618:54;438:7958;;;;;;;;;;;4618:54;4693:53;;;438:7958;4693:53;438:7958;;;;;;4693:53;4536:61;-1:-1:-1;;;;438:7958:15;;;;4583:14;438:7958;;;;4557:40;4536:61;;438:7958;;;;;;;;;;;;4220:149;438:7958;4278:19;438:7958;2264:5;4224:15;438:7958;4224:15;;438:7958;;;4243:19;438:7958;4220:149;;4003:166;4053:43;438:7958;;;4007:11;438:7958;;;;;;;4053:43;4117:41;;;438:7958;4117:41;4007:11;438:7958;;;;;;4117:41;3785:181;3838:51;438:7958;;;;;;;;;;;3838:51;3910:45;;;438:7958;3910:45;438:7958;;;;;;3910:45;3041:27;3060:8;;;438:7958;3060:8;438:7958;;3060:8;438:7958;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;438:7958:15;;2943:10;:19;2939:43;;6571:34;438:7958;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2943:10;;438:7958;;;;;;;;;6571:34;;;;438:7958;;;;;;;-1:-1:-1;;438:7958:15;;;;;1714:29;438:7958;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;-1:-1:-1;;;;;438:7958:15;;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;2117:34;438:7958;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;1871:29;438:7958;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;-1:-1:-1;;;;;438:7958:15;;2943:10;:19;2939:43;;438:7958;;;;;;;2943:10;6742:28;438:7958;6742:28;;438:7958;;;;;;;-1:-1:-1;;438:7958:15;;;;;1798:26;438:7958;;;;;;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;-1:-1:-1;;;;;438:7958:15;2943:10;:19;2939:43;;438:7958;6920:19;438:7958;2264:5;6971:15;438:7958;6971:15;;438:7958;;;6949:47;438:7958;;;;;;;;-1:-1:-1;;438:7958:15;;;;;;;;;;;7624:18;438:7958;7624:22;;;:80;;;438:7958;7620:241;;;7742:36;7741:56;438:7958;;;7742:36;;:::i;:::-;7782:15;7741:56;;:::i;:::-;7888:15;438:7958;7936:19;438:7958;7918:15;;:37;7914:140;7918:37;;;7979;7918:15;;7979:37;;:::i;:::-;7914:140;;438:7958;;;;;;;;;;;;;;;;;;;;7914:140;8031:23;438:7958;7914:140;;;7620:241;7828:22;438:7958;7620:241;;7624:80;438:7958;7668:36;438:7958;;7668:36;;:::i;:::-;7650:15;:54;7624:80;;438:7958;;;;;;-1:-1:-1;;438:7958:15;;;;;;2024:33;438:7958;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;:::o;2218:5::-;;;;;;;:::o;:::-;438:7958;;;2218:5;;;;;;;;8149:244;;8254:13;;8250:27;;8291:18;;;;8287:32;;8338:17;;;;:::i;:::-;2218:5;;;;;;;;;;;;;;;;8336:50;;;:::i;:::-;8149:244;:::o;8287:32::-;8311:8;;438:7958;8311:8;:::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "calculateSlippage(uint256,uint256)": "4a92c260",
+    "checkTradeAllowed(uint256,uint256,int256)": "d7778ea3",
+    "cooldownSeconds()": "b8221bc4",
+    "dailyLossLimit()": "779e306b",
+    "dailyProfitLoss()": "f76e8dec",
+    "dailyResetTimestamp()": "7f2671c1",
+    "emergencyPause(string)": "cf5b4fd5",
+    "getSafetyStatus()": "2aedada6",
+    "lastTradeTimestamp()": "19f18dee",
+    "maxGasPrice()": "3de39c11",
+    "maxSlippageBps()": "c4aa7395",
+    "owner()": "8da5cb5b",
+    "paused()": "5c975abb",
+    "resetDailyCounter()": "3788f0d2",
+    "transferOwnership(address)": "f2fde38b",
+    "unpause()": "3f4ba83a",
+    "updateParameters(uint256,uint256,uint256,uint256)": "ee1eab4f"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"timeRemaining\",\"type\":\"uint256\"}],\"name\":\"CooldownActive\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"totalLoss\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"}],\"name\":\"DailyLossLimitExceeded\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"actual\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"GasPriceTooHigh\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidParameter\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"Paused\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"actual\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"max\",\"type\":\"uint256\"}],\"name\":\"SlippageExceeded\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"loss\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"}],\"name\":\"DailyLossCircuitTripped\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"triggeredBy\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"name\":\"EmergencyPause\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"triggeredBy\",\"type\":\"address\"}],\"name\":\"EmergencyUnpause\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"gasPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"}],\"name\":\"GasCircuitTripped\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxSlippage\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"maxGasPrice\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"dailyLossLimit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"cooldownSeconds\",\"type\":\"uint256\"}],\"name\":\"ParametersUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"slippage\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"}],\"name\":\"SlippageCircuitTripped\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"int256\",\"name\":\"profitLoss\",\"type\":\"int256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"TradeRecorded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"expected\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"actual\",\"type\":\"uint256\"}],\"name\":\"calculateSlippage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"expectedOutput\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"profitLoss\",\"type\":\"int256\"}],\"name\":\"checkTradeAllowed\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"cooldownSeconds\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"dailyLossLimit\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"dailyProfitLoss\",\"outputs\":[{\"internalType\":\"int256\",\"name\":\"\",\"type\":\"int256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"dailyResetTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"reason\",\"type\":\"string\"}],\"name\":\"emergencyPause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getSafetyStatus\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isPaused\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"timeUntilNextTrade\",\"type\":\"uint256\"},{\"internalType\":\"int256\",\"name\":\"currentDailyPL\",\"type\":\"int256\"},{\"internalType\":\"uint256\",\"name\":\"timeUntilDailyReset\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"lastTradeTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxGasPrice\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"maxSlippageBps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"resetDailyCounter\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_maxSlippageBps\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_maxGasPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_dailyLossLimit\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_cooldownSeconds\",\"type\":\"uint256\"}],\"name\":\"updateParameters\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Provides:      - Price deviation limits (max slippage)      - Gas price ceiling (pause if gas too high)      - Daily loss limits (pause if cumulative loss exceeds threshold)      - Cooldown periods between large trades      - Emergency pause mechanism\",\"kind\":\"dev\",\"methods\":{\"checkTradeAllowed(uint256,uint256,int256)\":{\"params\":{\"expectedOutput\":\"Expected output amount from trade\",\"minOutput\":\"Minimum acceptable output (accounting for slippage)\",\"profitLoss\":\"Estimated profit/loss from trade (can be negative)\"}},\"emergencyPause(string)\":{\"params\":{\"reason\":\"Reason for pause (for logging)\"}},\"updateParameters(uint256,uint256,uint256,uint256)\":{\"params\":{\"_cooldownSeconds\":\"Seconds between trades\",\"_dailyLossLimit\":\"Max daily loss in wei\",\"_maxGasPrice\":\"Max gas price in wei\",\"_maxSlippageBps\":\"Max slippage in basis points (10000 = 100%)\"}}},\"title\":\"SafetyModule\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"calculateSlippage(uint256,uint256)\":{\"notice\":\"Calculate slippage from expected and actual output\"},\"checkTradeAllowed(uint256,uint256,int256)\":{\"notice\":\"Check if trade can proceed based on all circuit breaker conditions\"},\"emergencyPause(string)\":{\"notice\":\"Emergency pause - stops all trading\"},\"getSafetyStatus()\":{\"notice\":\"Get current safety status\"},\"resetDailyCounter()\":{\"notice\":\"Reset daily profit/loss counter (emergency use)\"},\"transferOwnership(address)\":{\"notice\":\"Transfer ownership\"},\"unpause()\":{\"notice\":\"Unpause trading\"},\"updateParameters(uint256,uint256,uint256,uint256)\":{\"notice\":\"Update circuit breaker parameters\"}},\"notice\":\"Circuit breakers and emergency controls for arbitrage executors\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/SafetyModule.sol\":\"SafetyModule\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/SafetyModule.sol\":{\"keccak256\":\"0x522828d541e5306d9380e57e166530721fa5127ba2212ff2a2cc5f5145f882bf\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ddc09de299bb96189707e0e3733af141e8cdc0cb15adf4ee0c75ec7223f2d97a\",\"dweb:/ipfs/QmXatmcCygjdcPqvkcG6aczQAdNDY32LFWDZzqHY2tZy26\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "timeRemaining",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "CooldownActive"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "totalLoss",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "DailyLossLimitExceeded"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "actual",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "max",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "GasPriceTooHigh"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InvalidParameter"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "OnlyOwner"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "Paused"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "actual",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "max",
+              "type": "uint256"
+            }
+          ],
+          "type": "error",
+          "name": "SlippageExceeded"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "loss",
+              "type": "int256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "DailyLossCircuitTripped",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "triggeredBy",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "EmergencyPause",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "triggeredBy",
+              "type": "address",
+              "indexed": true
+            }
+          ],
+          "type": "event",
+          "name": "EmergencyUnpause",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "gasPrice",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "GasCircuitTripped",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "maxSlippage",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "maxGasPrice",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "dailyLossLimit",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "cooldownSeconds",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ParametersUpdated",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "slippage",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "limit",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "SlippageCircuitTripped",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "int256",
+              "name": "profitLoss",
+              "type": "int256",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TradeRecorded",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "expected",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "actual",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "pure",
+          "type": "function",
+          "name": "calculateSlippage",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "expectedOutput",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minOutput",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "profitLoss",
+              "type": "int256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "checkTradeAllowed"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "cooldownSeconds",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "dailyLossLimit",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "dailyProfitLoss",
+          "outputs": [
+            {
+              "internalType": "int256",
+              "name": "",
+              "type": "int256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "dailyResetTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "reason",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "emergencyPause"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getSafetyStatus",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "isPaused",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeUntilNextTrade",
+              "type": "uint256"
+            },
+            {
+              "internalType": "int256",
+              "name": "currentDailyPL",
+              "type": "int256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timeUntilDailyReset",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "lastTradeTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "maxGasPrice",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "maxSlippageBps",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "paused",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "resetDailyCounter"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferOwnership"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "unpause"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_maxSlippageBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_maxGasPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_dailyLossLimit",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_cooldownSeconds",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "updateParameters"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "checkTradeAllowed(uint256,uint256,int256)": {
+            "params": {
+              "expectedOutput": "Expected output amount from trade",
+              "minOutput": "Minimum acceptable output (accounting for slippage)",
+              "profitLoss": "Estimated profit/loss from trade (can be negative)"
+            }
+          },
+          "emergencyPause(string)": {
+            "params": {
+              "reason": "Reason for pause (for logging)"
+            }
+          },
+          "updateParameters(uint256,uint256,uint256,uint256)": {
+            "params": {
+              "_cooldownSeconds": "Seconds between trades",
+              "_dailyLossLimit": "Max daily loss in wei",
+              "_maxGasPrice": "Max gas price in wei",
+              "_maxSlippageBps": "Max slippage in basis points (10000 = 100%)"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "calculateSlippage(uint256,uint256)": {
+            "notice": "Calculate slippage from expected and actual output"
+          },
+          "checkTradeAllowed(uint256,uint256,int256)": {
+            "notice": "Check if trade can proceed based on all circuit breaker conditions"
+          },
+          "emergencyPause(string)": {
+            "notice": "Emergency pause - stops all trading"
+          },
+          "getSafetyStatus()": {
+            "notice": "Get current safety status"
+          },
+          "resetDailyCounter()": {
+            "notice": "Reset daily profit/loss counter (emergency use)"
+          },
+          "transferOwnership(address)": {
+            "notice": "Transfer ownership"
+          },
+          "unpause()": {
+            "notice": "Unpause trading"
+          },
+          "updateParameters(uint256,uint256,uint256,uint256)": {
+            "notice": "Update circuit breaker parameters"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/SafetyModule.sol": "SafetyModule"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/SafetyModule.sol": {
+        "keccak256": "0x522828d541e5306d9380e57e166530721fa5127ba2212ff2a2cc5f5145f882bf",
+        "urls": [
+          "bzz-raw://ddc09de299bb96189707e0e3733af141e8cdc0cb15adf4ee0c75ec7223f2d97a",
+          "dweb:/ipfs/QmXatmcCygjdcPqvkcG6aczQAdNDY32LFWDZzqHY2tZy26"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 15
+}

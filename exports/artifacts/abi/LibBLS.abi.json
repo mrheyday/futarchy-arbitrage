@@ -1,0 +1,12 @@
+[
+  {
+    "type": "error",
+    "name": "BLSVerificationFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidPoint",
+    "inputs": []
+  }
+]

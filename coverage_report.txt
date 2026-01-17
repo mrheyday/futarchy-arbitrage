@@ -1,0 +1,13 @@
+Warning: `--ir-minimum` enables `viaIR` with minimum optimization, which can result in inaccurate source mappings.
+Only use this flag as a workaround if you are experiencing "stack too deep" errors.
+Note that `viaIR` is production ready since Solidity 0.8.13 and above.
+See more: https://github.com/foundry-rs/foundry/issues/3357
+Compiling 33 files with Solc 0.8.33
+Solc 0.8.33 finished in 735.15ms
+Error: Compiler run failed:
+Error: Cannot swap Variable value0 with Variable tail: too deep in the stack by 2 slots in [ value0 RET value14 headStart value13 value12 value11 value10 value9 value8 value7 value6 value5 value4 value3 value2 value1 headStart tail ]
+No memoryguard was present. Consider using memory-safe assembly only and annotating it via 'assembly ("memory-safe") { ... }'.
+  --> contracts/FutarchyArbExecutorV4.sol:23:1:
+   |
+23 | contract FutarchyArbExecutorV4 {
+   | ^ (Relevant source part starts here and spans across multiple lines).

@@ -33,6 +33,23 @@ remappings = [
 "solady-utils/=lib/solady/src/utils/",
 ]
 
+[profile.coverage]
+src = "contracts"
+out = "out"
+libs = ["lib"]
+solc = "0.8.33"
+optimizer = true
+optimizer_runs = 0
+via_ir = true
+evm_version = "osaka"
+ignored_warnings_from = ["lib/"]
+
+remappings = [
+"solady/=lib/solady/",
+"solady-clz/=lib/solady/src/utils/clz/",
+"solady-utils/=lib/solady/src/utils/",
+]
+
 # Formatter configuration
 [fmt]
 line_length = 120

@@ -1,0 +1,154 @@
+{
+  "timestamp": "/Users/hs/futarchy-arbitrage-1",
+  "total_contracts": 46,
+  "clz_contracts": [
+    "FixedPointMathLib"
+  ],
+  "clz_contract_count": 1,
+  "contracts": {
+    "BuyCondFlowTest": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/BuyCondFlowTest.bytecode"
+    },
+    "FixedPointMathLib": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FixedPointMathLib.bytecode"
+    },
+    "FutarchyArbExecutorV3": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyArbExecutorV3.bytecode"
+    },
+    "FutarchyArbExecutorV4": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyArbExecutorV4.bytecode"
+    },
+    "FutarchyArbExecutorV5": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyArbExecutorV5.bytecode"
+    },
+    "FutarchyArbExecutorV5Test": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyArbExecutorV5Test.bytecode"
+    },
+    "FutarchyArbitrageExecutorV2": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyArbitrageExecutorV2.bytecode"
+    },
+    "FutarchyBatchExecutor": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyBatchExecutor.bytecode"
+    },
+    "FutarchyBatchExecutorMinimal": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyBatchExecutorMinimal.bytecode"
+    },
+    "FutarchyBatchExecutorSimple": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyBatchExecutorSimple.bytecode"
+    },
+    "FutarchyBatchExecutorUltra": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyBatchExecutorUltra.bytecode"
+    },
+    "FutarchyBatchExecutorV2": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FutarchyBatchExecutorV2.bytecode"
+    },
+    "AuctionEconomics": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/AuctionEconomics.bytecode"
+    },
+    "EIP7702Proxy": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/EIP7702Proxy.bytecode"
+    },
+    "FlashloanAbstraction": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/FlashloanAbstraction.bytecode"
+    },
+    "HybridExecutionCore": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/HybridExecutionCore.bytecode"
+    },
+    "ReputationSystem": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/ReputationSystem.bytecode"
+    },
+    "LibBLS": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/LibBLS.bytecode"
+    },
+    "LibBit": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/LibBit.bytecode"
+    },
+    "LibP256": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/LibP256.bytecode"
+    },
+    "LibSort": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/LibSort.bytecode"
+    },
+    "MockERC20": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MockERC20.bytecode"
+    },
+    "MockBalancerBatchRouter": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MockBalancerBatchRouter.bytecode"
+    },
+    "MockBalancerVault": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MockBalancerVault.bytecode"
+    },
+    "MockFutarchyRouter": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MockFutarchyRouter.bytecode"
+    },
+    "MockSwaprRouter": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MockSwaprRouter.bytecode"
+    },
+    "PectraWrapper": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/PectraWrapper.bytecode"
+    },
+    "PredictionArbExecutorV1": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/PredictionArbExecutorV1.bytecode"
+    },
+    "PredictionArbExecutorV1Test": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/PredictionArbExecutorV1Test.bytecode"
+    },
+    "SafeCastLib": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/SafeCastLib.bytecode"
+    },
+    "SafetyModule": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/SafetyModule.bytecode"
+    },
+    "SafetyModuleTest": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/SafetyModuleTest.bytecode"
+    },
+    "Script": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/Script.bytecode"
+    },
+    "SimpleEIP7702Test": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/SimpleEIP7702Test.bytecode"
+    },
+    "AccountAbstraction": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/AccountAbstraction.bytecode"
+    },
+    "ComplianceModule": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/ComplianceModule.bytecode"
+    },
+    "CrossChainRouter": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/CrossChainRouter.bytecode"
+    },
+    "MEVProtection": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MEVProtection.bytecode"
+    },
+    "MonitoringTelemetry": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/MonitoringTelemetry.bytecode"
+    },
+    "TreasuryFramework": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/TreasuryFramework.bytecode"
+    },
+    "ZKEnforcement": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/ZKEnforcement.bytecode"
+    },
+    "Test": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/Test.bytecode"
+    },
+    "stdError": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/stdError.bytecode"
+    },
+    "TransientReentrancyGuard": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/TransientReentrancyGuard.bytecode"
+    },
+    "Vm": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/Vm.bytecode"
+    },
+    "VmSafe": {
+      "bytecode": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/bytecode/VmSafe.bytecode"
+    }
+  },
+  "clz_details": {
+    "FixedPointMathLib": {
+      "abi": "/Users/hs/futarchy-arbitrage-1/exports/artifacts/abi/FixedPointMathLib.abi.json",
+      "artifact": "/Users/hs/futarchy-arbitrage-1/out/FixedPointMathLib.sol/FixedPointMathLib.json"
+    }
+  }
+}

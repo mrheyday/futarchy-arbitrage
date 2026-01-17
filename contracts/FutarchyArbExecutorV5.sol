@@ -1,907 +1,393 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.33;
 
-/// ------------------------
-/// Minimal external ABIs
-/// ------------------------
+/// Minimal interfaces
 interface IERC20 {
-
     function balanceOf(address) external view returns (uint256);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function transfer(address to, uint256 amount) external returns (bool);
-
+    function approve(address, uint256) external returns (bool);
+    function allowance(address, address) external view returns (uint256);
+    function transfer(address, uint256) external returns (bool);
 }
 
-interface IPermit2 {
-
-    /// Uniswap Permit2 approval: owner = msg.sender
-    function approve(address token, address spender, uint160 amount, uint48 expiration) external;
-
-}
-
-/// Minimal composite-like splitter interface (defensive; low-level call used)
-interface ICompositeLike {
-
-    function split(uint256 amount) external;
-
-}
-
-/// Futarchy router interface used for proper splits
+interface IPermit2 { function approve(address, address, uint160, uint48) external; }
 interface IFutarchyRouter {
-
-    function splitPosition(address proposal, address token, uint256 amount) external;
-    /// Merge conditional collateral (YES/NO) back into base collateral `token` for a given `proposal`.
-    /// Expected to transferFrom both conditional legs from `msg.sender` (this executor) and mint `token`.
-    function mergePositions(address proposal, address token, uint256 amount) external;
-
+    function splitPosition(address, address, uint256) external;
+    function mergePositions(address, address, uint256) external;
 }
 
-/// Minimal Algebra/Swapr router interface (exact-in single hop)
 interface IAlgebraSwapRouter {
-
     struct ExactInputSingleParams {
-        address tokenIn;
-        address tokenOut;
-        address recipient;
-        uint256 deadline;
-        uint256 amountIn;
-        uint256 amountOutMinimum;
-        uint160 limitSqrtPrice; // 0 for “no limit”
+        address tokenIn; address tokenOut; address recipient;
+        uint256 deadline; uint256 amountIn; uint256 amountOutMinimum; uint160 limitSqrtPrice;
     }
-    function exactInputSingle(ExactInputSingleParams calldata params) external payable returns (uint256 amountOut);
-
-    // NOTE: Swapr/Algebra exactOutputSingle expects tokenIn first, then tokenOut (no fee field).
-    struct ExactOutputSingleParams {
-        address tokenIn;
-        address tokenOut;
-        address recipient;
-        uint256 deadline;
-        uint256 amountOut;
-        uint256 amountInMaximum;
-        uint160 limitSqrtPrice; // 0 for “no limit”
-    }
-    function exactOutputSingle(ExactOutputSingleParams calldata params) external payable returns (uint256 amountIn);
-
+    function exactInputSingle(ExactInputSingleParams calldata) external payable returns (uint256);
 }
 
-interface IUniswapV3Pool {
-
-    function fee() external view returns (uint24);
-
-}
+interface IUniswapV3Pool { function fee() external view returns (uint24); }
 
 interface ISwapRouterV3ExactOutput {
-
     struct ExactOutputSingleParams {
-        address tokenIn;
-        address tokenOut;
-        uint24 fee;
-        address recipient;
-        uint256 deadline;
-        uint256 amountOut;
-        uint256 amountInMaximum;
-        uint160 sqrtPriceLimitX96;
+        address tokenIn; address tokenOut; uint24 fee; address recipient;
+        uint256 deadline; uint256 amountOut; uint256 amountInMaximum; uint160 sqrtPriceLimitX96;
     }
-    function exactOutputSingle(ExactOutputSingleParams calldata params) external payable returns (uint256 amountIn);
-
+    function exactOutputSingle(ExactOutputSingleParams calldata) external payable returns (uint256);
 }
 
-/// ------------------------
-/// Uniswap V2-like Router (Swapr v2) – exact-in multi-hop
-/// ------------------------
 interface IUniswapV2Router02 {
-
-    function swapExactTokensForTokens(
-        uint256 amountIn,
-        uint256 amountOutMin,
-        address[] calldata path,
-        address to,
-        uint256 deadline
-    ) external returns (uint256[] memory amounts);
-
+    function swapExactTokensForTokens(uint256, uint256, address[] calldata, address, uint256) external returns (uint256[] memory);
 }
 
-/// ------------------------
-/// Balancer BatchRouter (swapExactIn) – typed interface for BUY step 6
-/// ------------------------
 interface IBalancerBatchRouter {
-
-    struct SwapPathStep {
-        address pool;
-        address tokenOut;
-        bool isBuffer;
-    }
-
-    struct SwapPathExactAmountIn {
-        address tokenIn;
-        SwapPathStep[] steps;
-        uint256 exactAmountIn;
-        uint256 minAmountOut;
-    }
-    function swapExactIn(
-        SwapPathExactAmountIn[] calldata paths,
-        uint256 deadline,
-        bool wethIsEth,
-        bytes calldata userData
-    )
-        external
-        payable
-        returns (uint256[] memory pathAmountsOut, address[] memory tokensOut, uint256[] memory amountsOut);
-
+    struct SwapPathStep { address pool; address tokenOut; bool isBuffer; }
+    struct SwapPathExactAmountIn { address tokenIn; SwapPathStep[] steps; uint256 exactAmountIn; uint256 minAmountOut; }
+    function swapExactIn(SwapPathExactAmountIn[] calldata, uint256, bool, bytes calldata) external payable returns (uint256[] memory, address[] memory, uint256[] memory);
 }
 
-/// ------------------------
-/// Balancer Vault (batchSwap) – used in PNK flows
-/// ------------------------
 interface IBalancerVault {
-
-    enum SwapKind {
-        GIVEN_IN,
-        GIVEN_OUT
-    }
-
-    struct BatchSwapStep {
-        bytes32 poolId;
-        uint256 assetInIndex;
-        uint256 assetOutIndex;
-        uint256 amount; // amount for GIVEN_IN on the first step of each branch; 0 for subsequent chained steps
-        bytes userData;
-    }
-
-    struct FundManagement {
-        address sender;
-        bool fromInternalBalance;
-        address recipient;
-        bool toInternalBalance;
-    }
-    function batchSwap(
-        SwapKind kind,
-        BatchSwapStep[] calldata swaps,
-        address[] calldata assets,
-        FundManagement calldata funds,
-        int256[] calldata limits,
-        uint256 deadline
-    ) external returns (int256[] memory assetDeltas);
-
+    enum SwapKind { GIVEN_IN, GIVEN_OUT }
+    struct BatchSwapStep { bytes32 poolId; uint256 assetInIndex; uint256 assetOutIndex; uint256 amount; bytes userData; }
+    struct FundManagement { address sender; bool fromInternalBalance; address recipient; bool toInternalBalance; }
+    function batchSwap(SwapKind, BatchSwapStep[] calldata, address[] calldata, FundManagement calldata, int256[] calldata, uint256) external returns (int256[] memory);
 }
 
-/**
- * @title FutarchyArbExecutorV5 (Step 1 & 2 only)
- * @notice Snapshot collateral; ensure approvals (Permit2 + Vault); execute pre-encoded Balancer BatchRouter.swapExactIn.
- * @dev Expects `buy_company_ops` to be calldata for BatchRouter.swapExactIn(paths, deadline, wethIsEth, userData).
- *      Contract must already custody the input collateral `cur` (e.g., sDAI).
- */
+/// @title FutarchyArbExecutorV5
+/// @notice Gas-optimized version with reduced bytecode size
 contract FutarchyArbExecutorV5 {
+    error Err(uint8 code);
 
-    /// ------------------------
-    /// Custom Errors (gas-efficient vs require strings)
-    /// ------------------------
-    error ZeroAddress();
-    error ZeroAmount();
-    error NotOwner();
-    error TransferFailed();
-    error ApproveFailed();
-    error ApproveResetFailed();
-    error ApproveSetFailed();
-    error BalancerSwapFailed();
-    error CompositeSplitFailed();
-    error InsufficientOutput();
-    error MinProfitNotMet();
-    error InvalidPaths();
-    error InvalidComp();
-    error NoBalance();
-    error EthSendFailed();
-    error BalanceTooLarge();
-    error InsufficientBalance();
-    error SwapReturnedZero();
-    error RouterOrProposalZero();
-    error TokenAddressZero();
-
-    /// ------------------------
-    /// PNK Trading Constants (Gnosis)
-    /// ------------------------
-    /// Fixed addresses used by the PNK buy/sell helper flows.
-    address internal constant TOKEN_SDAI = 0xaf204776c7245bF4147c2612BF6e5972Ee483701;
-    address internal constant TOKEN_WETH = 0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1;
-    address internal constant TOKEN_PNK = 0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3;
-    address internal constant BALANCER_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
-    address internal constant SWAPR_V2_ROUTER = 0xE43e60736b1cb4a75ad25240E2f9a62Bff65c0C0;
-
-    /// Balancer batchSwap GIVEN_IN route: sDAI -> WETH (multi-branch), as observed on-chain.
-    bytes32 internal constant PNK_POOL_1 = 0xa91c413d8516164868f6cca19573fe38f88f5982000200000000000000000157;
-    bytes32 internal constant PNK_POOL_2 = 0x7e5870ac540adfd01a213c829f2231c309623eb10002000000000000000000e9;
-    bytes32 internal constant PNK_POOL_3 = 0x40d2cbc586dd8df50001cdba3f65cd4bbc32d596000200000000000000000154;
-    bytes32 internal constant PNK_POOL_4 = 0x480d4f66cc41a1b6784a53a10890e5ece31d75c000020000000000000000014e;
-    bytes32 internal constant PNK_POOL_5 = 0xa99fd9950b5d5dceeaf4939e221dca8ca9b938ab000100000000000000000025;
-
-    /// Assets order used for the batchSwap indices.
-    /// Index mapping for convenience.
-    address internal constant PNK_ASSET_2 = 0xC0d871bD13eBdf5c4ff059D8243Fb38210608bD6;
-    address internal constant PNK_ASSET_4 = 0xE0eD85F76D9C552478929fab44693E03F0899F23;
-    address internal constant PNK_ASSET_5_GNO = 0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb;
-    uint256 internal constant PNK_IDX_SDAI = 0;
-    uint256 internal constant PNK_IDX_WETH = 2;
-
-    /// Deadlines
-    uint256 internal constant BALANCER_VAULT_DEADLINE = 9007199254740991; // far-future
-    uint256 internal constant SWAPR_V2_DEADLINE = 3510754692; // far-future
-
-    /// Helper: assets array in the exact order expected by the PNK Balancer route
-    function _pnkAssetsOrder() internal pure returns (address[] memory assets) {
-        assets = new address[](5);
-        assets[0] = TOKEN_SDAI;
-        assets[1] = PNK_ASSET_2;
-        assets[2] = TOKEN_WETH;
-        assets[3] = PNK_ASSET_4;
-        assets[4] = PNK_ASSET_5_GNO; // GNO
-    }
-
-    /// Helper: poolIds array used by the PNK Balancer route (sDAI -> WETH)
-    function _pnkPoolIds() internal pure returns (bytes32[] memory poolIds) {
-        poolIds = new bytes32[](5);
-        poolIds[0] = PNK_POOL_1;
-        poolIds[1] = PNK_POOL_2;
-        poolIds[2] = PNK_POOL_3;
-        poolIds[3] = PNK_POOL_4;
-        poolIds[4] = PNK_POOL_5;
-    }
-
-    /// ------------------------
-    /// PNK Buy Flow: sDAI -> WETH (Balancer Vault, single-branch) -> PNK (Swapr)
-    /// ------------------------
-    // Internal implementation used by on-chain flows
-    function _buyPnkWithSdai(uint256 amountSdaiIn, uint256 minWethOut, uint256 minPnkOut) internal {
-        if (amountSdaiIn == 0) revert ZeroAmount();
-
-        // Approve sDAI to Balancer Vault
-        _ensureMaxAllowance(IERC20(TOKEN_SDAI), BALANCER_VAULT);
-
-        // Build assets order
-        address[] memory assets = _pnkAssetsOrder();
-
-        // Build swaps: single branch sDAI (0) -> ASSET_4 (3) -> GNO (4) -> WETH (2)
-        IBalancerVault.BatchSwapStep[] memory swaps = new IBalancerVault.BatchSwapStep[](3);
-        swaps[0] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_3, assetInIndex: 0, assetOutIndex: 3, amount: amountSdaiIn, userData: bytes("")
-        });
-        swaps[1] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_4, assetInIndex: 3, assetOutIndex: 4, amount: 0, userData: bytes("")
-        });
-        swaps[2] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_5, assetInIndex: 4, assetOutIndex: 2, amount: 0, userData: bytes("")
-        });
-
-        // Limits: positive sDAI in; negative min WETH out if set
-        int256[] memory limits = new int256[](assets.length);
-        // forge-lint: disable-next-line(unsafe-typecast)
-        limits[PNK_IDX_SDAI] = int256(amountSdaiIn);
-        if (minWethOut > 0) {
-            // forge-lint: disable-next-line(unsafe-typecast)
-            limits[PNK_IDX_WETH] = -int256(minWethOut);
-        }
-
-        // Funds: this contract as sender/recipient; no internal balance
-        IBalancerVault.FundManagement memory funds = IBalancerVault.FundManagement({
-            sender: address(this), fromInternalBalance: false, recipient: address(this), toInternalBalance: false
-        });
-
-        // Execute batchSwap
-        IBalancerVault(BALANCER_VAULT)
-            .batchSwap(IBalancerVault.SwapKind.GIVEN_IN, swaps, assets, funds, limits, BALANCER_VAULT_DEADLINE);
-
-        // Validate WETH received
-        uint256 wethBal = IERC20(TOKEN_WETH).balanceOf(address(this));
-        if (wethBal == 0) revert NoBalance();
-        if (minWethOut > 0 && wethBal < minWethOut) revert InsufficientOutput();
-
-        // Approve and swap WETH -> PNK on Swapr v2 (Uniswap v2 router)
-        _ensureMaxAllowance(IERC20(TOKEN_WETH), SWAPR_V2_ROUTER);
-        address[] memory path = new address[](2);
-        path[0] = TOKEN_WETH;
-        path[1] = TOKEN_PNK;
-        IUniswapV2Router02(SWAPR_V2_ROUTER)
-            .swapExactTokensForTokens(wethBal, minPnkOut, path, address(this), SWAPR_V2_DEADLINE);
-    }
-
-    // External entrypoint gated to owner only
-    function buyPnkWithSdai(uint256 amountSdaiIn, uint256 minWethOut, uint256 minPnkOut) external onlyOwner {
-        _buyPnkWithSdai(amountSdaiIn, minWethOut, minPnkOut);
-    }
-
-    /// ------------------------
-    /// PNK Sell Flow: PNK -> WETH (Swapr) -> sDAI (Balancer Vault)
-    /// ------------------------
-    // Internal implementation used by on-chain flows
-    function _sellPnkForSdai(uint256 amountPnkIn, uint256 minWethOut, uint256 minSdaiOut) internal {
-        if (amountPnkIn == 0) revert ZeroAmount();
-
-        // 1) Swap PNK -> WETH on Swapr v2 (Uniswap v2 router)
-        _ensureMaxAllowance(IERC20(TOKEN_PNK), SWAPR_V2_ROUTER);
-        address[] memory pathOut = new address[](2);
-        pathOut[0] = TOKEN_PNK;
-        pathOut[1] = TOKEN_WETH;
-        IUniswapV2Router02(SWAPR_V2_ROUTER)
-            .swapExactTokensForTokens(amountPnkIn, minWethOut, pathOut, address(this), SWAPR_V2_DEADLINE);
-
-        // Read WETH received
-        uint256 wethBal = IERC20(TOKEN_WETH).balanceOf(address(this));
-        if (wethBal == 0) revert NoBalance();
-        if (minWethOut > 0 && wethBal < minWethOut) revert InsufficientOutput();
-
-        // 2) Balancer Vault batchSwap: WETH -> sDAI using the reverse path of the buy flow
-        _ensureMaxAllowance(IERC20(TOKEN_WETH), BALANCER_VAULT);
-
-        address[] memory assets = _pnkAssetsOrder();
-
-        IBalancerVault.BatchSwapStep[] memory swaps = new IBalancerVault.BatchSwapStep[](5);
-        uint256 half = wethBal / 2;
-        uint256 other = wethBal - half;
-
-        // Reverse Branch A: WETH (2) -> ASSET_2 (1) -> sDAI (0)
-        swaps[0] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_2, assetInIndex: 2, assetOutIndex: 1, amount: half, userData: bytes("")
-        });
-        swaps[1] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_1, assetInIndex: 1, assetOutIndex: 0, amount: 0, userData: bytes("")
-        });
-
-        // Reverse Branch B: WETH (2) -> GNO (4) -> ASSET_4 (3) -> sDAI (0)
-        swaps[2] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_5, assetInIndex: 2, assetOutIndex: 4, amount: other, userData: bytes("")
-        });
-        swaps[3] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_4, assetInIndex: 4, assetOutIndex: 3, amount: 0, userData: bytes("")
-        });
-        swaps[4] = IBalancerVault.BatchSwapStep({
-            poolId: PNK_POOL_3, assetInIndex: 3, assetOutIndex: 0, amount: 0, userData: bytes("")
-        });
-
-        // Limits: positive WETH in; negative min sDAI out if set
-        int256[] memory limits = new int256[](assets.length);
-        // forge-lint: disable-next-line(unsafe-typecast)
-        limits[PNK_IDX_WETH] = int256(wethBal);
-        if (minSdaiOut > 0) {
-            // forge-lint: disable-next-line(unsafe-typecast)
-            limits[PNK_IDX_SDAI] = -int256(minSdaiOut);
-        }
-
-        IBalancerVault.FundManagement memory funds = IBalancerVault.FundManagement({
-            sender: address(this), fromInternalBalance: false, recipient: address(this), toInternalBalance: false
-        });
-
-        IBalancerVault(BALANCER_VAULT)
-            .batchSwap(IBalancerVault.SwapKind.GIVEN_IN, swaps, assets, funds, limits, BALANCER_VAULT_DEADLINE);
-
-        // Validate sDAI received
-        uint256 sdaiBal = IERC20(TOKEN_SDAI).balanceOf(address(this));
-        if (sdaiBal == 0) revert NoBalance();
-        if (minSdaiOut > 0 && sdaiBal < minSdaiOut) revert InsufficientOutput();
-    }
-
-    // External entrypoint gated to owner only
-    function sellPnkForSdai(uint256 amountPnkIn, uint256 minWethOut, uint256 minSdaiOut) external onlyOwner {
-        _sellPnkForSdai(amountPnkIn, minWethOut, minSdaiOut);
-    }
-
-    /**
-     * @notice SELL complete arbitrage variant that buys PNK internally (sDAI→WETH→PNK) instead of using Balancer calldata.
-     * @dev Signature mirrors sell_conditional_arbitrage_balancer for compatibility; Step 2 differs only.
-     */
-    function sell_conditional_arbitrage_pnk(
-        bytes calldata buy_company_ops, // ignored in this variant
-        address balancer_router, // ignored for Step 2 (kept for signature compatibility)
-        address balancer_vault, // ignored for Step 2 (kept for signature compatibility)
-        address comp, // MUST be TOKEN_PNK in this variant
-        address cur,
-        address futarchy_router,
-        address proposal,
-        address yes_comp,
-        address no_comp,
-        address yes_cur,
-        address no_cur,
-        address swapr_router,
-        uint256 amount_sdai_in,
-        int256 min_out_final
-    ) external onlyOwner {
-        // Silence unused params
-        (buy_company_ops);
-        (balancer_router);
-        (balancer_vault);
-
-        // --- Step 1: snapshot collateral ---
-        uint256 initial_cur_balance = IERC20(cur).balanceOf(address(this));
-        emit InitialCollateralSnapshot(cur, initial_cur_balance);
-
-        if (amount_sdai_in == 0) revert ZeroAmount();
-        if (comp != TOKEN_PNK) revert InvalidComp();
-        if (futarchy_router == address(0) || proposal == address(0)) revert RouterOrProposalZero();
-        if (cur == address(0) || yes_comp == address(0) || no_comp == address(0)) revert ZeroAddress();
-        if (yes_cur == address(0) || no_cur == address(0) || swapr_router == address(0)) revert TokenAddressZero();
-
-        // --- Step 2 (replaced): buy PNK using internal sDAI→WETH→PNK path ---
-        // Uses fixed Balancer route + Swapr v2 router configured in this contract.
-        // minWethOut/minPnkOut set to 0 for simplicity; external callers can constrain via min_out_final if needed.
-        _buyPnkWithSdai(amount_sdai_in, 0, 0);
-
-        // --- Step 3: verify PNK (comp) acquired ---
-        uint256 compBalance = IERC20(comp).balanceOf(address(this));
-        emit CompositeAcquired(comp, compBalance);
-        if (compBalance == 0) revert NoBalance();
-
-        // --- Step 4: Split into conditional comps ---
-        if (futarchy_router != address(0) && proposal != address(0)) {
-            _ensureMaxAllowance(IERC20(comp), futarchy_router);
-            IFutarchyRouter(futarchy_router).splitPosition(proposal, comp, compBalance);
-        } else {
-            (bool ok,) = comp.call(abi.encodeWithSelector(ICompositeLike.split.selector, compBalance));
-            emit CompositeSplitAttempted(comp, compBalance, ok);
-        }
-
-        // --- Step 5: Sell conditional composite → conditional collateral on Swapr (exact-in) ---
-        uint256 yesCompBal = IERC20(yes_comp).balanceOf(address(this));
-        if (yesCompBal > 0) _swaprExactIn(swapr_router, yes_comp, yes_cur, yesCompBal, 0);
-        uint256 noCompBal = IERC20(no_comp).balanceOf(address(this));
-        if (noCompBal > 0) _swaprExactIn(swapr_router, no_comp, no_cur, noCompBal, 0);
-
-        // --- Step 6: Merge conditional collateral (YES/NO) back into base collateral (cur) ---
-        if (futarchy_router != address(0) && proposal != address(0)) {
-            uint256 yesCurBal = IERC20(yes_cur).balanceOf(address(this));
-            uint256 noCurBal = IERC20(no_cur).balanceOf(address(this));
-            uint256 mergeAmt = yesCurBal < noCurBal ? yesCurBal : noCurBal;
-            if (mergeAmt > 0) {
-                // Router will transferFrom both legs; approve both to MAX
-                _ensureMaxAllowance(IERC20(yes_cur), futarchy_router);
-                _ensureMaxAllowance(IERC20(no_cur), futarchy_router);
-                IFutarchyRouter(futarchy_router).mergePositions(proposal, cur, mergeAmt);
-                emit ConditionalCollateralMerged(futarchy_router, proposal, cur, mergeAmt);
-            }
-        }
-
-        // --- Step 7: Sell any remaining single-sided conditional collateral to base collateral on Swapr ---
-        uint256 yesCurLeft = IERC20(yes_cur).balanceOf(address(this));
-        uint256 noCurLeft = IERC20(no_cur).balanceOf(address(this));
-        if (yesCurLeft > 0) _swaprExactIn(swapr_router, yes_cur, cur, yesCurLeft, 0);
-        else if (noCurLeft > 0) _swaprExactIn(swapr_router, no_cur, cur, noCurLeft, 0);
-
-        // --- Step 8: On-chain profit check in base collateral terms (signed) ---
-        uint256 final_cur_balance = IERC20(cur).balanceOf(address(this));
-        if (final_cur_balance > uint256(type(int256).max) || initial_cur_balance > uint256(type(int256).max)) {
-            revert BalanceTooLarge();
-        }
-        // forge-lint: disable-next-line(unsafe-typecast)
-        int256 signedProfit = int256(final_cur_balance) - int256(initial_cur_balance);
-        if (signedProfit < min_out_final) revert MinProfitNotMet();
-        emit ProfitVerified(initial_cur_balance, final_cur_balance, min_out_final);
-    }
-
-    /**
-     * @notice BUY complete arbitrage variant that sells PNK internally (PNK→WETH→sDAI) instead of using Balancer calldata.
-     * @dev Signature mirrors buy_conditional_arbitrage_balancer for compatibility; only Step 6 differs.
-     */
-    function buy_conditional_arbitrage_pnk(
-        address comp, // MUST be TOKEN_PNK in this variant
-        address cur,
-        bool yes_has_higher_price,
-        address futarchy_router,
-        address proposal,
-        address yes_comp,
-        address no_comp,
-        address yes_cur,
-        address no_cur,
-        address yes_pool,
-        address no_pool,
-        address swapr_router,
-        uint256 amount_sdai_in,
-        int256 min_out_final
-    ) external onlyOwner {
-        // --- Step 0: snapshot base collateral for profit accounting ---
-        uint256 initial_cur_balance = IERC20(cur).balanceOf(address(this));
-
-        if (amount_sdai_in == 0) revert ZeroAmount();
-        if (comp != TOKEN_PNK) revert InvalidComp();
-        if (futarchy_router == address(0) || proposal == address(0)) revert RouterOrProposalZero();
-        if (cur == address(0) || yes_comp == address(0) || no_comp == address(0)) revert ZeroAddress();
-        if (yes_cur == address(0) || no_cur == address(0) || swapr_router == address(0)) revert TokenAddressZero();
-
-        // Step 1: split sDAI into conditional collateral (YES/NO)
-        _ensureMaxAllowance(IERC20(cur), futarchy_router);
-        IFutarchyRouter(futarchy_router).splitPosition(proposal, cur, amount_sdai_in);
-        emit ConditionalCollateralSplit(futarchy_router, proposal, cur, amount_sdai_in);
-
-        // Defensive check: ensure at least amount_sdai_in exists on both legs
-        if (IERC20(yes_cur).balanceOf(address(this)) < amount_sdai_in) revert InsufficientBalance();
-        if (IERC20(no_cur).balanceOf(address(this)) < amount_sdai_in) revert InsufficientBalance();
-
-        // Step 2 & 3: buy comps symmetrically
-        uint24 yesFee = _poolFeeOrDefault(yes_pool);
-        uint24 noFee = _poolFeeOrDefault(no_pool);
-        if (yes_has_higher_price) {
-            uint256 yesCompOut = _swaprExactIn(swapr_router, yes_cur, yes_comp, amount_sdai_in, 0);
-            if (yesCompOut == 0) revert SwapReturnedZero();
-            _swaprExactOut(swapr_router, no_cur, no_comp, noFee, yesCompOut, amount_sdai_in);
-        } else {
-            uint256 noCompOut = _swaprExactIn(swapr_router, no_cur, no_comp, amount_sdai_in, 0);
-            if (noCompOut == 0) revert SwapReturnedZero();
-            _swaprExactOut(swapr_router, yes_cur, yes_comp, yesFee, noCompOut, amount_sdai_in);
-        }
-
-        // Step 4: Merge conditional composite tokens (YES_COMP/NO_COMP -> COMP)
-        uint256 yesCompBal = IERC20(yes_comp).balanceOf(address(this));
-        uint256 noCompBal = IERC20(no_comp).balanceOf(address(this));
-        uint256 mergeAmt = yesCompBal < noCompBal ? yesCompBal : noCompBal;
-        if (mergeAmt > 0) {
-            _ensureMaxAllowance(IERC20(yes_comp), futarchy_router);
-            _ensureMaxAllowance(IERC20(no_comp), futarchy_router);
-            IFutarchyRouter(futarchy_router).mergePositions(proposal, comp, mergeAmt);
-            emit ConditionalCollateralMerged(futarchy_router, proposal, comp, mergeAmt);
-        }
-
-        // Step 6 (replaced): Sell PNK -> sDAI using internal helper
-        uint256 pnkBal = IERC20(TOKEN_PNK).balanceOf(address(this));
-        if (pnkBal > 0) _sellPnkForSdai(pnkBal, 0, 0);
-
-        // Step 7: Sell any remaining single-sided conditional collateral to base collateral on Swapr
-        uint256 yesCurLeft = IERC20(yes_cur).balanceOf(address(this));
-        uint256 noCurLeft = IERC20(no_cur).balanceOf(address(this));
-        if (yesCurLeft > 0) _swaprExactIn(swapr_router, yes_cur, cur, yesCurLeft, 0);
-        else if (noCurLeft > 0) _swaprExactIn(swapr_router, no_cur, cur, noCurLeft, 0);
-
-        // Step 8: Profit check
-        uint256 final_cur_balance = IERC20(cur).balanceOf(address(this));
-        if (final_cur_balance > uint256(type(int256).max) || initial_cur_balance > uint256(type(int256).max)) {
-            revert BalanceTooLarge();
-        }
-        // forge-lint: disable-next-line(unsafe-typecast)
-        int256 signedProfit = int256(final_cur_balance) - int256(initial_cur_balance);
-        if (signedProfit < min_out_final) revert MinProfitNotMet();
-        emit ProfitVerified(initial_cur_balance, final_cur_balance, min_out_final);
-    }
-    // --- Ownership ---
-    address public owner;
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-
-    modifier onlyOwner() {
-        if (msg.sender != owner) revert NotOwner();
-        _;
-    }
-
-    constructor() {
-        owner = msg.sender;
-        emit OwnershipTransferred(address(0), msg.sender);
-    }
-    /// Uniswap Permit2 (canonical)
-    // Checksummed literal required by recent solc versions
+    // Constants
+    address internal constant SDAI = 0xaf204776c7245bF4147c2612BF6e5972Ee483701;
+    address internal constant WETH = 0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1;
+    address internal constant PNK = 0x37b60f4E9A31A64cCc0024dce7D0fD07eAA0F7B3;
+    address internal constant BAL_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
+    address internal constant SWAPR_V2 = 0xE43e60736b1cb4a75ad25240E2f9a62Bff65c0C0;
     address internal constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
-    uint160 internal constant MAX_UINT160 = type(uint160).max;
-    uint48 internal constant MAX_UINT48 = type(uint48).max;
 
-    event InitialCollateralSnapshot(address indexed collateral, uint256 balance);
-    event MaxAllowanceEnsured(address indexed token, address indexed spender, uint256 allowance);
-    event Permit2AllowanceEnsured(address indexed token, address indexed spender, uint160 amount, uint48 expiration);
-    event BalancerBuyExecuted(address indexed router, bytes buyOps);
-    event BalancerSellExecuted(address indexed router, bytes sellOps);
-    event CompositeAcquired(address indexed comp, uint256 amount);
-    event CompositeSplitAttempted(address indexed comp, uint256 amount, bool ok);
-    event SwaprExactInExecuted(
-        address indexed router, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut
-    );
-    event SwaprExactOutExecuted(
-        address indexed router, address indexed tokenIn, address indexed tokenOut, uint256 amountOut, uint256 amountIn
-    );
-    event ConditionalCollateralMerged(
-        address indexed router, address indexed proposal, address indexed collateral, uint256 amount
-    );
-    event ConditionalCollateralSplit(
-        address indexed router, address indexed proposal, address indexed collateral, uint256 amount
-    );
-    event ProfitVerified(uint256 initialBalance, uint256 finalBalance, int256 minProfit);
+    bytes32 internal constant POOL_3 = 0x40d2cbc586dd8df50001cdba3f65cd4bbc32d596000200000000000000000154;
+    bytes32 internal constant POOL_4 = 0x480d4f66cc41a1b6784a53a10890e5ece31d75c000020000000000000000014e;
+    bytes32 internal constant POOL_5 = 0xa99fd9950b5d5dceeaf4939e221dca8ca9b938ab000100000000000000000025;
 
-    /// Idempotent ERC20 max-approval (resets to 0 first if needed)
-    function _ensureMaxAllowance(IERC20 token, address spender) internal {
-        uint256 cur = token.allowance(address(this), spender);
-        if (cur != type(uint256).max) {
-            if (cur != 0) if (!token.approve(spender, 0)) revert ApproveResetFailed();
-            if (!token.approve(spender, type(uint256).max)) revert ApproveSetFailed();
-        }
-        emit MaxAllowanceEnsured(address(token), spender, token.allowance(address(this), spender));
-    }
+    address public owner;
+    
+    event Profit(uint256 initial, uint256 final_, int256 min);
 
-    /// Ensure both ERC20->Permit2 and Permit2(owner=this)->router allowances
-    function _ensurePermit2Approvals(IERC20 token, address router) internal {
-        // 1) ERC-20 approval: token spender = Permit2
-        _ensureMaxAllowance(token, PERMIT2);
-        // 2) Permit2 internal allowance: owner = this contract; spender = router
-        IPermit2(PERMIT2).approve(address(token), router, MAX_UINT160, MAX_UINT48);
-        emit Permit2AllowanceEnsured(address(token), router, MAX_UINT160, MAX_UINT48);
-    }
+    modifier auth() { if (msg.sender != owner) revert Err(1); _; }
+    constructor() { owner = msg.sender; }
 
-    /// Algebra/Swapr: approve and execute exact-input single hop
-    function _swaprExactIn(address swapr_router, address tokenIn, address tokenOut, uint256 amountIn, uint256 minOut)
-        internal
-        returns (uint256 amountOut)
-    {
-        if (swapr_router == address(0)) revert ZeroAddress();
-        if (tokenIn == address(0) || tokenOut == address(0)) revert TokenAddressZero();
-        if (amountIn == 0) return 0;
-        _ensureMaxAllowance(IERC20(tokenIn), swapr_router);
-        IAlgebraSwapRouter.ExactInputSingleParams memory p = IAlgebraSwapRouter.ExactInputSingleParams({
-            tokenIn: tokenIn,
-            tokenOut: tokenOut,
-            recipient: address(this),
-            deadline: block.timestamp,
-            amountIn: amountIn,
-            amountOutMinimum: minOut,
-            limitSqrtPrice: 0
-        });
-        amountOut = IAlgebraSwapRouter(swapr_router).exactInputSingle(p);
-        emit SwaprExactInExecuted(swapr_router, tokenIn, tokenOut, amountIn, amountOut);
-    }
-
-    /// Swapr/UniswapV3: approve and execute exact-output single hop (requires fee tier)
-    function _swaprExactOut(
-        address swapr_router,
-        address tokenIn,
-        address tokenOut,
-        uint24 fee,
-        uint256 amountOut,
-        uint256 maxIn
-    ) internal returns (uint256 amountIn) {
-        if (swapr_router == address(0)) revert ZeroAddress();
-        if (tokenIn == address(0) || tokenOut == address(0)) revert TokenAddressZero();
-        if (amountOut == 0) return 0;
-        _ensureMaxAllowance(IERC20(tokenIn), swapr_router);
-        ISwapRouterV3ExactOutput.ExactOutputSingleParams memory p = ISwapRouterV3ExactOutput.ExactOutputSingleParams({
-            tokenIn: tokenIn,
-            tokenOut: tokenOut,
-            fee: fee,
-            recipient: address(this),
-            deadline: block.timestamp,
-            amountOut: amountOut,
-            amountInMaximum: maxIn,
-            sqrtPriceLimitX96: 0
-        });
-        amountIn = ISwapRouterV3ExactOutput(swapr_router).exactOutputSingle(p);
-        emit SwaprExactOutExecuted(swapr_router, tokenIn, tokenOut, amountOut, amountIn);
-    }
-
-    uint24 internal constant DEFAULT_V3_FEE = 100; // 0.01%
-
-    function _poolFeeOrDefault(address pool) internal view returns (uint24) {
-        if (pool == address(0)) return DEFAULT_V3_FEE;
-        try IUniswapV3Pool(pool).fee() returns (uint24 f) {
-            return f == 0 ? DEFAULT_V3_FEE : f;
-        } catch {
-            return DEFAULT_V3_FEE;
+    // --- Helpers ---
+    function _approve(IERC20 t, address s) internal {
+        uint256 c = t.allowance(address(this), s);
+        if (c != type(uint256).max) {
+            if (c != 0) t.approve(s, 0);
+            t.approve(s, type(uint256).max);
         }
     }
 
-    /**
-     * @notice Symmetric BUY: steps 1–6 already implemented; this patch adds steps 7–8.
-     * @dev Steps 1–3: split sDAI -> conditional collateral; buy YES/NO comps (exact-in + exact-out).
-     *      Step 4: merge comps -> COMP; Step 5–6: sell COMP -> sDAI on Balancer.
-     *      Step 7: sell remaining single-sided conditional collateral (YES_cur or NO_cur) -> cur on Swapr.
-     *      Step 8: on-chain profit check in base-collateral terms against `min_out_final`.
-     */
+    function _permit2(IERC20 t, address r) internal {
+        _approve(t, PERMIT2);
+        IPermit2(PERMIT2).approve(address(t), r, type(uint160).max, type(uint48).max);
+    }
+
+    function _swaprIn(address r, address ti, address to, uint256 a) internal returns (uint256) {
+        if (a == 0) return 0;
+        _approve(IERC20(ti), r);
+        return IAlgebraSwapRouter(r).exactInputSingle(IAlgebraSwapRouter.ExactInputSingleParams(ti, to, address(this), block.timestamp, a, 0, 0));
+    }
+
+    function _swaprOut(address r, address ti, address to, uint24 f, uint256 ao, uint256 mi) internal returns (uint256) {
+        if (ao == 0) return 0;
+        _approve(IERC20(ti), r);
+        return ISwapRouterV3ExactOutput(r).exactOutputSingle(ISwapRouterV3ExactOutput.ExactOutputSingleParams(ti, to, f, address(this), block.timestamp, ao, mi, 0));
+    }
+
+    function _fee(address p) internal view returns (uint24) {
+        if (p == address(0)) return 100;
+        try IUniswapV3Pool(p).fee() returns (uint24 f) { return f == 0 ? 100 : f; } catch { return 100; }
+    }
+
+    function _pnkAssets() internal pure returns (address[] memory a) {
+        a = new address[](5);
+        a[0] = SDAI; a[1] = 0xC0d871bD13eBdf5c4ff059D8243Fb38210608bD6; a[2] = WETH;
+        a[3] = 0xE0eD85F76D9C552478929fab44693E03F0899F23; a[4] = 0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb;
+    }
+
+    // --- PNK Buy: sDAI -> WETH -> PNK ---
+    function _buyPnk(uint256 amt) internal {
+        if (amt == 0) revert Err(2);
+        _approve(IERC20(SDAI), BAL_VAULT);
+
+        address[] memory assets = _pnkAssets();
+        IBalancerVault.BatchSwapStep[] memory swaps = new IBalancerVault.BatchSwapStep[](3);
+        swaps[0] = IBalancerVault.BatchSwapStep(POOL_3, 0, 3, amt, "");
+        swaps[1] = IBalancerVault.BatchSwapStep(POOL_4, 3, 4, 0, "");
+        swaps[2] = IBalancerVault.BatchSwapStep(POOL_5, 4, 2, 0, "");
+
+        int256[] memory limits = new int256[](5);
+        // forge-lint: disable-next-line(unsafe-typecast)
+        limits[0] = int256(amt);
+
+        IBalancerVault(BAL_VAULT).batchSwap(
+            IBalancerVault.SwapKind.GIVEN_IN, swaps, assets,
+            IBalancerVault.FundManagement(address(this), false, address(this), false),
+            limits, type(uint256).max
+        );
+
+        uint256 weth = IERC20(WETH).balanceOf(address(this));
+        if (weth == 0) revert Err(3);
+
+        _approve(IERC20(WETH), SWAPR_V2);
+        address[] memory path = new address[](2);
+        path[0] = WETH; path[1] = PNK;
+        IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(weth, 0, path, address(this), type(uint256).max);
+    }
+
+    // --- PNK Sell: PNK -> WETH -> sDAI ---
+    function _sellPnk(uint256 amt) internal {
+        if (amt == 0) revert Err(2);
+
+        _approve(IERC20(PNK), SWAPR_V2);
+        address[] memory path = new address[](2);
+        path[0] = PNK; path[1] = WETH;
+        IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(amt, 0, path, address(this), type(uint256).max);
+
+        uint256 weth = IERC20(WETH).balanceOf(address(this));
+        if (weth == 0) revert Err(3);
+
+        _approve(IERC20(WETH), BAL_VAULT);
+        address[] memory assets = _pnkAssets();
+
+        uint256 h = weth / 2;
+        IBalancerVault.BatchSwapStep[] memory swaps = new IBalancerVault.BatchSwapStep[](5);
+        swaps[0] = IBalancerVault.BatchSwapStep(0x7e5870ac540adfd01a213c829f2231c309623eb10002000000000000000000e9, 2, 1, h, "");
+        swaps[1] = IBalancerVault.BatchSwapStep(0xa91c413d8516164868f6cca19573fe38f88f5982000200000000000000000157, 1, 0, 0, "");
+        swaps[2] = IBalancerVault.BatchSwapStep(POOL_5, 2, 4, weth - h, "");
+        swaps[3] = IBalancerVault.BatchSwapStep(POOL_4, 4, 3, 0, "");
+        swaps[4] = IBalancerVault.BatchSwapStep(POOL_3, 3, 0, 0, "");
+
+        int256[] memory limits = new int256[](5);
+        // forge-lint: disable-next-line(unsafe-typecast)
+        limits[2] = int256(weth);
+
+        IBalancerVault(BAL_VAULT).batchSwap(
+            IBalancerVault.SwapKind.GIVEN_IN, swaps, assets,
+            IBalancerVault.FundManagement(address(this), false, address(this), false),
+            limits, type(uint256).max
+        );
+    }
+
+    // --- Public PNK functions ---
+    function buyPnkWithSdai(uint256 amt, uint256, uint256) external auth { _buyPnk(amt); }
+    function sellPnkForSdai(uint256 amt, uint256, uint256) external auth { _sellPnk(amt); }
+
+    // --- Helper: Merge remaining conditionals ---
+    function _mergeRemainingCond(address r, address yt, address nt, address st) internal {
+        uint256 yBal = IERC20(yt).balanceOf(address(this));
+        uint256 nBal = IERC20(nt).balanceOf(address(this));
+        if (yBal > 0 && nBal > 0) {
+            uint256 m = yBal < nBal ? yBal : nBal;
+            _approve(IERC20(yt), r);
+            _approve(IERC20(nt), r);
+            IFutarchyRouter(r).mergePositions(address(0), st, m);
+        }
+    }
+
+    // --- BUY Conditional Arbitrage (Balancer) ---
     function buy_conditional_arbitrage_balancer(
-        bytes calldata sell_company_ops, // Balancer BatchRouter.swapExactIn (COMP -> sDAI) calldata
-        address balancer_router, // BatchRouter address (expects swapExactIn)
-        address balancer_vault, // Vault/V3 (optional; 0 if unused)
-        address comp, // Composite token (Company)
-        address cur,
-        bool yes_has_higher_price,
-        address futarchy_router,
-        address proposal,
-        address yes_comp,
-        address no_comp,
-        address yes_cur,
-        address no_cur,
-        address yes_pool,
-        address no_pool,
-        address swapr_router,
-        uint256 amount_sdai_in,
-        int256 min_out_final
-    ) external onlyOwner {
-        // KEEPING signature compatible; new arg appended.
-        // --- Step 0: snapshot base collateral for profit accounting ---
-        uint256 initial_cur_balance = IERC20(cur).balanceOf(address(this));
-
-        if (amount_sdai_in == 0) revert ZeroAmount();
-        if (futarchy_router == address(0) || proposal == address(0)) revert RouterOrProposalZero();
-        if (cur == address(0) || yes_comp == address(0) || no_comp == address(0)) revert ZeroAddress();
-        if (yes_cur == address(0) || no_cur == address(0) || swapr_router == address(0)) revert TokenAddressZero();
-
-        // Step 1: split sDAI into conditional collateral (YES/NO)
-        _ensureMaxAllowance(IERC20(cur), futarchy_router);
-        IFutarchyRouter(futarchy_router).splitPosition(proposal, cur, amount_sdai_in);
-        emit ConditionalCollateralSplit(futarchy_router, proposal, cur, amount_sdai_in);
-
-        // Defensive check: ensure at least amount_sdai_in exists on both legs
-        if (IERC20(yes_cur).balanceOf(address(this)) < amount_sdai_in) revert InsufficientBalance();
-        if (IERC20(no_cur).balanceOf(address(this)) < amount_sdai_in) revert InsufficientBalance();
-
-        // Step 2 & 3: buy comps symmetrically
-        uint24 yesFee = _poolFeeOrDefault(yes_pool);
-        uint24 noFee = _poolFeeOrDefault(no_pool);
-        if (yes_has_higher_price) {
-            uint256 yesCompOut = _swaprExactIn(swapr_router, yes_cur, yes_comp, amount_sdai_in, 0);
-            if (yesCompOut == 0) revert SwapReturnedZero();
-            _swaprExactOut(swapr_router, no_cur, no_comp, noFee, yesCompOut, amount_sdai_in);
-        } else {
-            uint256 noCompOut = _swaprExactIn(swapr_router, no_cur, no_comp, amount_sdai_in, 0);
-            if (noCompOut == 0) revert SwapReturnedZero();
-            _swaprExactOut(swapr_router, yes_cur, yes_comp, yesFee, noCompOut, amount_sdai_in);
-        }
-
-        // ------------------------------------------------------------------ //
-        // Step 4: Merge conditional composite tokens (YES_COMP/NO_COMP -> COMP)
-        // ------------------------------------------------------------------ //
-        uint256 yesCompBal = IERC20(yes_comp).balanceOf(address(this));
-        uint256 noCompBal = IERC20(no_comp).balanceOf(address(this));
-        uint256 mergeAmt = yesCompBal < noCompBal ? yesCompBal : noCompBal;
-        if (mergeAmt > 0) {
-            // Router will transferFrom both legs; approve both to MAX
-            _ensureMaxAllowance(IERC20(yes_comp), futarchy_router);
-            _ensureMaxAllowance(IERC20(no_comp), futarchy_router);
-            IFutarchyRouter(futarchy_router).mergePositions(proposal, comp, mergeAmt);
-            // Reuse merged event; collateral param carries `comp` in this branch
-            emit ConditionalCollateralMerged(futarchy_router, proposal, comp, mergeAmt);
-        }
-
-        // ------------------------------------------------------------------ //
-        // Step 5 & 6: Sell COMP -> sDAI
-        //   - If COMP is PNK, use the internal PNK sell helper (Swapr v2 + Balancer Vault)
-        //   - Otherwise, use provided Balancer BatchRouter calldata to sell COMP
-        // ------------------------------------------------------------------ //
-        if (mergeAmt > 0) {
-            if (comp == TOKEN_PNK) {
-                // Internal PNK liquidation path in the same tx
-                uint256 pnkBal = IERC20(TOKEN_PNK).balanceOf(address(this));
-                if (pnkBal > 0) _sellPnkForSdai(pnkBal, 0, 0);
-            } else if (sell_company_ops.length > 0) {
-                if (balancer_router == address(0)) revert ZeroAddress();
-                _ensurePermit2Approvals(IERC20(comp), balancer_router);
-                if (balancer_vault != address(0)) _ensureMaxAllowance(IERC20(comp), balancer_vault);
-
-                (
-                    IBalancerBatchRouter.SwapPathExactAmountIn[] memory paths,
-                    uint256 deadline,
-                    bool wethIsEth,
-                    bytes memory userData
-                ) = abi.decode(
-                    sell_company_ops[4:], (IBalancerBatchRouter.SwapPathExactAmountIn[], uint256, bool, bytes)
-                );
-                if (paths.length == 0) revert InvalidPaths();
-                if (paths[0].tokenIn != comp) paths[0].tokenIn = comp;
-                paths[0].exactAmountIn = mergeAmt;
-
-                IBalancerBatchRouter(balancer_router).swapExactIn(paths, deadline, wethIsEth, userData);
-                emit BalancerSellExecuted(balancer_router, sell_company_ops);
-            }
-        }
-
-        // --- Step 7: Sell any remaining single-sided conditional collateral to base collateral on Swapr ---
-        uint256 yesCurLeft = IERC20(yes_cur).balanceOf(address(this));
-        uint256 noCurLeft = IERC20(no_cur).balanceOf(address(this));
-        if (yesCurLeft > 0) _swaprExactIn(swapr_router, yes_cur, cur, yesCurLeft, 0);
-        else if (noCurLeft > 0) _swaprExactIn(swapr_router, no_cur, cur, noCurLeft, 0);
-
-        // --- Step 8: On-chain profit check in base collateral terms (signed) ---
-        uint256 final_cur_balance = IERC20(cur).balanceOf(address(this));
-        if (final_cur_balance > uint256(type(int256).max) || initial_cur_balance > uint256(type(int256).max)) {
-            revert BalanceTooLarge();
-        }
+        address proposal, address router, address swaprRouter, address batchRouter,
+        address sdaiYes, address sdaiNo, address gnoYes, address gnoNo,
+        address balPool, address gno, uint256 amt, int256 minProfit
+    ) external auth {
+        uint256 init = IERC20(SDAI).balanceOf(address(this));
+        _buyBalancerFlow(proposal, router, swaprRouter, batchRouter, sdaiYes, sdaiNo, gnoYes, gnoNo, balPool, gno, amt);
+        uint256 fin = IERC20(SDAI).balanceOf(address(this));
         // forge-lint: disable-next-line(unsafe-typecast)
-        int256 signedProfit = int256(final_cur_balance) - int256(initial_cur_balance);
-        if (signedProfit < min_out_final) revert MinProfitNotMet();
-        emit ProfitVerified(initial_cur_balance, final_cur_balance, min_out_final);
+        if (int256(fin) - int256(init) < minProfit) revert Err(4);
+        emit Profit(init, fin, minProfit);
     }
 
+    function _buyBalancerFlow(
+        address proposal, address router, address swaprRouter, address batchRouter,
+        address sdaiYes, address sdaiNo, address gnoYes, address gnoNo,
+        address balPool, address gno, uint256 amt
+    ) internal {
+        // Split sDAI -> YES/NO
+        _approve(IERC20(SDAI), router);
+        IFutarchyRouter(router).splitPosition(proposal, SDAI, amt);
+
+        // Swap YES/NO sDAI -> YES/NO GNO
+        uint256 yesOut = _swaprIn(swaprRouter, sdaiYes, gnoYes, IERC20(sdaiYes).balanceOf(address(this)));
+        uint256 noOut = _swaprIn(swaprRouter, sdaiNo, gnoNo, IERC20(sdaiNo).balanceOf(address(this)));
+
+        // Merge GNO conditionals
+        uint256 mergeAmt = yesOut < noOut ? yesOut : noOut;
+        _approve(IERC20(gnoYes), router);
+        _approve(IERC20(gnoNo), router);
+        IFutarchyRouter(router).mergePositions(proposal, gno, mergeAmt);
+
+        // Sell GNO on Balancer
+        _sellGnoBalancer(batchRouter, balPool, gno);
+
+        // Sell remaining conditionals
+        uint256 remYes = IERC20(gnoYes).balanceOf(address(this));
+        uint256 remNo = IERC20(gnoNo).balanceOf(address(this));
+        if (remYes > 0) _swaprIn(swaprRouter, gnoYes, sdaiYes, remYes);
+        if (remNo > 0) _swaprIn(swaprRouter, gnoNo, sdaiNo, remNo);
+
+        // Merge remaining sDAI conditionals
+        _mergeRemainingCond(router, sdaiYes, sdaiNo, SDAI);
+    }
+
+    function _sellGnoBalancer(address batchRouter, address balPool, address gno) internal {
+        _permit2(IERC20(gno), batchRouter);
+        IBalancerBatchRouter.SwapPathExactAmountIn[] memory paths = new IBalancerBatchRouter.SwapPathExactAmountIn[](1);
+        IBalancerBatchRouter.SwapPathStep[] memory steps = new IBalancerBatchRouter.SwapPathStep[](1);
+        steps[0] = IBalancerBatchRouter.SwapPathStep(balPool, SDAI, false);
+        paths[0] = IBalancerBatchRouter.SwapPathExactAmountIn(gno, steps, IERC20(gno).balanceOf(address(this)), 0);
+        IBalancerBatchRouter(batchRouter).swapExactIn(paths, type(uint256).max, false, "");
+    }
+
+    // --- SELL Conditional Arbitrage (Balancer) ---
     function sell_conditional_arbitrage_balancer(
-        bytes calldata buy_company_ops,
-        address balancer_router,
-        address balancer_vault,
-        address comp,
-        address cur,
-        address futarchy_router,
-        address proposal,
-        address yes_comp,
-        address no_comp,
-        address yes_cur,
-        address no_cur,
-        address swapr_router,
-        uint256 amount_sdai_in,
-        int256 min_out_final
-    ) external onlyOwner {
-        // Silence unused param (forward-compat)
-        (amount_sdai_in);
-
-        // --- Step 1: snapshot collateral ---
-        uint256 initial_cur_balance = IERC20(cur).balanceOf(address(this));
-        emit InitialCollateralSnapshot(cur, initial_cur_balance);
-
-        // --- Approvals required for the observed Balancer trace ---
-        _ensurePermit2Approvals(IERC20(cur), balancer_router);
-        if (balancer_vault != address(0)) _ensureMaxAllowance(IERC20(cur), balancer_vault);
-
-        // --- Step 2: Balancer buy ---
-        (bool ok,) = balancer_router.call(buy_company_ops);
-        if (!ok) revert BalancerSwapFailed();
-        emit BalancerBuyExecuted(balancer_router, buy_company_ops);
-
-        // --- Step 3: verify composite acquired ---
-        uint256 compBalance = IERC20(comp).balanceOf(address(this));
-        emit CompositeAcquired(comp, compBalance);
-        if (compBalance == 0) revert NoBalance();
-
-        // --- Step 4: Split into conditional comps ---
-        if (futarchy_router != address(0) && proposal != address(0)) {
-            _ensureMaxAllowance(IERC20(comp), futarchy_router);
-            IFutarchyRouter(futarchy_router).splitPosition(proposal, comp, compBalance);
-        } else {
-            (ok,) = comp.call(abi.encodeWithSelector(ICompositeLike.split.selector, compBalance));
-            emit CompositeSplitAttempted(comp, compBalance, ok);
-        }
-
-        // --- Step 5: Sell conditional composite → conditional collateral on Swapr (exact-in) ---
-        uint256 yesCompBal = IERC20(yes_comp).balanceOf(address(this));
-        if (yesCompBal > 0) _swaprExactIn(swapr_router, yes_comp, yes_cur, yesCompBal, 0);
-        uint256 noCompBal = IERC20(no_comp).balanceOf(address(this));
-        if (noCompBal > 0) _swaprExactIn(swapr_router, no_comp, no_cur, noCompBal, 0);
-        // --- Step 6: Merge conditional collateral (YES/NO) back into base collateral (cur) ---
-        if (futarchy_router != address(0) && proposal != address(0)) {
-            uint256 yesCurBal = IERC20(yes_cur).balanceOf(address(this));
-            uint256 noCurBal = IERC20(no_cur).balanceOf(address(this));
-            uint256 mergeAmt = yesCurBal < noCurBal ? yesCurBal : noCurBal;
-            if (mergeAmt > 0) {
-                // Router will transferFrom both legs; approve both to MAX
-                _ensureMaxAllowance(IERC20(yes_cur), futarchy_router);
-                _ensureMaxAllowance(IERC20(no_cur), futarchy_router);
-                IFutarchyRouter(futarchy_router).mergePositions(proposal, cur, mergeAmt);
-                emit ConditionalCollateralMerged(futarchy_router, proposal, cur, mergeAmt);
-            }
-        }
-
-        // --- Step 7: Sell any remaining single-sided conditional collateral to base collateral on Swapr ---
-        // After merging min(yes_cur, no_cur), at most one side should remain > 0.
-        uint256 yesCurLeft = IERC20(yes_cur).balanceOf(address(this));
-        uint256 noCurLeft = IERC20(no_cur).balanceOf(address(this));
-        if (yesCurLeft > 0) _swaprExactIn(swapr_router, yes_cur, cur, yesCurLeft, 0);
-        else if (noCurLeft > 0) _swaprExactIn(swapr_router, no_cur, cur, noCurLeft, 0);
-
-        // --- Step 8: On-chain profit check in base collateral terms (signed) ---
-        uint256 final_cur_balance = IERC20(cur).balanceOf(address(this));
+        address proposal, address router, address swaprRouter, address batchRouter,
+        address sdaiYes, address sdaiNo, address gnoYes, address gnoNo,
+        address balPool, address gno, uint256 amt, int256 minProfit
+    ) external auth {
+        uint256 init = IERC20(SDAI).balanceOf(address(this));
+        _sellBalancerFlow(proposal, router, swaprRouter, batchRouter, sdaiYes, sdaiNo, gnoYes, gnoNo, balPool, gno, amt);
+        uint256 fin = IERC20(SDAI).balanceOf(address(this));
         // forge-lint: disable-next-line(unsafe-typecast)
-        int256 signedProfit = int256(final_cur_balance) - int256(initial_cur_balance);
-        if (signedProfit < min_out_final) revert MinProfitNotMet();
+        if (int256(fin) - int256(init) < minProfit) revert Err(4);
+        emit Profit(init, fin, minProfit);
+    }
+
+    function _sellBalancerFlow(
+        address proposal, address router, address swaprRouter, address batchRouter,
+        address sdaiYes, address sdaiNo, address gnoYes, address gnoNo,
+        address balPool, address gno, uint256 amt
+    ) internal {
+        // Buy GNO on Balancer
+        _buyGnoBalancer(batchRouter, balPool, gno, amt);
+
+        // Split GNO -> YES/NO
+        uint256 gnoBal = IERC20(gno).balanceOf(address(this));
+        _approve(IERC20(gno), router);
+        IFutarchyRouter(router).splitPosition(proposal, gno, gnoBal);
+
+        // Sell YES/NO GNO -> YES/NO sDAI
+        _swaprIn(swaprRouter, gnoYes, sdaiYes, IERC20(gnoYes).balanceOf(address(this)));
+        _swaprIn(swaprRouter, gnoNo, sdaiNo, IERC20(gnoNo).balanceOf(address(this)));
+
+        // Merge sDAI conditionals
+        uint256 yBal = IERC20(sdaiYes).balanceOf(address(this));
+        uint256 nBal = IERC20(sdaiNo).balanceOf(address(this));
+        uint256 m = yBal < nBal ? yBal : nBal;
+        _approve(IERC20(sdaiYes), router);
+        _approve(IERC20(sdaiNo), router);
+        IFutarchyRouter(router).mergePositions(proposal, SDAI, m);
+    }
+
+    function _buyGnoBalancer(address batchRouter, address balPool, address gno, uint256 amt) internal {
+        _permit2(IERC20(SDAI), batchRouter);
+        IBalancerBatchRouter.SwapPathExactAmountIn[] memory paths = new IBalancerBatchRouter.SwapPathExactAmountIn[](1);
+        IBalancerBatchRouter.SwapPathStep[] memory steps = new IBalancerBatchRouter.SwapPathStep[](1);
+        steps[0] = IBalancerBatchRouter.SwapPathStep(balPool, gno, false);
+        paths[0] = IBalancerBatchRouter.SwapPathExactAmountIn(SDAI, steps, amt, 0);
+        IBalancerBatchRouter(batchRouter).swapExactIn(paths, type(uint256).max, false, "");
+    }
+
+    // --- BUY Conditional Arbitrage (PNK) ---
+    function buy_conditional_arbitrage_pnk(
+        address proposal, address router, address swaprRouter,
+        address sdaiYes, address sdaiNo, address pnkYes, address pnkNo,
+        uint256 amt, int256 minProfit
+    ) external auth {
+        uint256 init = IERC20(SDAI).balanceOf(address(this));
+        _buyPnkFlow(proposal, router, swaprRouter, sdaiYes, sdaiNo, pnkYes, pnkNo, amt);
+        uint256 fin = IERC20(SDAI).balanceOf(address(this));
         // forge-lint: disable-next-line(unsafe-typecast)
-        emit ProfitVerified(initial_cur_balance, final_cur_balance, min_out_final - int256(amount_sdai_in));
+        if (int256(fin) - int256(init) < minProfit) revert Err(4);
+        emit Profit(init, fin, minProfit);
     }
 
-    receive() external payable {}
+    function _buyPnkFlow(
+        address proposal, address router, address swaprRouter,
+        address sdaiYes, address sdaiNo, address pnkYes, address pnkNo,
+        uint256 amt
+    ) internal {
+        // Split sDAI -> YES/NO
+        _approve(IERC20(SDAI), router);
+        IFutarchyRouter(router).splitPosition(proposal, SDAI, amt);
 
-    // --- Owner withdrawals ---
-    function withdrawToken(IERC20 token, address to, uint256 amount) external onlyOwner {
-        if (to == address(0)) revert ZeroAddress();
-        if (!token.transfer(to, amount)) revert TransferFailed();
+        // Swap YES/NO sDAI -> YES/NO PNK
+        uint256 yesOut = _swaprIn(swaprRouter, sdaiYes, pnkYes, IERC20(sdaiYes).balanceOf(address(this)));
+        uint256 noOut = _swaprIn(swaprRouter, sdaiNo, pnkNo, IERC20(sdaiNo).balanceOf(address(this)));
+
+        // Merge PNK conditionals
+        uint256 mergeAmt = yesOut < noOut ? yesOut : noOut;
+        _approve(IERC20(pnkYes), router);
+        _approve(IERC20(pnkNo), router);
+        IFutarchyRouter(router).mergePositions(proposal, PNK, mergeAmt);
+
+        // Sell PNK for sDAI
+        _sellPnk(IERC20(PNK).balanceOf(address(this)));
+
+        // Sell remaining conditionals
+        uint256 remYes = IERC20(pnkYes).balanceOf(address(this));
+        uint256 remNo = IERC20(pnkNo).balanceOf(address(this));
+        if (remYes > 0) _swaprIn(swaprRouter, pnkYes, sdaiYes, remYes);
+        if (remNo > 0) _swaprIn(swaprRouter, pnkNo, sdaiNo, remNo);
+
+        // Merge remaining sDAI conditionals
+        _mergeRemainingCond(router, sdaiYes, sdaiNo, SDAI);
     }
 
-    function sweepToken(IERC20 token, address to) external onlyOwner {
-        if (to == address(0)) revert ZeroAddress();
-        uint256 bal = token.balanceOf(address(this));
-        if (!token.transfer(to, bal)) revert TransferFailed();
+    // --- SELL Conditional Arbitrage (PNK) ---
+    function sell_conditional_arbitrage_pnk(
+        address proposal, address router, address swaprRouter,
+        address sdaiYes, address sdaiNo, address pnkYes, address pnkNo,
+        uint256 amt, int256 minProfit
+    ) external auth {
+        uint256 init = IERC20(SDAI).balanceOf(address(this));
+        _sellPnkFlow(proposal, router, swaprRouter, sdaiYes, sdaiNo, pnkYes, pnkNo, amt);
+        uint256 fin = IERC20(SDAI).balanceOf(address(this));
+        // forge-lint: disable-next-line(unsafe-typecast)
+        if (int256(fin) - int256(init) < minProfit) revert Err(4);
+        emit Profit(init, fin, minProfit);
     }
 
-    function withdrawETH(address payable to, uint256 amount) external onlyOwner {
-        if (to == address(0)) revert ZeroAddress();
-        (bool ok,) = to.call{value: amount}("");
-        if (!ok) revert EthSendFailed();
+    function _sellPnkFlow(
+        address proposal, address router, address swaprRouter,
+        address sdaiYes, address sdaiNo, address pnkYes, address pnkNo,
+        uint256 amt
+    ) internal {
+        // Buy PNK with sDAI
+        _buyPnk(amt);
+
+        // Split PNK -> YES/NO
+        uint256 pnkBal = IERC20(PNK).balanceOf(address(this));
+        _approve(IERC20(PNK), router);
+        IFutarchyRouter(router).splitPosition(proposal, PNK, pnkBal);
+
+        // Sell YES/NO PNK -> YES/NO sDAI
+        _swaprIn(swaprRouter, pnkYes, sdaiYes, IERC20(pnkYes).balanceOf(address(this)));
+        _swaprIn(swaprRouter, pnkNo, sdaiNo, IERC20(pnkNo).balanceOf(address(this)));
+
+        // Merge sDAI conditionals
+        uint256 yBal = IERC20(sdaiYes).balanceOf(address(this));
+        uint256 nBal = IERC20(sdaiNo).balanceOf(address(this));
+        uint256 m = yBal < nBal ? yBal : nBal;
+        _approve(IERC20(sdaiYes), router);
+        _approve(IERC20(sdaiNo), router);
+        IFutarchyRouter(router).mergePositions(proposal, SDAI, m);
     }
 
-    function transferOwnership(address newOwner) external onlyOwner {
-        if (newOwner == address(0)) revert ZeroAddress();
-        emit OwnershipTransferred(owner, newOwner);
+    // --- Admin functions ---
+    function transferOwnership(address newOwner) external auth {
+        if (newOwner == address(0)) revert Err(99);
         owner = newOwner;
     }
-
+    function withdrawToken(address t, address to, uint256 a) external auth { if (!IERC20(t).transfer(to, a)) revert Err(50); }
+    function sweepToken(address t, address to) external auth { uint256 bal = IERC20(t).balanceOf(address(this)); if (bal > 0 && !IERC20(t).transfer(to, bal)) revert Err(50); }
+    function withdrawETH(address to, uint256 a) external auth { (bool ok,) = payable(to).call{value: a}(""); require(ok); }
+    receive() external payable {}
 }

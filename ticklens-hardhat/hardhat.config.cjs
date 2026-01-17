@@ -16,8 +16,9 @@ function getAccounts() {
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.20",
+    version: "0.8.33",
     settings: { optimizer: { enabled: true, runs: 1000000 } },
+    via_ir: true
   },
   networks: {
     gnosis: {

@@ -1,0 +1,894 @@
+'forge clean' running (wd: /Users/hs/futarchy-arbitrage-1)
+'forge config --json' running
+'forge build --build-info contracts' running (wd: /Users/hs/futarchy-arbitrage-1)
+
+Detector: controlled-delegatecall
+HybridExecutionCore.failoverRoute(uint256,address) (contracts/InstitutionalSolverCore.sol#276-279) uses delegatecall to a input-controlled function id
+	- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverCore.sol#277)
+InstitutionalSolverSystem._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverSystem.sol#129-157) uses delegatecall to a input-controlled function id
+	- (success,None) = solver.delegatecall(execData) (contracts/InstitutionalSolverSystem.sol#149)
+InstitutionalSolverSystem.failoverRoute(uint256,address) (contracts/InstitutionalSolverSystem.sol#371-374) uses delegatecall to a input-controlled function id
+	- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverSystem.sol#372)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#controlled-delegatecall
+
+Detector: incorrect-exp
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - inv_fullMulDiv_asm_0 = 2 ^ 3 * d (lib/solady/src/utils/clz/FixedPointMathLib.sol#486)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - inv_fullMulDivUnchecked_asm_0 = 2 ^ 3 * d (lib/solady/src/utils/clz/FixedPointMathLib.sol#526)
+LibBit.fls(uint256) (lib/solady/src/utils/clz/LibBit.sol#16-22) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - r = 255 ^ clz(uint256)(x) ^ 255 * ! x (lib/solady/src/utils/clz/LibBit.sol#21-22)
+LibBit.ffs(uint256) (lib/solady/src/utils/clz/LibBit.sol#31-37) has bitwise-xor operator ^ instead of the exponentiation operator **: 
+	 - r = 255 ^ clz(uint256)(x) ^ 255 * ! x (lib/solady/src/utils/clz/LibBit.sol#36-37)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-exponentiation
+
+Detector: incorrect-shift
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) contains an incorrect shift operation: l_lambertW0Wad_asm_0 = l_lambertW0Wad_asm_0 | byte(uint256,uint256)(0x1f & 0x8421084210842108cc6318c6db6d54be >> v_lambertW0Wad_asm_0 >> l_lambertW0Wad_asm_0,0x0706060506020504060203020504030106050205030304010505030400000000) + 49 (lib/solady/src/utils/clz/FixedPointMathLib.sol#369-370)
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) contains an incorrect shift operation: w = 7 << l_lambertW0Wad_asm_0 /' byte(uint256,uint256)(l_lambertW0Wad_asm_0 - 31,0x0303030303030303040506080c13) (lib/solady/src/utils/clz/FixedPointMathLib.sol#371)
+FixedPointMathLib.sqrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#770-797) contains an incorrect shift operation: z = 1 << 256 - clz(uint256)(x) >> 1 (lib/solady/src/utils/clz/FixedPointMathLib.sol#781)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) contains an incorrect shift operation: z = 1 << 257 - clz(uint256)(x) / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#810)
+FixedPointMathLib.log2Up(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#901-907) contains an incorrect shift operation: r = r + 1 << r < x (lib/solady/src/utils/clz/FixedPointMathLib.sol#905)
+FixedPointMathLib.log256Up(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#940-946) contains an incorrect shift operation: r = r + 1 << r << 3 < x (lib/solady/src/utils/clz/FixedPointMathLib.sol#944)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-shift-in-assembly
+
+Detector: divide-before-multiply
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- y = ((y * x) >> 96) + 57155421227552351082224309758442 (lib/solady/src/utils/clz/FixedPointMathLib.sol#239)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- p = p * x + (4385272521454847904659076985693276 << 96) (lib/solady/src/utils/clz/FixedPointMathLib.sol#242)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- q = ((q * x) >> 96) + 50020603652535783019961831881945 (lib/solady/src/utils/clz/FixedPointMathLib.sol#246)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- q = ((q * x) >> 96) - 533845033583426703283633433725380 (lib/solady/src/utils/clz/FixedPointMathLib.sol#247)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- q = ((q * x) >> 96) + 3604857256930695427073651918091429 (lib/solady/src/utils/clz/FixedPointMathLib.sol#248)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- q = ((q * x) >> 96) - 14423608567350463180887372962807573 (lib/solady/src/utils/clz/FixedPointMathLib.sol#249)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) performs a multiplication on the result of a division:
+	- x = (x << 78) / 5 ** 18 (lib/solady/src/utils/clz/FixedPointMathLib.sol#226)
+	- q = ((q * x) >> 96) + 26449188498355588339934803723976023 (lib/solady/src/utils/clz/FixedPointMathLib.sol#250)
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) performs a multiplication on the result of a division:
+	- t_lambertW0Wad_asm_2 = w * e / wad (lib/solady/src/utils/clz/FixedPointMathLib.sol#389)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = 2 ^ 3 * d (lib/solady/src/utils/clz/FixedPointMathLib.sol#486)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = inv_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#490)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = inv_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#491)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = inv_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#492)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = inv_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#493)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- inv_fullMulDiv_asm_0 = inv_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#494)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#480)
+	- z = p1_fullMulDiv_asm_0 - r_fullMulDiv_asm_0 > z * 0 - t_fullMulDiv_asm_0 / t_fullMulDiv_asm_0 + 1 | z - r_fullMulDiv_asm_0 / t_fullMulDiv_asm_0 * 2 - d * inv_fullMulDiv_asm_0 * inv_fullMulDiv_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#495-501)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = 2 ^ 3 * d (lib/solady/src/utils/clz/FixedPointMathLib.sol#526)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = inv_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#527)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = inv_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#528)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = inv_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#529)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = inv_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#530)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- inv_fullMulDivUnchecked_asm_0 = inv_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#531)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) performs a multiplication on the result of a division:
+	- d = d / t_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#525)
+	- z = p1_fullMulDivUnchecked_asm_0 - r_fullMulDivUnchecked_asm_0 > z * 0 - t_fullMulDivUnchecked_asm_0 / t_fullMulDivUnchecked_asm_0 + 1 | z - r_fullMulDivUnchecked_asm_0 / t_fullMulDivUnchecked_asm_0 * 2 - d * inv_fullMulDivUnchecked_asm_0 * inv_fullMulDivUnchecked_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#532-535)
+FixedPointMathLib.invMod(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#619-636) performs a multiplication on the result of a division:
+	- q_invMod_asm_0 = g_invMod_asm_0 / r_invMod_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#625)
+	- r_invMod_asm_0 = t_invMod_asm_0 - r_invMod_asm_0 * q_invMod_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#628)
+FixedPointMathLib.invMod(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#619-636) performs a multiplication on the result of a division:
+	- q_invMod_asm_0 = g_invMod_asm_0 / r_invMod_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#625)
+	- y_invMod_asm_0 = u_invMod_asm_0 - y_invMod_asm_0 * q_invMod_asm_0 (lib/solady/src/utils/clz/FixedPointMathLib.sol#631)
+FixedPointMathLib.rpow(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#733-767) performs a multiplication on the result of a division:
+	- x = xxRound_rpow_asm_0 / b (lib/solady/src/utils/clz/FixedPointMathLib.sol#749)
+	- zx_rpow_asm_0 = z * x (lib/solady/src/utils/clz/FixedPointMathLib.sol#752)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#812)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#813)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#813)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#814)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#814)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#815)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#815)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#816)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#816)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#817)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#817)
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#818)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) performs a multiplication on the result of a division:
+	- z = x / z * z + z + z / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#818)
+	- z = z - x / z * z < z (lib/solady/src/utils/clz/FixedPointMathLib.sol#820)
+FixedPointMathLib.cbrtWad(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#840-864) performs a multiplication on the result of a division:
+	- z = (fullMulDivUnchecked(x,10 ** 36,z * z) + z + z) / 3 (lib/solady/src/utils/clz/FixedPointMathLib.sol#844)
+	- t_cbrtWad_asm_0 = mulmod(uint256,uint256,uint256)(z * z,z,p_cbrtWad_asm_0) (lib/solady/src/utils/clz/FixedPointMathLib.sol#861)
+LibBit.popCount(uint256) (lib/solady/src/utils/clz/LibBit.sol#41-50) performs a multiplication on the result of a division:
+	- c = isMax_popCount_asm_0 << 8 | x * max_popCount_asm_0 / 255 >> 248 (lib/solady/src/utils/clz/LibBit.sol#49-50)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#divide-before-multiply
+
+Detector: incorrect-equality
+FutarchyArbExecutorV5._buyPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#115-141) uses a dangerous strict equality:
+	- weth == 0 (contracts/FutarchyArbExecutorV5.sol#135)
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) uses a dangerous strict equality:
+	- amt == 0 (contracts/FutarchyArbExecutorV5.sol#145)
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) uses a dangerous strict equality:
+	- weth == 0 (contracts/FutarchyArbExecutorV5.sol#153)
+FutarchyArbExecutorV5._swaprIn(address,address,address,uint256) (contracts/FutarchyArbExecutorV5.sol#91-95) uses a dangerous strict equality:
+	- a == 0 (contracts/FutarchyArbExecutorV5.sol#92)
+PredictionArbExecutorV1._swaprExactIn(address,address,address,uint256,uint256) (contracts/PredictionArbExecutorV1.sol#153-172) uses a dangerous strict equality:
+	- amountIn == 0 (contracts/PredictionArbExecutorV1.sol#159)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dangerous-strict-equalities
+
+Detector: reentrancy-no-eth
+Reentrancy in InstitutionalSolverSystem._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverSystem.sol#129-157):
+	External calls:
+	- (success,None) = solver.delegatecall(execData) (contracts/InstitutionalSolverSystem.sol#149)
+	State variables written after the call(s):
+	- updateReputationInternal(solver,10) (contracts/InstitutionalSolverSystem.sol#156)
+		- reputation[solver] = newRep (contracts/InstitutionalSolverSystem.sol#285)
+	InstitutionalSolverSystem.reputation (contracts/InstitutionalSolverSystem.sol#78) can be used in cross function reentrancies:
+	- InstitutionalSolverSystem.getReputation(address) (contracts/InstitutionalSolverSystem.sol#293-295)
+	- InstitutionalSolverSystem.getTopSolversByReputation(address[],uint256) (contracts/InstitutionalSolverSystem.sol#443-487)
+	- InstitutionalSolverSystem.updateReputationInternal(address,int256) (contracts/InstitutionalSolverSystem.sol#274-287)
+	- resolvers[intentId] = solver (contracts/InstitutionalSolverSystem.sol#152)
+	InstitutionalSolverSystem.resolvers (contracts/InstitutionalSolverSystem.sol#60) can be used in cross function reentrancies:
+	- InstitutionalSolverSystem.sealExecution(uint256) (contracts/InstitutionalSolverSystem.sol#365-369)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-1
+
+Detector: unused-return
+FutarchyArbExecutorV5._approve(IERC20,address) (contracts/FutarchyArbExecutorV5.sol#78-84) ignores return value by t.approve(s,0) (contracts/FutarchyArbExecutorV5.sol#81)
+FutarchyArbExecutorV5._approve(IERC20,address) (contracts/FutarchyArbExecutorV5.sol#78-84) ignores return value by t.approve(s,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#82)
+FutarchyArbExecutorV5._buyPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#115-141) ignores return value by IBalancerVault(BAL_VAULT).batchSwap(IBalancerVault.SwapKind.GIVEN_IN,swaps,assets,IBalancerVault.FundManagement(address(this),false,address(this),false),limits,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#128-132)
+FutarchyArbExecutorV5._buyPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#115-141) ignores return value by IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(weth,0,path,address(this),type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#140)
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) ignores return value by IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(amt,0,path,address(this),type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#150)
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) ignores return value by IBalancerVault(BAL_VAULT).batchSwap(IBalancerVault.SwapKind.GIVEN_IN,swaps,assets,IBalancerVault.FundManagement(address(this),false,address(this),false),limits,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#169-173)
+FutarchyArbExecutorV5._sellGnoBalancer(address,address,address) (contracts/FutarchyArbExecutorV5.sol#237-244) ignores return value by IBalancerBatchRouter(batchRouter).swapExactIn(paths,type()(uint256).max,false,) (contracts/FutarchyArbExecutorV5.sol#243)
+FutarchyArbExecutorV5._buyGnoBalancer(address,address,address,uint256) (contracts/FutarchyArbExecutorV5.sol#285-292) ignores return value by IBalancerBatchRouter(batchRouter).swapExactIn(paths,type()(uint256).max,false,) (contracts/FutarchyArbExecutorV5.sol#291)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-return
+
+Detector: events-access
+FutarchyArbExecutorV5.transferOwnership(address) (contracts/FutarchyArbExecutorV5.sol#379-382) should emit an event for: 
+	- owner = newOwner (contracts/FutarchyArbExecutorV5.sol#381) 
+SafetyModule.transferOwnership(address) (contracts/SafetyModule.sol#202-205) should emit an event for: 
+	- owner = newOwner (contracts/SafetyModule.sol#204) 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-events-access-control
+
+Detector: missing-zero-check
+FutarchyArbExecutorV5.withdrawETH(address,uint256).to (contracts/FutarchyArbExecutorV5.sol#385) lacks a zero-check on :
+		- (ok,None) = address(to).call{value: a}() (contracts/FutarchyArbExecutorV5.sol#385)
+HybridExecutionCore.constructor(address,address,address[])._zkVerifier (contracts/InstitutionalSolverCore.sol#216) lacks a zero-check on :
+		- zkVerifier = _zkVerifier (contracts/InstitutionalSolverCore.sol#218)
+HybridExecutionCore.constructor(address,address,address[])._paymaster (contracts/InstitutionalSolverCore.sol#216) lacks a zero-check on :
+		- paymaster = _paymaster (contracts/InstitutionalSolverCore.sol#219)
+HybridExecutionCore.failoverRoute(uint256,address).venue (contracts/InstitutionalSolverCore.sol#276) lacks a zero-check on :
+		- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverCore.sol#277)
+InstitutionalSolverSystem.constructor(address,address,address[])._zkVerifier (contracts/InstitutionalSolverSystem.sol#109) lacks a zero-check on :
+		- zkVerifier = _zkVerifier (contracts/InstitutionalSolverSystem.sol#111)
+InstitutionalSolverSystem.constructor(address,address,address[])._paymaster (contracts/InstitutionalSolverSystem.sol#109) lacks a zero-check on :
+		- paymaster = _paymaster (contracts/InstitutionalSolverSystem.sol#112)
+InstitutionalSolverSystem.executeFlashloan(address,uint256,bytes).token (contracts/InstitutionalSolverSystem.sol#299) lacks a zero-check on :
+		- (success,None) = flashloanProviders[i].call(abi.encodeWithSignature(flashLoan(address,uint256,bytes),token,amount,data)) (contracts/InstitutionalSolverSystem.sol#305-307)
+InstitutionalSolverSystem.failoverRoute(uint256,address).venue (contracts/InstitutionalSolverSystem.sol#371) lacks a zero-check on :
+		- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverSystem.sol#372)
+InstitutionalSolverSystem.updateZKVerifier(address).newVerifier (contracts/InstitutionalSolverSystem.sol#378) lacks a zero-check on :
+		- zkVerifier = newVerifier (contracts/InstitutionalSolverSystem.sol#379)
+InstitutionalSolverSystem.updatePaymaster(address).newPaymaster (contracts/InstitutionalSolverSystem.sol#383) lacks a zero-check on :
+		- paymaster = newPaymaster (contracts/InstitutionalSolverSystem.sol#384)
+PectraWrapper.executeOne(address,bytes).target (contracts/PectraWrapper.sol#64) lacks a zero-check on :
+		- (success,result) = target.call{value: msg.value}(data) (contracts/PectraWrapper.sol#65)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#missing-zero-address-validation
+
+Detector: calls-loop
+HybridExecutionCore._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverCore.sol#232-257) has external calls inside a loop: (zkSuccess,None) = zkVerifier.staticcall(abi.encodeWithSignature(verifyProof(bytes),execData)) (contracts/InstitutionalSolverCore.sol#238)
+	Calls stack containing the loop:
+		HybridExecutionCore.batchResolve(uint256[],address[],bytes[])
+InstitutionalSolverSystem._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverSystem.sol#129-157) has external calls inside a loop: (zkSuccess,None) = zkVerifier.staticcall(abi.encodeWithSignature(verifyProof(bytes),execData)) (contracts/InstitutionalSolverSystem.sol#139)
+	Calls stack containing the loop:
+		InstitutionalSolverSystem.batchResolve(uint256[],address[],bytes[])
+InstitutionalSolverSystem._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverSystem.sol#129-157) has external calls inside a loop: (success,None) = solver.delegatecall(execData) (contracts/InstitutionalSolverSystem.sol#149)
+	Calls stack containing the loop:
+		InstitutionalSolverSystem.batchResolve(uint256[],address[],bytes[])
+InstitutionalSolverSystem.executeFlashloan(address,uint256,bytes) (contracts/InstitutionalSolverSystem.sol#299-314) has external calls inside a loop: (success,None) = flashloanProviders[i].call(abi.encodeWithSignature(flashLoan(address,uint256,bytes),token,amount,data)) (contracts/InstitutionalSolverSystem.sol#305-307)
+PectraWrapper.execute10(address[10],bytes[10],uint256) (contracts/PectraWrapper.sol#40-59) has external calls inside a loop: (success,returnData) = targets[i].call(calldatas[i]) (contracts/PectraWrapper.sol#49)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation/#calls-inside-a-loop
+
+Detector: reentrancy-events
+Reentrancy in PredictionArbExecutorV1._ensureMaxAllowance(IERC20,address) (contracts/PredictionArbExecutorV1.sol#144-151):
+	External calls:
+	- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+	- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+Reentrancy in PredictionArbExecutorV1._swaprExactIn(address,address,address,uint256,uint256) (contracts/PredictionArbExecutorV1.sol#153-172):
+	External calls:
+	- _ensureMaxAllowance(IERC20(tokenIn),swapr_router) (contracts/PredictionArbExecutorV1.sol#160)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- amountOut = IAlgebraSwapRouter(swapr_router).exactInputSingle(p) (contracts/PredictionArbExecutorV1.sol#170)
+	Event emitted after the call(s):
+	- SwaprExactInExecuted(swapr_router,tokenIn,tokenOut,amountIn,amountOut) (contracts/PredictionArbExecutorV1.sol#171)
+Reentrancy in PredictionArbExecutorV1._swaprExactOut(address,address,address,uint256,uint256) (contracts/PredictionArbExecutorV1.sol#174-193):
+	External calls:
+	- _ensureMaxAllowance(IERC20(tokenIn),swapr_router) (contracts/PredictionArbExecutorV1.sol#181)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	Event emitted after the call(s):
+	- SwaprExactOutExecuted(swapr_router,tokenIn,tokenOut,amountOut,amountIn) (contracts/PredictionArbExecutorV1.sol#192)
+Reentrancy in PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#267-315):
+	External calls:
+	- _swaprExactOut(swapr_router,currency,yes_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#295)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+		- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+	- SwaprExactOutExecuted(swapr_router,tokenIn,tokenOut,amountOut,amountIn) (contracts/PredictionArbExecutorV1.sol#192)
+		- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+Reentrancy in PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#267-315):
+	External calls:
+	- _swaprExactOut(swapr_router,currency,yes_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#295)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _ensureMaxAllowance(IERC20(yes_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#303)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+		- _ensureMaxAllowance(IERC20(yes_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#303)
+Reentrancy in PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#267-315):
+	External calls:
+	- _swaprExactOut(swapr_router,currency,yes_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#295)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _ensureMaxAllowance(IERC20(yes_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#303)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- _ensureMaxAllowance(IERC20(no_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#304)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+		- _ensureMaxAllowance(IERC20(no_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#304)
+Reentrancy in PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#267-315):
+	External calls:
+	- _swaprExactOut(swapr_router,currency,yes_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#295)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _swaprExactOut(swapr_router,currency,no_currency,amount_conditional_out,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#296)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountIn = IAlgebraSwapRouter(swapr_router).exactOutputSingle(p) (contracts/PredictionArbExecutorV1.sol#191)
+	- _ensureMaxAllowance(IERC20(yes_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#303)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- _ensureMaxAllowance(IERC20(no_currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#304)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- IFutarchyRouter(futarchy_router).mergePositions(proposal,currency,amount_conditional_out) (contracts/PredictionArbExecutorV1.sol#305)
+	Event emitted after the call(s):
+	- ConditionalCollateralMerged(futarchy_router,proposal,currency,amount_conditional_out) (contracts/PredictionArbExecutorV1.sol#306)
+	- ProfitVerified(initial,finalBal,min_out_final) (contracts/PredictionArbExecutorV1.sol#314)
+Reentrancy in FutarchyArbExecutorV5.buy_conditional_arbitrage_balancer(address,address,address,address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#193-203):
+	External calls:
+	- _buyBalancerFlow(proposal,router,swaprRouter,batchRouter,sdaiYes,sdaiNo,gnoYes,gnoNo,balPool,gno,amt) (contracts/FutarchyArbExecutorV5.sol#199)
+		- IPermit2(PERMIT2).approve(address(t),r,type()(uint160).max,type()(uint48).max) (contracts/FutarchyArbExecutorV5.sol#88)
+		- IFutarchyRouter(router).splitPosition(proposal,SDAI,amt) (contracts/FutarchyArbExecutorV5.sol#212)
+		- t.approve(s,0) (contracts/FutarchyArbExecutorV5.sol#81)
+		- IAlgebraSwapRouter(r).exactInputSingle(IAlgebraSwapRouter.ExactInputSingleParams(ti,to,address(this),block.timestamp,a,0,0)) (contracts/FutarchyArbExecutorV5.sol#94)
+		- IBalancerBatchRouter(batchRouter).swapExactIn(paths,type()(uint256).max,false,) (contracts/FutarchyArbExecutorV5.sol#243)
+		- t.approve(s,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#82)
+		- IFutarchyRouter(r).mergePositions(address(0),st,m) (contracts/FutarchyArbExecutorV5.sol#188)
+		- IFutarchyRouter(router).mergePositions(proposal,gno,mergeAmt) (contracts/FutarchyArbExecutorV5.sol#222)
+	Event emitted after the call(s):
+	- Profit(init,fin,minProfit) (contracts/FutarchyArbExecutorV5.sol#202)
+Reentrancy in FutarchyArbExecutorV5.buy_conditional_arbitrage_pnk(address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#295-305):
+	External calls:
+	- _buyPnkFlow(proposal,router,swaprRouter,sdaiYes,sdaiNo,pnkYes,pnkNo,amt) (contracts/FutarchyArbExecutorV5.sol#301)
+		- IFutarchyRouter(router).splitPosition(proposal,SDAI,amt) (contracts/FutarchyArbExecutorV5.sol#314)
+		- t.approve(s,0) (contracts/FutarchyArbExecutorV5.sol#81)
+		- IAlgebraSwapRouter(r).exactInputSingle(IAlgebraSwapRouter.ExactInputSingleParams(ti,to,address(this),block.timestamp,a,0,0)) (contracts/FutarchyArbExecutorV5.sol#94)
+		- t.approve(s,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#82)
+		- IFutarchyRouter(r).mergePositions(address(0),st,m) (contracts/FutarchyArbExecutorV5.sol#188)
+		- IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(amt,0,path,address(this),type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#150)
+		- IFutarchyRouter(router).mergePositions(proposal,PNK,mergeAmt) (contracts/FutarchyArbExecutorV5.sol#324)
+		- IBalancerVault(BAL_VAULT).batchSwap(IBalancerVault.SwapKind.GIVEN_IN,swaps,assets,IBalancerVault.FundManagement(address(this),false,address(this),false),limits,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#169-173)
+	Event emitted after the call(s):
+	- Profit(init,fin,minProfit) (contracts/FutarchyArbExecutorV5.sol#304)
+Reentrancy in PectraWrapper.execute10(address[10],bytes[10],uint256) (contracts/PectraWrapper.sol#40-59):
+	External calls:
+	- (success,returnData) = targets[i].call(calldatas[i]) (contracts/PectraWrapper.sol#49)
+	Event emitted after the call(s):
+	- BatchExecuted(count) (contracts/PectraWrapper.sol#58)
+	- CallExecuted(targets[i],calldatas[i],success) (contracts/PectraWrapper.sol#51)
+Reentrancy in PectraWrapper.executeOne(address,bytes) (contracts/PectraWrapper.sol#64-69):
+	External calls:
+	- (success,result) = target.call{value: msg.value}(data) (contracts/PectraWrapper.sol#65)
+	Event emitted after the call(s):
+	- CallExecuted(target,data,success) (contracts/PectraWrapper.sol#67)
+Reentrancy in CrossChainRouter.routeMessage(uint256,address,bytes) (contracts/SupportingModules.sol#206-213):
+	External calls:
+	- (success,None) = bridge.call(abi.encodeWithSignature(sendMessage(uint256,bytes),chainId,message)) (contracts/SupportingModules.sol#209)
+	Event emitted after the call(s):
+	- CrossChainMessage(chainId,messageHash) (contracts/SupportingModules.sol#212)
+Reentrancy in PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#215-258):
+	External calls:
+	- _ensureMaxAllowance(IERC20(currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#237)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- IFutarchyRouter(futarchy_router).splitPosition(proposal,currency,amount_currency_in) (contracts/PredictionArbExecutorV1.sol#238)
+	Event emitted after the call(s):
+	- ConditionalCollateralSplit(futarchy_router,proposal,currency,amount_currency_in) (contracts/PredictionArbExecutorV1.sol#239)
+Reentrancy in PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#215-258):
+	External calls:
+	- _ensureMaxAllowance(IERC20(currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#237)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- IFutarchyRouter(futarchy_router).splitPosition(proposal,currency,amount_currency_in) (contracts/PredictionArbExecutorV1.sol#238)
+	- _swaprExactIn(swapr_router,yes_currency,currency,yesBal,0) (contracts/PredictionArbExecutorV1.sol#247)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountOut = IAlgebraSwapRouter(swapr_router).exactInputSingle(p) (contracts/PredictionArbExecutorV1.sol#170)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+		- _swaprExactIn(swapr_router,yes_currency,currency,yesBal,0) (contracts/PredictionArbExecutorV1.sol#247)
+	- SwaprExactInExecuted(swapr_router,tokenIn,tokenOut,amountIn,amountOut) (contracts/PredictionArbExecutorV1.sol#171)
+		- _swaprExactIn(swapr_router,yes_currency,currency,yesBal,0) (contracts/PredictionArbExecutorV1.sol#247)
+Reentrancy in PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#215-258):
+	External calls:
+	- _ensureMaxAllowance(IERC20(currency),futarchy_router) (contracts/PredictionArbExecutorV1.sol#237)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+	- IFutarchyRouter(futarchy_router).splitPosition(proposal,currency,amount_currency_in) (contracts/PredictionArbExecutorV1.sol#238)
+	- _swaprExactIn(swapr_router,yes_currency,currency,yesBal,0) (contracts/PredictionArbExecutorV1.sol#247)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountOut = IAlgebraSwapRouter(swapr_router).exactInputSingle(p) (contracts/PredictionArbExecutorV1.sol#170)
+	- _swaprExactIn(swapr_router,no_currency,currency,noBal,0) (contracts/PredictionArbExecutorV1.sol#249)
+		- ! token.approve(spender,0) (contracts/PredictionArbExecutorV1.sol#147)
+		- ! token.approve(spender,type()(uint256).max) (contracts/PredictionArbExecutorV1.sol#148)
+		- amountOut = IAlgebraSwapRouter(swapr_router).exactInputSingle(p) (contracts/PredictionArbExecutorV1.sol#170)
+	Event emitted after the call(s):
+	- MaxAllowanceEnsured(address(token),spender,token.allowance(address(this),spender)) (contracts/PredictionArbExecutorV1.sol#150)
+		- _swaprExactIn(swapr_router,no_currency,currency,noBal,0) (contracts/PredictionArbExecutorV1.sol#249)
+	- ProfitVerified(initial,finalBal,min_out_final) (contracts/PredictionArbExecutorV1.sol#257)
+	- SwaprExactInExecuted(swapr_router,tokenIn,tokenOut,amountIn,amountOut) (contracts/PredictionArbExecutorV1.sol#171)
+		- _swaprExactIn(swapr_router,no_currency,currency,noBal,0) (contracts/PredictionArbExecutorV1.sol#249)
+Reentrancy in FutarchyArbExecutorV5.sell_conditional_arbitrage_balancer(address,address,address,address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#247-257):
+	External calls:
+	- _sellBalancerFlow(proposal,router,swaprRouter,batchRouter,sdaiYes,sdaiNo,gnoYes,gnoNo,balPool,gno,amt) (contracts/FutarchyArbExecutorV5.sol#253)
+		- IPermit2(PERMIT2).approve(address(t),r,type()(uint160).max,type()(uint48).max) (contracts/FutarchyArbExecutorV5.sol#88)
+		- t.approve(s,0) (contracts/FutarchyArbExecutorV5.sol#81)
+		- IFutarchyRouter(router).splitPosition(proposal,gno,gnoBal) (contracts/FutarchyArbExecutorV5.sol#270)
+		- IAlgebraSwapRouter(r).exactInputSingle(IAlgebraSwapRouter.ExactInputSingleParams(ti,to,address(this),block.timestamp,a,0,0)) (contracts/FutarchyArbExecutorV5.sol#94)
+		- IBalancerBatchRouter(batchRouter).swapExactIn(paths,type()(uint256).max,false,) (contracts/FutarchyArbExecutorV5.sol#291)
+		- t.approve(s,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#82)
+		- IFutarchyRouter(router).mergePositions(proposal,SDAI,m) (contracts/FutarchyArbExecutorV5.sol#282)
+	Event emitted after the call(s):
+	- Profit(init,fin,minProfit) (contracts/FutarchyArbExecutorV5.sol#256)
+Reentrancy in FutarchyArbExecutorV5.sell_conditional_arbitrage_pnk(address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#340-350):
+	External calls:
+	- _sellPnkFlow(proposal,router,swaprRouter,sdaiYes,sdaiNo,pnkYes,pnkNo,amt) (contracts/FutarchyArbExecutorV5.sol#346)
+		- t.approve(s,0) (contracts/FutarchyArbExecutorV5.sol#81)
+		- IFutarchyRouter(router).splitPosition(proposal,PNK,pnkBal) (contracts/FutarchyArbExecutorV5.sol#363)
+		- IAlgebraSwapRouter(r).exactInputSingle(IAlgebraSwapRouter.ExactInputSingleParams(ti,to,address(this),block.timestamp,a,0,0)) (contracts/FutarchyArbExecutorV5.sol#94)
+		- t.approve(s,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#82)
+		- IFutarchyRouter(router).mergePositions(proposal,SDAI,m) (contracts/FutarchyArbExecutorV5.sol#375)
+		- IBalancerVault(BAL_VAULT).batchSwap(IBalancerVault.SwapKind.GIVEN_IN,swaps,assets,IBalancerVault.FundManagement(address(this),false,address(this),false),limits,type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#128-132)
+		- IUniswapV2Router02(SWAPR_V2).swapExactTokensForTokens(weth,0,path,address(this),type()(uint256).max) (contracts/FutarchyArbExecutorV5.sol#140)
+	Event emitted after the call(s):
+	- Profit(init,fin,minProfit) (contracts/FutarchyArbExecutorV5.sol#349)
+Reentrancy in ZKEnforcement.verifyProof(address,bytes) (contracts/SupportingModules.sol#16-30):
+	External calls:
+	- (success,None) = verifier.call(abi.encodeWithSignature(verify(bytes),proof)) (contracts/SupportingModules.sol#25)
+	Event emitted after the call(s):
+	- ProofVerified(verifier,proofHash) (contracts/SupportingModules.sol#27)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#reentrancy-vulnerabilities-3
+
+Detector: timestamp
+FutarchyArbExecutorV5._buyBalancerFlow(address,address,address,address,address,address,address,address,address,address,uint256) (contracts/FutarchyArbExecutorV5.sol#205-235) uses timestamp for comparisons
+	Dangerous comparisons:
+	- yesOut < noOut (contracts/FutarchyArbExecutorV5.sol#219)
+FutarchyArbExecutorV5._buyPnkFlow(address,address,address,address,address,address,address,uint256) (contracts/FutarchyArbExecutorV5.sol#307-337) uses timestamp for comparisons
+	Dangerous comparisons:
+	- yesOut < noOut (contracts/FutarchyArbExecutorV5.sol#321)
+SafetyModule.checkTradeAllowed(uint256,uint256,int256) (contracts/SafetyModule.sol#102-141) uses timestamp for comparisons
+	Dangerous comparisons:
+	- block.timestamp >= dailyResetTimestamp (contracts/SafetyModule.sol#117)
+	- lastTradeTimestamp > 0 && block.timestamp < lastTradeTimestamp + cooldownSeconds (contracts/SafetyModule.sol#131)
+SafetyModule.getSafetyStatus() (contracts/SafetyModule.sol#214-231) uses timestamp for comparisons
+	Dangerous comparisons:
+	- lastTradeTimestamp > 0 && block.timestamp < lastTradeTimestamp + cooldownSeconds (contracts/SafetyModule.sol#221)
+	- block.timestamp < dailyResetTimestamp (contracts/SafetyModule.sol#229)
+MEVProtection.checkMEVEntropy(bytes32,uint256) (contracts/SupportingModules.sol#43-54) uses timestamp for comparisons
+	Dangerous comparisons:
+	- entropy < 100 (contracts/SupportingModules.sol#50)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#block-timestamp
+
+Detector: assembly
+HybridExecutionCore._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverCore.sol#232-257) uses assembly
+	- INLINE ASM (contracts/InstitutionalSolverCore.sol#247-251)
+EIP7702Proxy.fallback() (contracts/InstitutionalSolverCore.sol#317-323) uses assembly
+	- INLINE ASM (contracts/InstitutionalSolverCore.sol#318-322)
+LibSort.insertionSort(uint256[]) (lib/solady/src/utils/LibSort.sol#16-39) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#18-39)
+LibSort.sort(uint256[]) (lib/solady/src/utils/LibSort.sol#66-168) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#69-168)
+LibSort.uniquifySorted(uint256[]) (lib/solady/src/utils/LibSort.sol#197-212) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#198-212)
+LibSort.reverse(uint256[]) (lib/solady/src/utils/LibSort.sol#289-305) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#293-305)
+LibSort.copy(uint256[]) (lib/solady/src/utils/LibSort.sol#320-336) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#325-336)
+LibSort.isSorted(uint256[]) (lib/solady/src/utils/LibSort.sol#354-368) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#358-368)
+LibSort.isSorted(int256[]) (lib/solady/src/utils/LibSort.sol#369-385) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#372-384)
+LibSort.isSortedAndUniquified(uint256[]) (lib/solady/src/utils/LibSort.sol#398-410) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#402-410)
+LibSort.isSortedAndUniquified(int256[]) (lib/solady/src/utils/LibSort.sol#413-426) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#416-426)
+LibSort.clean(address[]) (lib/solady/src/utils/LibSort.sol#553-564) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#557-563)
+LibSort.groupSum(uint256[],uint256[]) (lib/solady/src/utils/LibSort.sol#567-624) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#569-623)
+LibSort.hasDuplicate(uint256[]) (lib/solady/src/utils/LibSort.sol#642-674) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#646-674)
+LibSort._toUints(int256[]) (lib/solady/src/utils/LibSort.sol#698-703) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#700-703)
+LibSort._toUints(address[]) (lib/solady/src/utils/LibSort.sol#704-712) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#708-710)
+LibSort._toUints(bytes32[]) (lib/solady/src/utils/LibSort.sol#713-718) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#715-717)
+LibSort._toInts(uint256[]) (lib/solady/src/utils/LibSort.sol#720-724) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#722-724)
+LibSort._toAddresses(uint256[]) (lib/solady/src/utils/LibSort.sol#725-731) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#726-729)
+LibSort._toBytes32s(uint256[]) (lib/solady/src/utils/LibSort.sol#732-737) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#734-736)
+LibSort._flipSign(int256[]) (lib/solady/src/utils/LibSort.sol#740-750) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#743-750)
+LibSort._searchSorted(uint256[],uint256,uint256) (lib/solady/src/utils/LibSort.sol#756-788) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#763-788)
+LibSort._difference(uint256[],uint256[],uint256) (lib/solady/src/utils/LibSort.sol#791-825) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#795-825)
+LibSort._intersection(uint256[],uint256[],uint256) (lib/solady/src/utils/LibSort.sol#829-862) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#834-862)
+LibSort._union(uint256[],uint256[],uint256) (lib/solady/src/utils/LibSort.sol#865-909) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#870-909)
+LibSort.sort.asm_0.swap() (lib/solady/src/utils/LibSort.sol#70-72) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#70-72)
+LibSort.sort.asm_0.mswap() (lib/solady/src/utils/LibSort.sol#73-78) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#73-78)
+LibSort.sort.asm_0.sortInner() (lib/solady/src/utils/LibSort.sol#78-141) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#78-141)
+LibSort.groupSum.asm_0.mswap() (lib/solady/src/utils/LibSort.sol#569-573) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#569-573)
+LibSort.groupSum.asm_0.sortInner() (lib/solady/src/utils/LibSort.sol#573-592) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#573-592)
+LibSort.hasDuplicate.asm_0.p() (lib/solady/src/utils/LibSort.sol#646-647) uses assembly
+	- INLINE ASM (lib/solady/src/utils/LibSort.sol#646-647)
+SafeCastLib._revertOverflow() (lib/solady/src/utils/SafeCastLib.sol#648-655) uses assembly
+	- INLINE ASM (lib/solady/src/utils/SafeCastLib.sol#650-655)
+FixedPointMathLib.mulWad(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#64-76) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#66-75)
+FixedPointMathLib.sMulWad(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#79-90) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#81-89)
+FixedPointMathLib.rawMulWad(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#93-98) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#95-97)
+FixedPointMathLib.rawSMulWad(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#101-106) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#103-105)
+FixedPointMathLib.mulWadUp(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#109-122) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#111-121)
+FixedPointMathLib.rawMulWadUp(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#125-130) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#127-129)
+FixedPointMathLib.divWad(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#133-143) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#135-142)
+FixedPointMathLib.sDivWad(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#146-157) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#148-156)
+FixedPointMathLib.rawDivWad(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#160-165) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#162-164)
+FixedPointMathLib.rawSDivWad(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#168-173) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#170-172)
+FixedPointMathLib.divWadUp(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#176-186) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#178-185)
+FixedPointMathLib.rawDivWadUp(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#189-194) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#191-193)
+FixedPointMathLib.expWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#207-272) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#214-221)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#253-258)
+FixedPointMathLib.lnWad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#277-339) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#279-338)
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#365-374)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#378-383)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#388-391)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#396-398)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#405-409)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#414-416)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#422-424)
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#427-429)
+FixedPointMathLib.fullMulEq(uint256,uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#438-447) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#444-446)
+FixedPointMathLib.fullMulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#452-508) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#454-507)
+FixedPointMathLib.fullMulDivUnchecked(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#513-537) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#519-536)
+FixedPointMathLib.fullMulDivUp(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#543-555) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#546-554)
+FixedPointMathLib.fullMulDivN(uint256,uint256,uint8) (lib/solady/src/utils/clz/FixedPointMathLib.sol#561-586) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#563-585)
+FixedPointMathLib.mulDiv(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#590-601) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#592-600)
+FixedPointMathLib.mulDivUp(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#605-616) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#607-615)
+FixedPointMathLib.invMod(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#619-636) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#621-635)
+FixedPointMathLib.divUp(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#640-649) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#642-648)
+FixedPointMathLib.zeroFloorSub(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#652-657) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#654-656)
+FixedPointMathLib.saturatingSub(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#660-665) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#662-664)
+FixedPointMathLib.saturatingAdd(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#668-673) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#670-672)
+FixedPointMathLib.saturatingMul(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#676-681) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#678-680)
+FixedPointMathLib.ternary(bool,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#684-689) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#686-688)
+FixedPointMathLib.ternary(bool,bytes32,bytes32) (lib/solady/src/utils/clz/FixedPointMathLib.sol#692-697) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#694-696)
+FixedPointMathLib.ternary(bool,address,address) (lib/solady/src/utils/clz/FixedPointMathLib.sol#700-705) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#702-704)
+FixedPointMathLib.coalesce(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#708-713) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#710-712)
+FixedPointMathLib.coalesce(bytes32,bytes32) (lib/solady/src/utils/clz/FixedPointMathLib.sol#716-721) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#718-720)
+FixedPointMathLib.coalesce(address,address) (lib/solady/src/utils/clz/FixedPointMathLib.sol#724-729) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#726-728)
+FixedPointMathLib.rpow(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#733-767) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#735-766)
+FixedPointMathLib.sqrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#770-797) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#772-796)
+FixedPointMathLib.cbrt(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#804-822) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#806-821)
+FixedPointMathLib.sqrtWad(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#825-835) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#832-834)
+FixedPointMathLib.cbrtWad(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#840-864) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#847-863)
+FixedPointMathLib.factorial(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#877-887) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#879-886)
+FixedPointMathLib.log2(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#892-897) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#894-896)
+FixedPointMathLib.log2Up(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#901-907) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#904-906)
+FixedPointMathLib.log10(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#911-917) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#913-916)
+FixedPointMathLib.log10Up(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#921-927) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#924-926)
+FixedPointMathLib.log256(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#931-936) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#933-935)
+FixedPointMathLib.log256Up(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#940-946) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#943-945)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#952-984)
+FixedPointMathLib.packSci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#995-1005) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#998-1004)
+FixedPointMathLib.dist(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1036-1041) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1038-1040)
+FixedPointMathLib.dist(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1044-1049) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1046-1048)
+FixedPointMathLib.min(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1052-1057) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1054-1056)
+FixedPointMathLib.min(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1060-1065) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1062-1064)
+FixedPointMathLib.max(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1068-1073) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1070-1072)
+FixedPointMathLib.max(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1076-1081) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1078-1080)
+FixedPointMathLib.clamp(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1084-1094) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1090-1093)
+FixedPointMathLib.clamp(int256,int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1097-1103) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1099-1102)
+FixedPointMathLib.gcd(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1106-1115) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1108-1114)
+FixedPointMathLib.rawDiv(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1208-1213) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1210-1212)
+FixedPointMathLib.rawSDiv(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1216-1221) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1218-1220)
+FixedPointMathLib.rawMod(uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1224-1229) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1226-1228)
+FixedPointMathLib.rawSMod(int256,int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1232-1237) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1234-1236)
+FixedPointMathLib.rawAddMod(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1240-1245) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1242-1244)
+FixedPointMathLib.rawMulMod(uint256,uint256,uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#1248-1253) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/FixedPointMathLib.sol#1250-1252)
+LibBit.fls(uint256) (lib/solady/src/utils/clz/LibBit.sol#16-22) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#18-22)
+LibBit.ffs(uint256) (lib/solady/src/utils/clz/LibBit.sol#31-37) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#33-37)
+LibBit.popCount(uint256) (lib/solady/src/utils/clz/LibBit.sol#41-50) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#43-50)
+LibBit.countZeroBytes(uint256) (lib/solady/src/utils/clz/LibBit.sol#55-60) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#56-60)
+LibBit.countZeroBytes(bytes) (lib/solady/src/utils/clz/LibBit.sol#65-79) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#66-79)
+LibBit.countZeroBytesCalldata(bytes) (lib/solady/src/utils/clz/LibBit.sol#85-100) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#86-99)
+LibBit.isPo2(uint256) (lib/solady/src/utils/clz/LibBit.sol#100-109) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#106-109)
+LibBit.clz_(uint256) (lib/solady/src/utils/clz/LibBit.sol#136-141) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#137-141)
+LibBit.toNibbles(bytes) (lib/solady/src/utils/clz/LibBit.sol#166-189) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#172-189)
+LibBit.rawAnd(bool,bool) (lib/solady/src/utils/clz/LibBit.sol#206-209) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#207-209)
+LibBit.and(bool,bool) (lib/solady/src/utils/clz/LibBit.sol#210-217) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#211-217)
+LibBit.and(bool,bool,bool) (lib/solady/src/utils/clz/LibBit.sol#218-225) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#221-225)
+LibBit.and(bool,bool,bool,bool) (lib/solady/src/utils/clz/LibBit.sol#226-234) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#229-234)
+LibBit.rawOr(bool,bool) (lib/solady/src/utils/clz/LibBit.sol#234-238) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#237)
+LibBit.or(bool,bool) (lib/solady/src/utils/clz/LibBit.sol#241-245) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#243-245)
+LibBit.or(bool,bool,bool) (lib/solady/src/utils/clz/LibBit.sol#249-253) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#251-253)
+LibBit.or(bool,bool,bool,bool) (lib/solady/src/utils/clz/LibBit.sol#257-262) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#259-262)
+LibBit.rawToUint(bool) (lib/solady/src/utils/clz/LibBit.sol#266-269) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#268-269)
+LibBit.toUint(bool) (lib/solady/src/utils/clz/LibBit.sol#273-276) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#274-275)
+LibBit.countZeroBytes.asm_0.czb() (lib/solady/src/utils/clz/LibBit.sol#67-71) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#67-71)
+LibBit.countZeroBytesCalldata.asm_0.czb() (lib/solady/src/utils/clz/LibBit.sol#86-91) uses assembly
+	- INLINE ASM (lib/solady/src/utils/clz/LibBit.sol#86-91)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#assembly-usage
+
+Detector: pragma
+3 different versions of Solidity are used:
+	- Version constraint 0.8.33 is used by:
+		-0.8.33 (contracts/FutarchyArbExecutorV5.sol#2)
+		-0.8.33 (contracts/InstitutionalSolverCore.sol#2)
+		-0.8.33 (contracts/InstitutionalSolverSystem.sol#2)
+		-0.8.33 (contracts/LibBLS.sol#2)
+		-0.8.33 (contracts/LibP256.sol#2)
+		-0.8.33 (contracts/PectraWrapper.sol#2)
+		-0.8.33 (contracts/PredictionArbExecutorV1.sol#2)
+		-0.8.33 (contracts/SafetyModule.sol#2)
+		-0.8.33 (contracts/SupportingModules.sol#2)
+		-0.8.33 (contracts/TransientReentrancyGuard.sol#2)
+	- Version constraint ^0.8.33 is used by:
+		-^0.8.33 (lib/solady/src/utils/LibSort.sol#1-2)
+		-^0.8.33 (lib/solady/src/utils/clz/FixedPointMathLib.sol#2)
+		-^0.8.33 (lib/solady/src/utils/clz/LibBit.sol#1-2)
+	- Version constraint ^0.8.4 is used by:
+		-^0.8.4 (lib/solady/src/utils/SafeCastLib.sol#1-2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#different-pragma-directives-are-used
+
+Detector: cyclomatic-complexity
+LibSort.sort.asm_0.sortInner() (lib/solady/src/utils/LibSort.sol#78-141) has a high cyclomatic complexity (19).
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#cyclomatic-complexity
+
+Detector: dead-code
+FutarchyArbExecutorV5._fee(address) (contracts/FutarchyArbExecutorV5.sol#103-106) is never used and should be removed
+FutarchyArbExecutorV5._swaprOut(address,address,address,uint24,uint256,uint256) (contracts/FutarchyArbExecutorV5.sol#97-101) is never used and should be removed
+PredictionArbExecutorV1._poolFeeOrDefault(address) (contracts/PredictionArbExecutorV1.sol#199-206) is never used and should be removed
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#dead-code
+
+Detector: solc-version
+Version constraint ^0.8.4 contains known severe issues (https://solidity.readthedocs.io/en/latest/bugs.html)
+	- FullInlinerNonExpressionSplitArgumentEvaluationOrder
+	- MissingSideEffectsOnSelectorAccess
+	- AbiReencodingHeadOverflowWithStaticArrayCleanup
+	- DirtyBytesArrayToStorage
+	- DataLocationChangeInInternalOverride
+	- NestedCalldataArrayAbiReencodingSizeValidation
+	- SignedImmutables.
+It is used by:
+	- ^0.8.4 (lib/solady/src/utils/SafeCastLib.sol#1-2)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#incorrect-versions-of-solidity
+
+Detector: low-level-calls
+Low level call in FutarchyArbExecutorV5.withdrawETH(address,uint256) (contracts/FutarchyArbExecutorV5.sol#385):
+	- (ok,None) = address(to).call{value: a}() (contracts/FutarchyArbExecutorV5.sol#385)
+Low level call in FlashloanAbstraction.executeFlashloan(address[],address,uint256,bytes) (contracts/InstitutionalSolverCore.sol#168-181):
+	- (success,None) = providers[i].call(abi.encodeWithSignature(flashLoan(address,uint256,bytes),token,amount,data)) (contracts/InstitutionalSolverCore.sol#173-174)
+Low level call in HybridExecutionCore._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverCore.sol#232-257):
+	- (zkSuccess,None) = zkVerifier.staticcall(abi.encodeWithSignature(verifyProof(bytes),execData)) (contracts/InstitutionalSolverCore.sol#238)
+Low level call in HybridExecutionCore.failoverRoute(uint256,address) (contracts/InstitutionalSolverCore.sol#276-279):
+	- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverCore.sol#277)
+Low level call in InstitutionalSolverSystem._resolveIntent(uint256,address,bytes) (contracts/InstitutionalSolverSystem.sol#129-157):
+	- (zkSuccess,None) = zkVerifier.staticcall(abi.encodeWithSignature(verifyProof(bytes),execData)) (contracts/InstitutionalSolverSystem.sol#139)
+	- (success,None) = solver.delegatecall(execData) (contracts/InstitutionalSolverSystem.sol#149)
+Low level call in InstitutionalSolverSystem.executeFlashloan(address,uint256,bytes) (contracts/InstitutionalSolverSystem.sol#299-314):
+	- (success,None) = flashloanProviders[i].call(abi.encodeWithSignature(flashLoan(address,uint256,bytes),token,amount,data)) (contracts/InstitutionalSolverSystem.sol#305-307)
+Low level call in InstitutionalSolverSystem.failoverRoute(uint256,address) (contracts/InstitutionalSolverSystem.sol#371-374):
+	- (success,None) = venue.delegatecall(intents[intentId]) (contracts/InstitutionalSolverSystem.sol#372)
+Low level call in LibBLS.verifySignature(uint256[2],uint256[4],uint256[4]) (contracts/LibBLS.sol#32-72):
+	- (success,result) = BLS12_PAIRING_CHECK.staticcall(abi.encodePacked(input)) (contracts/LibBLS.sol#68)
+Low level call in LibBLS.aggregatePublicKeys(uint256[2][]) (contracts/LibBLS.sol#79-93):
+	- (success,result) = BLS12_G1ADD.staticcall(abi.encode(aggregatedKey[0],aggregatedKey[1],pubKeys[i][0],pubKeys[i][1])) (contracts/LibBLS.sol#85-86)
+Low level call in LibP256.verifySignature(bytes32,uint256,uint256,uint256,uint256) (contracts/LibP256.sol#26-38):
+	- (success,ret) = P256_VERIFY.staticcall(input) (contracts/LibP256.sol#31)
+Low level call in PectraWrapper.execute10(address[10],bytes[10],uint256) (contracts/PectraWrapper.sol#40-59):
+	- (success,returnData) = targets[i].call(calldatas[i]) (contracts/PectraWrapper.sol#49)
+Low level call in PectraWrapper.executeOne(address,bytes) (contracts/PectraWrapper.sol#64-69):
+	- (success,result) = target.call{value: msg.value}(data) (contracts/PectraWrapper.sol#65)
+Low level call in PectraWrapper.rescueToken(address,uint256) (contracts/PectraWrapper.sol#74-83):
+	- (sent,None) = address(owner).call{value: amount}() (contracts/PectraWrapper.sol#76)
+	- (success,None) = token.call(abi.encodeWithSignature(transfer(address,uint256),owner,amount)) (contracts/PectraWrapper.sol#80)
+Low level call in PredictionArbExecutorV1.withdrawETH(address,uint256) (contracts/PredictionArbExecutorV1.sol#331-335):
+	- (ok,None) = to.call{value: amount}() (contracts/PredictionArbExecutorV1.sol#333)
+Low level call in ZKEnforcement.verifyProof(address,bytes) (contracts/SupportingModules.sol#16-30):
+	- (success,None) = verifier.call(abi.encodeWithSignature(verify(bytes),proof)) (contracts/SupportingModules.sol#25)
+Low level call in CrossChainRouter.routeMessage(uint256,address,bytes) (contracts/SupportingModules.sol#206-213):
+	- (success,None) = bridge.call(abi.encodeWithSignature(sendMessage(uint256,bytes),chainId,message)) (contracts/SupportingModules.sol#209)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#low-level-calls
+
+Detector: naming-convention
+Function FutarchyArbExecutorV5.buy_conditional_arbitrage_balancer(address,address,address,address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#193-203) is not in mixedCase
+Function FutarchyArbExecutorV5.sell_conditional_arbitrage_balancer(address,address,address,address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#247-257) is not in mixedCase
+Function FutarchyArbExecutorV5.buy_conditional_arbitrage_pnk(address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#295-305) is not in mixedCase
+Function FutarchyArbExecutorV5.sell_conditional_arbitrage_pnk(address,address,address,address,address,address,address,uint256,int256) (contracts/FutarchyArbExecutorV5.sol#340-350) is not in mixedCase
+Function PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#215-258) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).futarchy_router (contracts/PredictionArbExecutorV1.sol#216) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).yes_currency (contracts/PredictionArbExecutorV1.sol#219) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).no_currency (contracts/PredictionArbExecutorV1.sol#220) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).swapr_router (contracts/PredictionArbExecutorV1.sol#221) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).amount_currency_in (contracts/PredictionArbExecutorV1.sol#222) is not in mixedCase
+Parameter PredictionArbExecutorV1.sell_conditional_arbitrage(address,address,address,address,address,address,uint256,int256).min_out_final (contracts/PredictionArbExecutorV1.sol#223) is not in mixedCase
+Function PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256) (contracts/PredictionArbExecutorV1.sol#267-315) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).futarchy_router (contracts/PredictionArbExecutorV1.sol#268) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).yes_currency (contracts/PredictionArbExecutorV1.sol#271) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).no_currency (contracts/PredictionArbExecutorV1.sol#272) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).swapr_router (contracts/PredictionArbExecutorV1.sol#279) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).amount_conditional_out (contracts/PredictionArbExecutorV1.sol#280) is not in mixedCase
+Parameter PredictionArbExecutorV1.buy_conditional_arbitrage(address,address,address,address,address,address,address,address,uint256,int256).min_out_final (contracts/PredictionArbExecutorV1.sol#281) is not in mixedCase
+Parameter SafetyModule.updateParameters(uint256,uint256,uint256,uint256)._maxSlippageBps (contracts/SafetyModule.sol#155) is not in mixedCase
+Parameter SafetyModule.updateParameters(uint256,uint256,uint256,uint256)._maxGasPrice (contracts/SafetyModule.sol#156) is not in mixedCase
+Parameter SafetyModule.updateParameters(uint256,uint256,uint256,uint256)._dailyLossLimit (contracts/SafetyModule.sol#157) is not in mixedCase
+Parameter SafetyModule.updateParameters(uint256,uint256,uint256,uint256)._cooldownSeconds (contracts/SafetyModule.sol#158) is not in mixedCase
+Parameter LibSort.sort.asm_0.swap().a__sort_asm_0_swap (lib/solady/src/utils/LibSort.sol#70) is not in mixedCase
+Parameter LibSort.sort.asm_0.swap().b__sort_asm_0_swap (lib/solady/src/utils/LibSort.sol#70) is not in mixedCase
+Parameter LibSort.sort.asm_0.mswap().i__sort_asm_0_mswap (lib/solady/src/utils/LibSort.sol#73) is not in mixedCase
+Parameter LibSort.sort.asm_0.mswap().j__sort_asm_0_mswap (lib/solady/src/utils/LibSort.sol#73) is not in mixedCase
+Parameter LibSort.sort.asm_0.sortInner().w__sort_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#78-79) is not in mixedCase
+Parameter LibSort.sort.asm_0.sortInner().l__sort_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#79) is not in mixedCase
+Parameter LibSort.sort.asm_0.sortInner().h__sort_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#79) is not in mixedCase
+Parameter LibSort.groupSum.asm_0.mswap().i__groupSum_asm_0_mswap (lib/solady/src/utils/LibSort.sol#570) is not in mixedCase
+Parameter LibSort.groupSum.asm_0.mswap().j__groupSum_asm_0_mswap (lib/solady/src/utils/LibSort.sol#570) is not in mixedCase
+Parameter LibSort.groupSum.asm_0.sortInner().l__groupSum_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#573) is not in mixedCase
+Parameter LibSort.groupSum.asm_0.sortInner().h__groupSum_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#573) is not in mixedCase
+Parameter LibSort.groupSum.asm_0.sortInner().d__groupSum_asm_0_sortInner (lib/solady/src/utils/LibSort.sol#573) is not in mixedCase
+Parameter LibSort.hasDuplicate.asm_0.p().i__hasDuplicate_asm_0_p (lib/solady/src/utils/LibSort.sol#646) is not in mixedCase
+Parameter LibSort.hasDuplicate.asm_0.p().x__hasDuplicate_asm_0_p (lib/solady/src/utils/LibSort.sol#646) is not in mixedCase
+Parameter LibBit.countZeroBytes.asm_0.czb().x__countZeroBytes_asm_0_czb (lib/solady/src/utils/clz/LibBit.sol#67) is not in mixedCase
+Parameter LibBit.countZeroBytesCalldata.asm_0.czb().x__countZeroBytesCalldata_asm_0_czb (lib/solady/src/utils/clz/LibBit.sol#87) is not in mixedCase
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#conformance-to-solidity-naming-conventions
+
+Detector: too-many-digits
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) uses literals with too many digits:
+	- swaps[0] = IBalancerVault.BatchSwapStep(0x7e5870ac540adfd01a213c829f2231c309623eb10002000000000000000000e9,2,1,h,) (contracts/FutarchyArbExecutorV5.sol#160)
+FutarchyArbExecutorV5._sellPnk(uint256) (contracts/FutarchyArbExecutorV5.sol#144-174) uses literals with too many digits:
+	- swaps[1] = IBalancerVault.BatchSwapStep(0xa91c413d8516164868f6cca19573fe38f88f5982000200000000000000000157,1,0,0,) (contracts/FutarchyArbExecutorV5.sol#161)
+FutarchyArbExecutorV5.slitherConstructorConstantVariables() (contracts/FutarchyArbExecutorV5.sol#55-388) uses literals with too many digits:
+	- POOL_3 = 0x40d2cbc586dd8df50001cdba3f65cd4bbc32d596000200000000000000000154 (contracts/FutarchyArbExecutorV5.sol#66)
+FutarchyArbExecutorV5.slitherConstructorConstantVariables() (contracts/FutarchyArbExecutorV5.sol#55-388) uses literals with too many digits:
+	- POOL_4 = 0x480d4f66cc41a1b6784a53a10890e5ece31d75c000020000000000000000014e (contracts/FutarchyArbExecutorV5.sol#67)
+FutarchyArbExecutorV5.slitherConstructorConstantVariables() (contracts/FutarchyArbExecutorV5.sol#55-388) uses literals with too many digits:
+	- POOL_5 = 0xa99fd9950b5d5dceeaf4939e221dca8ca9b938ab000100000000000000000025 (contracts/FutarchyArbExecutorV5.sol#68)
+HybridExecutionCore.batchResolve(uint256[],address[],bytes[]) (contracts/InstitutionalSolverCore.sol#259-274) uses literals with too many digits:
+	- intentIds.length > 60000000 / 200000 (contracts/InstitutionalSolverCore.sol#264)
+InstitutionalSolverSystem.batchResolve(uint256[],address[],bytes[]) (contracts/InstitutionalSolverSystem.sol#159-177) uses literals with too many digits:
+	- intentIds.length > FUSAKA_GAS_LIMIT / 200000 (contracts/InstitutionalSolverSystem.sol#164)
+LibBLS.verifySignature(uint256[2],uint256[4],uint256[4]) (contracts/LibBLS.sol#32-72) uses literals with too many digits:
+	- negG1 = (uint256(0x0000000000000000000000000000000000000000000000000000000000000000),uint256(0x0000000000000000000000000000000000000000000000000000000000000000)) (contracts/LibBLS.sol#44-47)
+LibSort.hasDuplicate(uint256[]) (lib/solady/src/utils/LibSort.sol#642-674) uses literals with too many digits:
+	- r_hasDuplicate_asm_0 = mulmod(uint256,uint256,uint256)(mload(uint256)(i_hasDuplicate_asm_0),0x100000000000000000000000000000051,~ 0xbc) (lib/solady/src/utils/LibSort.sol#657-660)
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) uses literals with too many digits:
+	- - 0x4000000000000 <= w (lib/solady/src/utils/clz/FixedPointMathLib.sol#358)
+FixedPointMathLib.lambertW0Wad(int256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#345-431) uses literals with too many digits:
+	- l_lambertW0Wad_asm_0 = l_lambertW0Wad_asm_0 | byte(uint256,uint256)(0x1f & 0x8421084210842108cc6318c6db6d54be >> v_lambertW0Wad_asm_0 >> l_lambertW0Wad_asm_0,0x0706060506020504060203020504030106050205030304010505030400000000) + 49 (lib/solady/src/utils/clz/FixedPointMathLib.sol#369-370)
+FixedPointMathLib.cbrtWad(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#840-864) uses literals with too many digits:
+	- p_cbrtWad_asm_0 = p_cbrtWad_asm_0 * 100000000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#852)
+FixedPointMathLib.cbrtWad(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#840-864) uses literals with too many digits:
+	- p_cbrtWad_asm_0 = p_cbrtWad_asm_0 * 100000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#855)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- ! mantissa % 1000000000000000000000000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#955-958)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- mantissa = mantissa / 1000000000000000000000000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#956)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- ! mantissa % 10000000000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#959-962)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- mantissa = mantissa / 10000000000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#960)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- ! mantissa % 1000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#963-966)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- mantissa = mantissa / 1000000000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#964)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- ! mantissa % 1000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#967-970)
+FixedPointMathLib.sci(uint256) (lib/solady/src/utils/clz/FixedPointMathLib.sol#950-985) uses literals with too many digits:
+	- mantissa = mantissa / 1000000 (lib/solady/src/utils/clz/FixedPointMathLib.sol#968)
+LibBit.reverseBytes(uint256) (lib/solady/src/utils/clz/LibBit.sol#121-135) uses literals with too many digits:
+	- m0 = 0x100000000000000000000000000000001 * (~ toUint(x == uint256(0)) >> 192) (lib/solady/src/utils/clz/LibBit.sol#126-128)
+LibBit.toNibbles(bytes) (lib/solady/src/utils/clz/LibBit.sol#166-189) uses literals with too many digits:
+	- x_toNibbles_asm_0 = 0x0000000000000000ffffffffffffffff0000000000000000ffffffffffffffff & x_toNibbles_asm_0 << 64 | x_toNibbles_asm_0 (lib/solady/src/utils/clz/LibBit.sol#180-182)
+LibBit.toNibbles(bytes) (lib/solady/src/utils/clz/LibBit.sol#166-189) uses literals with too many digits:
+	- x_toNibbles_asm_0 = 0x00000000ffffffff00000000ffffffff00000000ffffffff00000000ffffffff & x_toNibbles_asm_0 << 32 | x_toNibbles_asm_0 (lib/solady/src/utils/clz/LibBit.sol#182-184)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#too-many-digits
+
+Detector: unindexed-event-address
+Event AuctionEconomics.BidCommitted(address,bytes32) (contracts/InstitutionalSolverCore.sol#19) has address parameters but no indexed parameters
+Event AuctionEconomics.BidRevealed(address,uint256) (contracts/InstitutionalSolverCore.sol#20) has address parameters but no indexed parameters
+Event AuctionEconomics.AuctionSettled(address,uint256) (contracts/InstitutionalSolverCore.sol#21) has address parameters but no indexed parameters
+Event ReputationSystem.ReputationUpdated(address,int256) (contracts/InstitutionalSolverCore.sol#121) has address parameters but no indexed parameters
+Event ReputationSystem.Slashed(address,uint256) (contracts/InstitutionalSolverCore.sol#122) has address parameters but no indexed parameters
+Event HybridExecutionCore.IntentResolved(uint256,address,uint256) (contracts/InstitutionalSolverCore.sol#197) has address parameters but no indexed parameters
+Event ZKEnforcement.ProofVerified(address,bytes32) (contracts/SupportingModules.sol#14) has address parameters but no indexed parameters
+Event ComplianceModule.ComplianceChecked(address,uint256) (contracts/SupportingModules.sol#71) has address parameters but no indexed parameters
+Event AccountAbstraction.UserOpExecuted(address,uint256,uint256) (contracts/SupportingModules.sol#111) has address parameters but no indexed parameters
+Event TreasuryFramework.FundsDeposited(address,uint256) (contracts/SupportingModules.sol#150) has address parameters but no indexed parameters
+Event TreasuryFramework.FundsWithdrawn(address,uint256,address) (contracts/SupportingModules.sol#151) has address parameters but no indexed parameters
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unindexed-event-address-parameters
+
+Detector: unused-state
+InstitutionalSolverSystem.SLASH_FACTOR (contracts/InstitutionalSolverSystem.sol#80) is never used in InstitutionalSolverSystem (contracts/InstitutionalSolverSystem.sol#18-491)
+InstitutionalSolverSystem.KYC_VERIFIED (contracts/InstitutionalSolverSystem.sol#85) is never used in InstitutionalSolverSystem (contracts/InstitutionalSolverSystem.sol#18-491)
+InstitutionalSolverSystem.ACCREDITED (contracts/InstitutionalSolverSystem.sol#86) is never used in InstitutionalSolverSystem (contracts/InstitutionalSolverSystem.sol#18-491)
+InstitutionalSolverSystem.SANCTIONS_CLEAR (contracts/InstitutionalSolverSystem.sol#87) is never used in InstitutionalSolverSystem (contracts/InstitutionalSolverSystem.sol#18-491)
+InstitutionalSolverSystem.nonces (contracts/InstitutionalSolverSystem.sol#90) is never used in InstitutionalSolverSystem (contracts/InstitutionalSolverSystem.sol#18-491)
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#unused-state-variable
+
+Detector: immutable-states
+HybridExecutionCore.paymaster (contracts/InstitutionalSolverCore.sol#208) should be immutable 
+HybridExecutionCore.zkVerifier (contracts/InstitutionalSolverCore.sol#207) should be immutable 
+Reference: https://github.com/crytic/slither/wiki/Detector-Documentation#state-variables-that-could-be-declared-immutable
+contracts/ analyzed (38 contracts with 100 detectors), 320 result(s) found

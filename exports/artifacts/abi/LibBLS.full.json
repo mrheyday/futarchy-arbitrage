@@ -1,0 +1,89 @@
+{
+  "abi": [
+    {
+      "type": "error",
+      "name": "BLSVerificationFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidPoint",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212207898ea5400eaf13abd66dd1f7750e5613302aabb84a8d029c27436542d21aacb64736f6c63430008210033",
+    "sourceMap": "218:3495:11:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x5f80fdfea26469706673582212207898ea5400eaf13abd66dd1f7750e5613302aabb84a8d029c27436542d21aacb64736f6c63430008210033",
+    "sourceMap": "218:3495:11:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"BLSVerificationFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidPoint\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"Addresses are based on the EIP-2537 specification.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"LibBLS\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Wrapper for EIP-2537 BLS12-381 Precompiles (Osaka/Pectra Upgrade)\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/LibBLS.sol\":\"LibBLS\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/LibBLS.sol\":{\"keccak256\":\"0xe0c300c3819e22837986d73f66983b96b1584d0bca642f79aa2cc03b3d9f408b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5eeae45068f05b1035633d975f19a055c52d8e47f01e1b6f424236e986f5ced2\",\"dweb:/ipfs/QmUfnRbL9wJf7J7VWM8U7gmSf45Ynbn5qwtGiCfr3jmtHN\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "BLSVerificationFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InvalidPoint"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/LibBLS.sol": "LibBLS"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/LibBLS.sol": {
+        "keccak256": "0xe0c300c3819e22837986d73f66983b96b1584d0bca642f79aa2cc03b3d9f408b",
+        "urls": [
+          "bzz-raw://5eeae45068f05b1035633d975f19a055c52d8e47f01e1b6f424236e986f5ced2",
+          "dweb:/ipfs/QmUfnRbL9wJf7J7VWM8U7gmSf45Ynbn5qwtGiCfr3jmtHN"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 11
+}

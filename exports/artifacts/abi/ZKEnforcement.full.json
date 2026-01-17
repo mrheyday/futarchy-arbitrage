@@ -1,0 +1,133 @@
+{
+  "abi": [
+    {
+      "type": "event",
+      "name": "ProofVerified",
+      "inputs": [
+        {
+          "name": "verifier",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "proofHash",
+          "type": "bytes32",
+          "indexed": false,
+          "internalType": "bytes32"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "InvalidZKProof",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220e104354d1be2ddab47e182697697dc7fb0a24c1d91b54669c2eefed1703bf5fa64736f6c63430008210033",
+    "sourceMap": "287:662:17:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x5f80fdfea2646970667358221220e104354d1be2ddab47e182697697dc7fb0a24c1d91b54669c2eefed1703bf5fa64736f6c63430008210033",
+    "sourceMap": "287:662:17:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidZKProof\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"verifier\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"proofHash\",\"type\":\"bytes32\"}],\"name\":\"ProofVerified\",\"type\":\"event\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/SupportingModules.sol\":\"ZKEnforcement\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/SupportingModules.sol\":{\"keccak256\":\"0x7ff77974b2ec3a788c727ecc046a313ef2dc40be4a4e40bfb56e9a6488fde4c3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4c732280d2d49a110552196172501c8e56cb024078f34aa279687b9ab9ad5ece\",\"dweb:/ipfs/QmUNZaSiMmJMvjTNZtYfcaDYvWAj4Tz3AdBfBQ6rwW4inS\"]},\"lib/solady/src/utils/clz/FixedPointMathLib.sol\":{\"keccak256\":\"0x489084ba28f94372237b5de76586f58aef364c105389ca3f53c3722adc052009\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f521961724e036bde106c0d25fd940a5603991286975a84826981323074b48eb\",\"dweb:/ipfs/QmUhnbkQAq8TU4FxoFuGrHCtGd85bfBtggt3urnYeHPyEJ\"]},\"lib/solady/src/utils/clz/LibBit.sol\":{\"keccak256\":\"0x8afb68e18b09f20421a102c2e1db6afe8f4db062ed5300c6024fa759628c4fe1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e6bba285a6afec4561ad93405ca7361f552a1994cda44b0645cc49f786623bb4\",\"dweb:/ipfs/QmXqF5Rmycou9jBpXVgwAuL628pmBbKpBPCUghUaPKRYaV\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InvalidZKProof"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "verifier",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ProofVerified",
+          "anonymous": false
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/SupportingModules.sol": "ZKEnforcement"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/SupportingModules.sol": {
+        "keccak256": "0x7ff77974b2ec3a788c727ecc046a313ef2dc40be4a4e40bfb56e9a6488fde4c3",
+        "urls": [
+          "bzz-raw://4c732280d2d49a110552196172501c8e56cb024078f34aa279687b9ab9ad5ece",
+          "dweb:/ipfs/QmUNZaSiMmJMvjTNZtYfcaDYvWAj4Tz3AdBfBQ6rwW4inS"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/clz/FixedPointMathLib.sol": {
+        "keccak256": "0x489084ba28f94372237b5de76586f58aef364c105389ca3f53c3722adc052009",
+        "urls": [
+          "bzz-raw://f521961724e036bde106c0d25fd940a5603991286975a84826981323074b48eb",
+          "dweb:/ipfs/QmUhnbkQAq8TU4FxoFuGrHCtGd85bfBtggt3urnYeHPyEJ"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/clz/LibBit.sol": {
+        "keccak256": "0x8afb68e18b09f20421a102c2e1db6afe8f4db062ed5300c6024fa759628c4fe1",
+        "urls": [
+          "bzz-raw://e6bba285a6afec4561ad93405ca7361f552a1994cda44b0645cc49f786623bb4",
+          "dweb:/ipfs/QmXqF5Rmycou9jBpXVgwAuL628pmBbKpBPCUghUaPKRYaV"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 17
+}

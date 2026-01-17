@@ -1,0 +1,439 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "receive",
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "execute10",
+      "inputs": [
+        {
+          "name": "targets",
+          "type": "address[10]",
+          "internalType": "address[10]"
+        },
+        {
+          "name": "calldatas",
+          "type": "bytes[10]",
+          "internalType": "bytes[10]"
+        },
+        {
+          "name": "count",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "executeOne",
+      "inputs": [
+        {
+          "name": "target",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "data",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "rescueToken",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "BatchExecuted",
+      "inputs": [
+        {
+          "name": "callsExecuted",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "CallExecuted",
+      "inputs": [
+        {
+          "name": "target",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "data",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CallFailed",
+      "inputs": [
+        {
+          "name": "index",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "returnData",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "EthTransferFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlyOwner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SingleCallFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TooManyCalls",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TransferFailed",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60a0806040523460365733608052610606908161003b8239608051818181609501528181610238015281816102c101526103ab0152f35b5f80fdfe608080604052600436101561001c575b50361561001a575f80fd5b005b5f3560e01c90816333f3d6281461038c575080633e16b19c146102675780638da5cb5b146102235763f75be35c14610054575f61000f565b61018036600319011261021f57366101441161021f576101443567ffffffffffffffff811161021f5780600401906101443691011161021f576101643590337f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316141580610215575b61020657600a82116101f7575f5b828110610107577fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602084604051908152a1005b6001600160a01b0361012061011b83610553565b610579565b1661012e575b6001016100d3565b5f8061013c61011b84610553565b81610147858761058d565b9190826040519384928337810182815203925af16101636104e2565b81156101c95750906001917f6eb7af0fe8761c066484ab6b41c49a1eecb9025e21f258e3e7f0ef3631d67b4a6101bf61019e61011b85610553565b6101a8858861058d565b929094604051938493898060a01b03169684610521565b0390a29050610126565b826101f3604051928392635c0dee5d60e01b84526004840152604060248401526044830190610488565b0390fd5b63f5dedbff60e01b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b50303314156100c5565b5f80fd5b3461021f575f36600319011261021f576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b604036600319011261021f5761027b610472565b60243567ffffffffffffffff811161021f573660238201121561021f5780600401359067ffffffffffffffff821161021f576024810190602483369201011161021f57337f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316141580610382575b610206575f806040518484823780858101838152039034875af16103136104e2565b9281156103735761036f946103587f6eb7af0fe8761c066484ab6b41c49a1eecb9025e21f258e3e7f0ef3631d67b4a9360405193849360018060a01b03169684610521565b0390a2604051918291602083526020830190610488565b0390f35b631232b02d60e31b5f5260045ffd5b50303314156102f1565b3461021f57604036600319011261021f576103a5610472565b906024357f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163381141580610468575b610206575f9384936001600160a01b03821661041a575050829182915af16104036104e2565b501561040b57005b630db2c7f160e31b5f5260045ffd5b849193602082019363a9059cbb60e01b855260248301526044820152604481526104456064826104ac565b51925af16104516104e2565b501561045957005b6312171d8360e31b5f5260045ffd5b50303314156103dd565b600435906001600160a01b038216820361021f57565b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b90601f8019910116810190811067ffffffffffffffff8211176104ce57604052565b634e487b7160e01b5f52604160045260245ffd5b3d1561051c573d9067ffffffffffffffff82116104ce5760405191610511601f8201601f1916602001846104ac565b82523d5f602084013e565b606090565b918060609160209396959660408652816040870152838601375f828286010152601f8019910116830101931515910152565b600a8110156105655760051b60040190565b634e487b7160e01b5f52603260045260245ffd5b356001600160a01b038116810361021f5790565b90600a8110156105655760051b81013590601e198136030182121561021f57019081359167ffffffffffffffff831161021f57602001823603811361021f57919056fea26469706673582212204dac7f6d72eb82d966102b12bbaf1a48ed2c7bea57574a447320756b0065a36564736f6c63430008210033",
+    "sourceMap": "230:2470:13:-:0;;;;;;;718:10;710:18;;230:2470;;;;;;710:18;230:2470;;;;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608080604052600436101561001c575b50361561001a575f80fd5b005b5f3560e01c90816333f3d6281461038c575080633e16b19c146102675780638da5cb5b146102235763f75be35c14610054575f61000f565b61018036600319011261021f57366101441161021f576101443567ffffffffffffffff811161021f5780600401906101443691011161021f576101643590337f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316141580610215575b61020657600a82116101f7575f5b828110610107577fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602084604051908152a1005b6001600160a01b0361012061011b83610553565b610579565b1661012e575b6001016100d3565b5f8061013c61011b84610553565b81610147858761058d565b9190826040519384928337810182815203925af16101636104e2565b81156101c95750906001917f6eb7af0fe8761c066484ab6b41c49a1eecb9025e21f258e3e7f0ef3631d67b4a6101bf61019e61011b85610553565b6101a8858861058d565b929094604051938493898060a01b03169684610521565b0390a29050610126565b826101f3604051928392635c0dee5d60e01b84526004840152604060248401526044830190610488565b0390fd5b63f5dedbff60e01b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b50303314156100c5565b5f80fd5b3461021f575f36600319011261021f576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b604036600319011261021f5761027b610472565b60243567ffffffffffffffff811161021f573660238201121561021f5780600401359067ffffffffffffffff821161021f576024810190602483369201011161021f57337f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316141580610382575b610206575f806040518484823780858101838152039034875af16103136104e2565b9281156103735761036f946103587f6eb7af0fe8761c066484ab6b41c49a1eecb9025e21f258e3e7f0ef3631d67b4a9360405193849360018060a01b03169684610521565b0390a2604051918291602083526020830190610488565b0390f35b631232b02d60e31b5f5260045ffd5b50303314156102f1565b3461021f57604036600319011261021f576103a5610472565b906024357f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163381141580610468575b610206575f9384936001600160a01b03821661041a575050829182915af16104036104e2565b501561040b57005b630db2c7f160e31b5f5260045ffd5b849193602082019363a9059cbb60e01b855260248301526044820152604481526104456064826104ac565b51925af16104516104e2565b501561045957005b6312171d8360e31b5f5260045ffd5b50303314156103dd565b600435906001600160a01b038216820361021f57565b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b90601f8019910116810190811067ffffffffffffffff8211176104ce57604052565b634e487b7160e01b5f52604160045260245ffd5b3d1561051c573d9067ffffffffffffffff82116104ce5760405191610511601f8201601f1916602001846104ac565b82523d5f602084013e565b606090565b918060609160209396959660408652816040870152838601375f828286010152601f8019910116830101931515910152565b600a8110156105655760051b60040190565b634e487b7160e01b5f52603260045260245ffd5b356001600160a01b038116810361021f5790565b90600a8110156105655760051b81013590601e198136030182121561021f57019081359167ffffffffffffffff831161021f57602001823603811361021f57919056fea26469706673582212204dac7f6d72eb82d966102b12bbaf1a48ed2c7bea57574a447320756b0065a36564736f6c63430008210033",
+    "sourceMap": "230:2470:13:-:0;;;;;;;;;;-1:-1:-1;230:2470:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;230:2470:13;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;868:10;882:5;-1:-1:-1;;;;;230:2470:13;868:19;;;:50;;230:2470;864:74;;1282:2;1274:10;;1270:37;;230:2470;1338:9;;;;;;1716:20;230:2470;;;;;;;1716:20;230:2470;1323:13;-1:-1:-1;;;;;1368:10:13;;;;:::i;:::-;;:::i;:::-;230:2470;1364:268;;1323:13;230:2470;;1323:13;;1364:268;230:2470;1454:10;;;;;:::i;:::-;1470:12;;;;;:::i;:::-;230:2470;;;;;;;;;;;;;;;1454:29;;;;;;:::i;:::-;1505:8;;1501:46;;1583:10;;230:2470;1583:10;1570:47;;1583:10;;;;:::i;:::-;1595:12;;;;:::i;:::-;230:2470;;;;;;;;;;;;;;1570:47;;;:::i;:::-;;;;1364:268;;;;1501:46;230:2470;;;;1522:25;;;;;;;;230:2470;1522:25;;230:2470;;;;;;;;;;;:::i;:::-;1522:25;;;1270:37;1293:14;;;230:2470;1293:14;230:2470;;1293:14;864:74;927:11;;;230:2470;927:11;230:2470;;927:11;868:50;913:4;;868:10;891:27;;868:50;;230:2470;;;;;;;;;;-1:-1:-1;;230:2470:13;;;;;;434:30;-1:-1:-1;;;;;230:2470:13;;;;;;;;;-1:-1:-1;;230:2470:13;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;868:10;882:5;-1:-1:-1;;;;;230:2470:13;868:19;;;:50;;230:2470;864:74;;230:2470;;;;;;;;;;;;;;;1957:35;1976:9;;1957:35;;;;;:::i;:::-;2006:8;;;2002:39;;230:2470;;2056:35;;230:2470;;;;;;;;;;;;2056:35;;;:::i;:::-;;;;230:2470;;;;;;;;;;;;;:::i;:::-;;;;2002:39;2023:18;;;230:2470;2023:18;230:2470;;2023:18;868:50;913:4;;868:10;891:27;;868:50;;230:2470;;;;;;-1:-1:-1;;230:2470:13;;;;;;:::i;:::-;;;;882:5;-1:-1:-1;;;;;230:2470:13;868:10;:19;;;;:50;;230:2470;864:74;;230:2470;;;;-1:-1:-1;;;;;230:2470:13;;;;2313:38;;;;;;;;;;:::i;:::-;;2369:5;2365:37;;230:2470;2365:37;2383:19;;;230:2470;2383:19;230:2470;;2383:19;2259:397;2526:67;;;230:2470;2526:67;;;;;;;;230:2470;2526:67;;230:2470;;;;;;2526:67;;;;;;:::i;:::-;2515:79;;;;;;:::i;:::-;;2612:8;2608:37;;230:2470;2608:37;2629:16;;;230:2470;2629:16;230:2470;;2629:16;868:50;913:4;;868:10;891:27;;868:50;;230:2470;;;;-1:-1:-1;;;;;230:2470:13;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;-1:-1:-1;230:2470:13;;;;;;;;-1:-1:-1;;230:2470:13;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;-1:-1:-1;230:2470:13;;;;;-1:-1:-1;230:2470:13;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;230:2470:13;;;;;:::i;:::-;;;;-1:-1:-1;230:2470:13;;;;:::o;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;-1:-1:-1;;;;;230:2470:13;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+    "linkReferences": {},
+    "immutableReferences": {
+      "10410": [
+        {
+          "start": 149,
+          "length": 32
+        },
+        {
+          "start": 568,
+          "length": 32
+        },
+        {
+          "start": 705,
+          "length": 32
+        },
+        {
+          "start": 939,
+          "length": 32
+        }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "execute10(address[10],bytes[10],uint256)": "f75be35c",
+    "executeOne(address,bytes)": "3e16b19c",
+    "owner()": "8da5cb5b",
+    "rescueToken(address,uint256)": "33f3d628"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"returnData\",\"type\":\"bytes\"}],\"name\":\"CallFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EthTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"SingleCallFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TooManyCalls\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferFailed\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"callsExecuted\",\"type\":\"uint256\"}],\"name\":\"BatchExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"name\":\"CallExecuted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address[10]\",\"name\":\"targets\",\"type\":\"address[10]\"},{\"internalType\":\"bytes[10]\",\"name\":\"calldatas\",\"type\":\"bytes[10]\"},{\"internalType\":\"uint256\",\"name\":\"count\",\"type\":\"uint256\"}],\"name\":\"execute10\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"executeOne\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"rescueToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"details\":\"This contract allows bundled execution of arbitrage operations\",\"kind\":\"dev\",\"methods\":{\"execute10(address[10],bytes[10],uint256)\":{\"details\":\"Similar interface to FutarchyBatchExecutorMinimal but callable by owner\"}},\"title\":\"PectraWrapper\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"execute10(address[10],bytes[10],uint256)\":{\"notice\":\"Execute up to 10 calls in a batch\"},\"executeOne(address,bytes)\":{\"notice\":\"Execute a single call\"},\"rescueToken(address,uint256)\":{\"notice\":\"Rescue stuck tokens\"}},\"notice\":\"Wrapper contract to execute batched calls without EIP-7702\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/PectraWrapper.sol\":\"PectraWrapper\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/PectraWrapper.sol\":{\"keccak256\":\"0x417c864488b2ff4661a4ab493aa7d5378b9dc40c733891fce6253447a95689e9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6fbbbbde9954d86688d006bf0836c36534f086811667fb742cf8404d6b9aded7\",\"dweb:/ipfs/QmU3crCbvhkPy455uTTtZzJZLSrW7TL3Y7HpobsPapJsmU\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "returnData",
+              "type": "bytes"
+            }
+          ],
+          "type": "error",
+          "name": "CallFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "EthTransferFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "OnlyOwner"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "SingleCallFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "TooManyCalls"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "TransferFailed"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "callsExecuted",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "BatchExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bool",
+              "name": "success",
+              "type": "bool",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "CallExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[10]",
+              "name": "targets",
+              "type": "address[10]"
+            },
+            {
+              "internalType": "bytes[10]",
+              "name": "calldatas",
+              "type": "bytes[10]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "count",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "execute10"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "executeOne",
+          "outputs": [
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "rescueToken"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "payable",
+          "type": "receive"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "execute10(address[10],bytes[10],uint256)": {
+            "details": "Similar interface to FutarchyBatchExecutorMinimal but callable by owner"
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "execute10(address[10],bytes[10],uint256)": {
+            "notice": "Execute up to 10 calls in a batch"
+          },
+          "executeOne(address,bytes)": {
+            "notice": "Execute a single call"
+          },
+          "rescueToken(address,uint256)": {
+            "notice": "Rescue stuck tokens"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/PectraWrapper.sol": "PectraWrapper"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/PectraWrapper.sol": {
+        "keccak256": "0x417c864488b2ff4661a4ab493aa7d5378b9dc40c733891fce6253447a95689e9",
+        "urls": [
+          "bzz-raw://6fbbbbde9954d86688d006bf0836c36534f086811667fb742cf8404d6b9aded7",
+          "dweb:/ipfs/QmU3crCbvhkPy455uTTtZzJZLSrW7TL3Y7HpobsPapJsmU"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 13
+}

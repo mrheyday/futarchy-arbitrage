@@ -90,7 +90,7 @@ contract FutarchyArbExecutorV5Test is Test {
         uint256 totalBalance = 11000 ether;
 
         // Sweep tokens to owner
-        executor.sweepToken(IERC20(address(mockSdai)), owner);
+        executor.sweepToken(address(mockSdai), owner);
 
         // Verify tokens transferred
         assertEq(mockSdai.balanceOf(owner), totalBalance);
@@ -116,7 +116,7 @@ contract FutarchyArbExecutorV5Test is Test {
         mockCompany.mint(address(executor), 1000 ether);
 
         // Withdraw tokens
-        executor.withdrawToken(IERC20(address(mockCompany)), owner, 1000 ether);
+        executor.withdrawToken(address(mockCompany), owner, 1000 ether);
 
         // Verify tokens withdrawn to owner
         assertEq(mockCompany.balanceOf(owner), 1000 ether);
@@ -128,7 +128,7 @@ contract FutarchyArbExecutorV5Test is Test {
 
         vm.prank(user);
         vm.expectRevert();
-        executor.sweepToken(IERC20(address(mockSdai)), user);
+        executor.sweepToken(address(mockSdai), user);
     }
 
     function testNonOwnerCannotWithdrawETH() public {
@@ -144,7 +144,7 @@ contract FutarchyArbExecutorV5Test is Test {
 
         vm.prank(user);
         vm.expectRevert();
-        executor.withdrawToken(IERC20(address(mockCompany)), owner, 1000 ether);
+        executor.withdrawToken(address(mockCompany), owner, 1000 ether);
     }
 
     // ========================================
@@ -174,7 +174,7 @@ contract FutarchyArbExecutorV5Test is Test {
         uint256 totalBalance = 10000 ether + amount;
 
         // Sweep tokens
-        executor.sweepToken(IERC20(address(mockSdai)), to);
+        executor.sweepToken(address(mockSdai), to);
 
         // Verify all tokens transferred
         assertEq(mockSdai.balanceOf(to), totalBalance);
@@ -186,7 +186,7 @@ contract FutarchyArbExecutorV5Test is Test {
 
         mockCompany.mint(address(executor), amount);
 
-        executor.withdrawToken(IERC20(address(mockCompany)), owner, amount);
+        executor.withdrawToken(address(mockCompany), owner, amount);
 
         assertEq(mockCompany.balanceOf(owner), amount);
         assertEq(mockCompany.balanceOf(address(executor)), 0);
@@ -259,7 +259,7 @@ contract FutarchyArbExecutorV5Test is Test {
 
     function testSweepZeroBalance() public {
         // Sweep when balance is zero should not revert
-        executor.sweepToken(IERC20(address(mockSdai)), owner);
+        executor.sweepToken(address(mockSdai), owner);
         // Should complete without error
         assertTrue(true);
     }
@@ -292,7 +292,7 @@ contract FutarchyArbExecutorV5Test is Test {
         mockCompany.mint(address(executor), 100 ether);
 
         vm.expectRevert();
-        executor.withdrawToken(IERC20(address(mockCompany)), owner, 1000 ether);
+        executor.withdrawToken(address(mockCompany), owner, 1000 ether);
     }
 
     // ========================================
@@ -314,7 +314,7 @@ contract FutarchyArbExecutorV5Test is Test {
         mockCompany.mint(address(executor), 100 ether);
 
         uint256 gasBefore = gasleft();
-        executor.withdrawToken(IERC20(address(mockCompany)), owner, 50 ether);
+        executor.withdrawToken(address(mockCompany), owner, 50 ether);
         uint256 gasUsed = gasBefore - gasleft();
 
         // Token transfer should be reasonably gas efficient

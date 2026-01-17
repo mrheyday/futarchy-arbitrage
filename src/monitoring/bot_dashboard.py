@@ -20,9 +20,9 @@ from decimal import Decimal
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config.config_manager import ConfigManager
-from config.logging_config import setup_logger
-from helpers.web3_setup import get_web3_instance
+from src.config.config_manager import ConfigManager
+from src.config.logging_config import setup_logger
+from src.helpers.web3_setup import get_web3_instance
 
 logger = setup_logger("bot_dashboard", level=10)  # DEBUG
 

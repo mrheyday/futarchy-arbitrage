@@ -172,3 +172,32 @@ GAS_LIMIT_BUFFER: float = 1.1  # 10% buffer for gas limit estimates
 RPC_TIMEOUT: int = 30  # seconds
 MAX_RETRIES: int = 3
 RETRY_DELAY: int = 1  # seconds between retries
+
+
+# =============================================================================
+# WEB3 INSTANCE (Lazy initialization)
+# =============================================================================
+
+def get_web3():
+    """Get a Web3 instance connected to the configured RPC URL.
+
+    Returns:
+        Web3: Web3 instance
+    """
+    from web3 import Web3
+    rpc_url = get_rpc_url()
+    return Web3(Web3.HTTPProvider(rpc_url))
+
+
+# Lazy-initialized web3 instance for backward compatibility
+# Import as: from src.config.network import w3
+class _LazyWeb3:
+    """Lazy Web3 instance that initializes on first access."""
+    _instance = None
+
+    def __getattr__(self, name):
+        if _LazyWeb3._instance is None:
+            _LazyWeb3._instance = get_web3()
+        return getattr(_LazyWeb3._instance, name)
+
+w3 = _LazyWeb3()

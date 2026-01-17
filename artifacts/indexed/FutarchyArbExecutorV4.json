@@ -1,0 +1,1925 @@
+{
+  "name": "FutarchyArbExecutorV4",
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_runner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "receive",
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "buy_conditional_arbitrage",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "tuple",
+          "internalType": "struct FutarchyArbExecutorV4.BuyArgs",
+          "components": [
+            {
+              "name": "t",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Tokens",
+              "components": [
+                {
+                  "name": "comp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "cur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                }
+              ]
+            },
+            {
+              "name": "f",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+              "components": [
+                {
+                  "name": "router",
+                  "type": "address",
+                  "internalType": "contract IFutarchyRouter"
+                },
+                {
+                  "name": "proposal",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "p",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Pools",
+              "components": [
+                {
+                  "name": "yesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "noPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predYesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predNoPool",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "amountCurIn",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "yesBuyTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "yesBuyData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "noBuyTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "noBuyData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "buySpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "minYesCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minNoCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "sellCompanyOps",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+              "components": [
+                {
+                  "name": "targets",
+                  "type": "address[10]",
+                  "internalType": "address[10]"
+                },
+                {
+                  "name": "calldatas",
+                  "type": "bytes[10]",
+                  "internalType": "bytes[10]"
+                },
+                {
+                  "name": "count",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "tokenIn",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "tokenOut",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "spender",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "amountIn",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOut",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "patchIndex",
+                  "type": "uint8",
+                  "internalType": "uint8"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "liqSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "compYesToCurYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "compNoToCurNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "minNetCur",
+              "type": "int256",
+              "internalType": "int256"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "execute10",
+      "inputs": [
+        {
+          "name": "targets",
+          "type": "address[10]",
+          "internalType": "address[10]"
+        },
+        {
+          "name": "calldatas",
+          "type": "bytes[10]",
+          "internalType": "bytes[10]"
+        },
+        {
+          "name": "count",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "executeOne",
+      "inputs": [
+        {
+          "name": "target",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "data",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "runBuy",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "tuple",
+          "internalType": "struct FutarchyArbExecutorV4.BuyArgs",
+          "components": [
+            {
+              "name": "t",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Tokens",
+              "components": [
+                {
+                  "name": "comp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "cur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                }
+              ]
+            },
+            {
+              "name": "f",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+              "components": [
+                {
+                  "name": "router",
+                  "type": "address",
+                  "internalType": "contract IFutarchyRouter"
+                },
+                {
+                  "name": "proposal",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "p",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Pools",
+              "components": [
+                {
+                  "name": "yesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "noPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predYesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predNoPool",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "amountCurIn",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "yesBuyTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "yesBuyData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "noBuyTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "noBuyData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "buySpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "minYesCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minNoCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "sellCompanyOps",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+              "components": [
+                {
+                  "name": "targets",
+                  "type": "address[10]",
+                  "internalType": "address[10]"
+                },
+                {
+                  "name": "calldatas",
+                  "type": "bytes[10]",
+                  "internalType": "bytes[10]"
+                },
+                {
+                  "name": "count",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "tokenIn",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "tokenOut",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "spender",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "amountIn",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOut",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "patchIndex",
+                  "type": "uint8",
+                  "internalType": "uint8"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "liqSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "compYesToCurYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "compNoToCurNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "minNetCur",
+              "type": "int256",
+              "internalType": "int256"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "runSell",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "tuple",
+          "internalType": "struct FutarchyArbExecutorV4.SellArgs",
+          "components": [
+            {
+              "name": "t",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Tokens",
+              "components": [
+                {
+                  "name": "comp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "cur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                }
+              ]
+            },
+            {
+              "name": "f",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+              "components": [
+                {
+                  "name": "router",
+                  "type": "address",
+                  "internalType": "contract IFutarchyRouter"
+                },
+                {
+                  "name": "proposal",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "p",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Pools",
+              "components": [
+                {
+                  "name": "yesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "noPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predYesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predNoPool",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "buyCompanyOps",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+              "components": [
+                {
+                  "name": "targets",
+                  "type": "address[10]",
+                  "internalType": "address[10]"
+                },
+                {
+                  "name": "calldatas",
+                  "type": "bytes[10]",
+                  "internalType": "bytes[10]"
+                },
+                {
+                  "name": "count",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "tokenIn",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "tokenOut",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "spender",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "amountIn",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOut",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "patchIndex",
+                  "type": "uint8",
+                  "internalType": "uint8"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "amountCurIn",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "yesSwapTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "yesSwapData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "noSwapTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "noSwapData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "swapSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "minYesCurOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minNoCurOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "liqSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "predYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "minNetCur",
+              "type": "int256",
+              "internalType": "int256"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "runTrade",
+      "inputs": [
+        {
+          "name": "b",
+          "type": "tuple",
+          "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+          "components": [
+            {
+              "name": "targets",
+              "type": "address[10]",
+              "internalType": "address[10]"
+            },
+            {
+              "name": "calldatas",
+              "type": "bytes[10]",
+              "internalType": "bytes[10]"
+            },
+            {
+              "name": "count",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "tokenIn",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "tokenOut",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "spender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "amountIn",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "patchIndex",
+              "type": "uint8",
+              "internalType": "uint8"
+            },
+            {
+              "name": "amountOffset",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minOutOffset",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "slippageBps",
+              "type": "uint16",
+              "internalType": "uint16"
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "out",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "runner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "sell_conditional_arbitrage",
+      "inputs": [
+        {
+          "name": "a",
+          "type": "tuple",
+          "internalType": "struct FutarchyArbExecutorV4.SellArgs",
+          "components": [
+            {
+              "name": "t",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Tokens",
+              "components": [
+                {
+                  "name": "comp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "cur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noComp",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "yesCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                },
+                {
+                  "name": "noCur",
+                  "type": "address",
+                  "internalType": "contract IERC20"
+                }
+              ]
+            },
+            {
+              "name": "f",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+              "components": [
+                {
+                  "name": "router",
+                  "type": "address",
+                  "internalType": "contract IFutarchyRouter"
+                },
+                {
+                  "name": "proposal",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "p",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Pools",
+              "components": [
+                {
+                  "name": "yesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "noPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predYesPool",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "predNoPool",
+                  "type": "address",
+                  "internalType": "address"
+                }
+              ]
+            },
+            {
+              "name": "buyCompanyOps",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+              "components": [
+                {
+                  "name": "targets",
+                  "type": "address[10]",
+                  "internalType": "address[10]"
+                },
+                {
+                  "name": "calldatas",
+                  "type": "bytes[10]",
+                  "internalType": "bytes[10]"
+                },
+                {
+                  "name": "count",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "tokenIn",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "tokenOut",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "spender",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "amountIn",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOut",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "patchIndex",
+                  "type": "uint8",
+                  "internalType": "uint8"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "amountCurIn",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minCompOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "yesSwapTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "yesSwapData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "noSwapTarget",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "noSwapData",
+              "type": "bytes",
+              "internalType": "bytes"
+            },
+            {
+              "name": "swapSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "minYesCurOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "minNoCurOut",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "liqSpender",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "predYes",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "predNo",
+              "type": "tuple",
+              "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+              "components": [
+                {
+                  "name": "target",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "data",
+                  "type": "bytes",
+                  "internalType": "bytes"
+                },
+                {
+                  "name": "msgValue",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "amountOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "minOutOffset",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "slippageBps",
+                  "type": "uint16",
+                  "internalType": "uint16"
+                }
+              ]
+            },
+            {
+              "name": "minNetCur",
+              "type": "int256",
+              "internalType": "int256"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "BuyExecuted",
+      "inputs": [
+        {
+          "name": "curSplit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "yesCompOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "noCompOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "mergedComp",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "compSold",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "curReceived",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqCompYesIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqCompYesOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqCompNoIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqCompNoOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqYesIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqYesOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqNoIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqNoOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "netCur",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SellExecuted",
+      "inputs": [
+        {
+          "name": "curSpent",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "compBought",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "compSplit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "yesCurOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "noCurOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "mergedCur",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqYesIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqYesOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqNoIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "liqNoOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "netCur",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TradeExecuted",
+      "inputs": [
+        {
+          "name": "tokenIn",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "tokenOut",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amountIn",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "amountOut",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "AmountOffsetOOB",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "BalanceTooLarge",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CallFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LowCompOut",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LowNoCompOut",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LowNoCurOut",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LowYesCompOut",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LowYesCurOut",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "MinOutOffsetOOB",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NetCurBelowTolerance",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NotRunner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "NothingToMerge",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlySelf",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OutputBelowMin",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "PatchIndexOOB",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SpentMismatch",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TooManyCalls",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "UnderMint",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAmount",
+      "inputs": []
+    }
+  ],
+  "abi_function_count": 8,
+  "abi_event_count": 3,
+  "abi_error_count": 19,
+  "bytecode": {
+    "creation": "0x60a03461007f57601f6125bc38819003918201601f19168301916001600160401b038311848410176100835780849260209460405283398101031261007f57516001600160a01b038116810361007f5760805260405161252490816100988239608051...",
+    "creation_size": 9661,
+    "runtime": "0x6080604052600436101561001a575b3615610018575f80fd5b005b5f3560e01c80633e16b19c146100995780635f66c633146100945780637a8ca6151461008f5780639862d8f71461008a578063aaedc25f14610085578063c23756ae146100805780...",
+    "runtime_size": 9509,
+    "creation_full": "0x60a03461007f57601f6125bc38819003918201601f19168301916001600160401b038311848410176100835780849260209460405283398101031261007f57516001600160a01b038116810361007f57608052604051612524908161009882396080518181816101ae0152818161042f015281816104a301526106d80152f35b5f80fd5b634e487b7160e01b5f52604160045260245ffdfe6080604052600436101561001a575b3615610018575f80fd5b005b5f3560e01c80633e16b19c146100995780635f66c633146100945780637a8ca6151461008f5780639862d8f71461008a578063aaedc25f14610085578063c23756ae14610080578063e4d30e3d1461007b5763f75be35c0361000e57611660565b611142565b61078c565b6106a4565b610493565b61041a565b61019e565b604036600319011261010f576004356100b181610113565b60243567ffffffffffffffff811161010f573660238201121561010f57806004013567ffffffffffffffff811161010f57366024828401011161010f5761010b9260246100ff9301906117be565b60405191829182610155565b0390f35b5f80fd5b6001600160a01b0381160361010f57565b359061012f82610113565b565b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b906020610166928181520190610131565b90565b602060031982011261010f576004359067ffffffffffffffff821161010f5761036090829003600319011261010f5760040190565b3461010f576101ac36610169565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361040157303b1561010f575f60405180809363e4d30e3d60e01b82526020600483015261020860248301826117ef565b61021860e4830160c08301611891565b61022a610124830161010083016118b6565b6101808101356101a48301526102576102466101a08301610124565b6001600160a01b03166101c4840152565b6103406103cd6103ad61038d61036d61032c6102d361029161027d6101c08a018a611913565b6103606101e48d01526103848c0191611945565b6102b26102a16101e08b01610124565b6001600160a01b03166102048c0152565b6102c06102008a018a611913565b8b8303602319016102248d015290611945565b6102f46102e36102208a01610124565b6001600160a01b03166102448b0152565b6102408801356102648a01526102608801356102848a015261031a610280890189611965565b898203602319016102a48b0152611a3f565b61034d61033c6102a08901610124565b6001600160a01b03166102c48a0152565b61035b6102c0880188611b44565b888203602319016102e48a0152611b58565b61037b6102e0870187611b44565b87820360231901610304890152611b58565b61039b610300860186611b44565b86820360231901610324880152611b58565b6103bb610320850185611b44565b85820360231901610344870152611b58565b910135610364830152038183305af180156103fc576103e857005b806103f65f6100189361174c565b80610410565b611bc7565b638fba40ad60e01b5f5260045ffd5b5f91031261010f57565b3461010f575f36600319011261010f576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b602060031982011261010f576004359067ffffffffffffffff821161010f5761034090829003600319011261010f5760040190565b3461010f576104a13661045e565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361040157303b1561010f575f60405180809363611bab5760e11b8252602060048301526104fd60248301826117ef565b61050d60e4830160c08301611891565b61051f610124830161010083016118b6565b6103206106896106696105ef6105ad61055361053f610180880188611965565b6103406101a48a0152610364890190611a3f565b6101a08701356101c48901526101c08701356101e489015261058c61057b6101e08901610124565b6001600160a01b03166102048a0152565b61059a610200880188611913565b898303602319016102248b015290611945565b6105ce6105bd6102208801610124565b6001600160a01b0316610244890152565b6105dc610240870187611913565b888303602319016102648a015290611945565b6106106105ff6102608701610124565b6001600160a01b0316610284880152565b6102808501356102a48701526102a08501356102c48701526106496106386102c08701610124565b6001600160a01b03166102e4880152565b6106576102e0860186611b44565b86820360231901610304880152611b58565b610677610300850185611b44565b85820360231901610324870152611b58565b910135610344830152038183305af180156103fc576103e857005b3461010f57602036600319011261010f5760043567ffffffffffffffff811161010f576102a0600319823603011261010f577f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163303610401578061071661010b92600401611ea8565b906101848101359061072782610113565b7f54424bcd37c121359634358c4b6124e821af711811c1ad2fb8f96b94b046338c60406101e46101a48401359361075d85610113565b82519101358152602081018690526001600160a01b039384169490931692a36040519081529081906020820190565b3461010f5761079a3661045e565b3033036111335760208101906107be6107b283611bd2565b6001600160a01b031690565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611114575b506107fb610180830183611beb565b9061080c6101a08401358093612277565b926101c0810135801515908161110a575b506110fb5761082b81611bd2565b6108468560c08401926108406107b285611bd2565b906122c7565b60408201956108576107b288611bd2565b6040516370a0823160e01b81523060048201529790602090899060249082905afa9788156103fc575f986110da575b5060608401906108986107b283611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916110bb575b506108d36107b286611bd2565b9960e087019a6108e28c611bd2565b6108eb89611bd2565b90823b1561010f576040516301abf04560e71b81526001600160a01b03918216600482015291166024820152604481018c9052905f908290606490829084905af180156103fc576110a7575b506109446107b284611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc5761097c925f91610eac575b50611c15565b906109896107b285611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc578b9283926109c4925f91610eac5750611c15565b921091821561109d575b505061108e57610a0791610840610a016109e88b94611bd2565b926109fc856102608b019561084087611bd2565b611bd2565b91611bd2565b6080830191610a186107b284611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f9161106f575b50610a75610a576101e08701611bd2565b610a6f610a68610200890189611c27565b3691611c5a565b90612419565b610a816107b285611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610ab8925f91610eac5750611c15565b9461028085013586106110605760a0850191610ad66107b284611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611041575b50610b26610b156102208901611bd2565b610a6f610a686102408b018b611c27565b610b326107b285611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610b69925f91610eac5750611c15565b996102a08701358b10611032578a88101561102b5787915b821561101c57610a016107b2610bb792610baa86610b9e8c611bd2565b6108406107b285611bd2565b6109fc86610b9e8a611bd2565b610bc086611bd2565b90823b1561010f57604051637abef8d160e01b81526001600160a01b0391821660048201529116602482015260448101839052905f908290606490829084905af180156103fc57611008575b50610c178188611c15565b91610c22828c611c15565b945f945f9785610eea575b5086610d77575b506107b2610c4191611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610d48575b506001600160ff1b0381118015610d38575b610d295761032091610c9291611caf565b9601358612610d1a577fca4202436e8d09dae0f884d1f04d2b4a4b2e34472419c7d71435f525d1e2d68199610d15978a6040519b8c9b8c979491926101409996939c9b9a9794919c6101608a019d8a5260208a015260408901526060880152608087015260a086015260c085015260e08401526101008301526101208201520152565b0390a1005b63d9b3452f60e01b5f5260045ffd5b630748aac760e11b5f5260045ffd5b506001600160ff1b038211610c81565b610d6a915060203d602011610d70575b610d62818361174c565b810190611bdc565b5f610c6f565b503d610d58565b610d94919750610d878791611bd2565b6108406102c08b01611bd2565b610da06107b287611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610ecb575b50610e596103008901896040610e51610e4a6109fc85610e448e87610e00610df68583611c90565b6020810190611c27565b9290610e3f6060610e118886611c90565b013591610e3760a0610e318a6080610e29828b611c90565b013598611c90565b01611ca5565b953691611c5a565b61245d565b95611c90565b938d611c90565b013591612438565b610e656107b288611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc57610c41926107b292610ea4925f91610eac5750611c15565b979150610c34565b610ec5915060203d602011610d7057610d62818361174c565b5f610976565b610ee4915060203d602011610d7057610d62818361174c565b5f610dce565b610f07919650610efa8691611bd2565b6108406102c08c01611bd2565b610f136107b282611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610fe9575b50610f9f896102e081016040610e51610f8b8a85610f62610df68783611c90565b9290610e3f6060610f738a86611c90565b013591610e3760a0610e318c6080610e29828b611c90565b92610f996109fc8287611c90565b94611c90565b610fab6107b283611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610fe2925f91610eac5750611c15565b945f610c2d565b611002915060203d602011610d7057610d62818361174c565b5f610f41565b806103f65f6110169361174c565b5f610c0c565b6316a0341160e11b5f5260045ffd5b8a91610b81565b634bca4ffb60e01b5f5260045ffd5b61105a915060203d602011610d7057610d62818361174c565b5f610b04565b633329ce5360e11b5f5260045ffd5b611088915060203d602011610d7057610d62818361174c565b5f610a46565b63e57c748d60e01b5f5260045ffd5b109050885f6109ce565b806103f65f6110b59361174c565b5f610937565b6110d4915060203d602011610d7057610d62818361174c565b5f6108c6565b6110f491985060203d602011610d7057610d62818361174c565b965f610886565b634975cb0960e01b5f5260045ffd5b905084105f61081d565b61112d915060203d602011610d7057610d62818361174c565b5f6107ec565b63029a949d60e31b5f5260045ffd5b3461010f5761115036610169565b30330361113357602081016111676107b282611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611625575b5061119f82611bd2565b9060c08401936111c36111b46107b287611bd2565b936101808301359485916122c7565b6111cf6107b286611bd2565b9360e08201946111de86611bd2565b6111e783611bd2565b90823b1561010f576040516301abf04560e71b81526001600160a01b0391821660048201529116602482015260448101869052905f908290606490829084905af180156103fc57611611575b506112668461124460808501611bd2565b6112578261022087019261084084611bd2565b610840610a0160a08701611bd2565b60408201926112776107b285611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916115f2575b506112c76112b66101a08601611bd2565b610a6f610a686101c0880188611c27565b6112d36107b286611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc5761130a925f91610eac5750611c15565b9561024084013587106115e35760608401976113286107b28a611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916115c4575b506113786113676101e08801611bd2565b610a6f610a686102008a018a611c27565b6113846107b28b611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc576113bb925f91610eac5750611c15565b9561026086013587106115b557868910156115ae5788995b8a1561101c57611404926109fc8c610b9e6107b2946109fc836113f8610a0199611bd2565b6108406107b289611bd2565b61140d85611bd2565b90823b1561010f57604051637abef8d160e01b81526001600160a01b0391821660048201529116602482015260448101899052905f908290606490829084905af180156103fc5761159a575b5061147d6107b261147789611472610280880188611beb565b612277565b93611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f9161157b575b506001600160ff1b038111801561156b575b610d2957610340916114ce91611caf565b9201358212610d1a57857fc10039525f5b2267277206d3941570cb5f25bc01b6a317eed793cda290c891ce96610d1594604051978897889390979695926101c095926101e08601998652602086015260408501526060840152608083015260a08201525f60c08201525f60e08201525f6101008201525f6101208201525f6101408201525f6101608201525f6101808201525f6101a08201520152565b506001600160ff1b0382116114bd565b611594915060203d602011610d7057610d62818361174c565b5f6114ab565b806103f65f6115a89361174c565b5f611459565b86996113d3565b631b15f3a360e21b5f5260045ffd5b6115dd915060203d602011610d7057610d62818361174c565b5f611356565b6349d1e43560e11b5f5260045ffd5b61160b915060203d602011610d7057610d62818361174c565b5f6112a5565b806103f65f61161f9361174c565b5f611233565b61163e915060203d602011610d7057610d62818361174c565b5f611195565b906004916101441161010f57565b919061014083011161010f57565b61018036600319011261010f5761167636611644565b6101443567ffffffffffffffff811161010f57611697903690600401611652565b610164359130330361113357600a831161171c575f5b8381106116b657005b6116c36109fc8284611cdb565b6001600160a01b03811615611713575f8091816116e08588611cf1565b91906116f16040518094819361172b565b03925af16116fd61178f565b901561170e57506001905b016116ad565b611d0d565b50600190611708565b63f5dedbff60e01b5f5260045ffd5b908092918237015f815290565b634e487b7160e01b5f52604160045260245ffd5b90601f8019910116810190811067ffffffffffffffff82111761176e57604052565b611738565b67ffffffffffffffff811161176e57601f01601f191660200190565b3d156117b9573d906117a082611773565b916117ae604051938461174c565b82523d5f602084013e565b606090565b30330361113357825f9392849360405192839283378101848152039134905af16117e661178f565b901561170e5790565b9060a06118838161012f94803561180581610113565b600180841b03168552602081013561181c81610113565b600180841b03166020860152604081013561183681610113565b600180841b03166040860152606081013561185081610113565b600180841b0316606086015261187d608082013561186d81610113565b6001600160a01b03166080870152565b01610124565b6001600160a01b0316910152565b6020809180356118a081610113565b6001600160a01b03168452013561188381610113565b6060809180356118c581610113565b6001600160a01b0316845260208101356118de81610113565b6001600160a01b0316602085015260408101356118fa81610113565b6001600160a01b03166040850152013561188381610113565b9035601e198236030181121561010f57016020813591019167ffffffffffffffff821161010f57813603831361010f57565b908060209392818452848401375f828201840152601f01601f1916010190565b903561029e198236030181121561010f570190565b905f905b600a821061198b57505050565b602080600192853561199c81610113565b848060a01b031681520193019101909161197e565b903561013e198236030181121561010f570190565b6101408201915f81835b600a83106119e057505050505090565b9091929394602080611a0383886001950387526119fd8a87611913565b90611945565b970193019301919392906119d0565b60ff81160361010f57565b359061012f82611a12565b61ffff81160361010f57565b359061012f82611a28565b9061016690611a4e818461197a565b610280611b3b81611a7a611a666101408801886119b1565b6102a06101408701526102a08601906119c6565b95610160810135610160860152611aa8611a976101808301610124565b6001600160a01b0316610180870152565b611ac9611ab86101a08301610124565b6001600160a01b03166101a0870152565b611aea611ad96101c08301610124565b6001600160a01b03166101c0870152565b6101e08101356101e0860152610200810135610200860152611b1d611b126102208301611a1d565b60ff16610220870152565b61024081013561024086015261026081013561026086015201611a34565b61ffff16910152565b903560be198236030181121561010f570190565b908135611b6481610113565b6001600160a01b0316815260a061ffff81611b96611b856020870187611913565b60c0602088015260c0870191611945565b946040810135604086015260608101356060860152608081013560808601520135611bc081611a28565b1691015290565b6040513d5f823e3d90fd5b3561016681610113565b9081602091031261010f575190565b90359061029e198136030182121561010f570190565b634e487b7160e01b5f52601160045260245ffd5b91908203918211611c2257565b611c01565b903590601e198136030182121561010f570180359067ffffffffffffffff821161010f5760200191813603831361010f57565b929192611c6682611773565b91611c74604051938461174c565b82948184528183011161010f578281602093845f960137010152565b90359060be198136030182121561010f570190565b3561016681611a28565b81810392915f138015828513169184121617611c2257565b634e487b7160e01b5f52603260045260245ffd5b90600a811015611cec5760051b0190565b611cc7565b600a821015611cec57611d099160051b810190611c27565b9091565b805115611d1c57602081519101fd5b633204506f60e01b5f5260045ffd5b919061014060405193611d3e828661174c565b8491810192831161010f57905b828210611d5757505050565b602080918335611d6681610113565b815201910190611d4b565b90359061013e198136030182121561010f570190565b61014060405191611d98828461174c565b829181019036821161010f5780925b828410611db5575050505090565b833567ffffffffffffffff811161010f57820136601f8201121561010f57602091611de7839236908481359101611c5a565b815201930192611da7565b3561016681611a12565b939291906101808501905f865b600a8210611e61575050610180610140870152506102c08501905f5b600a8110611e395750506101609150930152565b9091602080611e5560019361017f198b82030187528751610131565b95019493019101611e25565b82516001600160a01b031681526020928301926001929092019101611e09565b61ffff16612710039061ffff8211611c2257565b81810292918115918404141715611c2257565b6101e081013580156122685761016082013591600a831161171c57611ed36107b26101808301611bd2565b611ee36107b26101a08401611bd2565b93611eee3684611d2b565b94611f05611f00610140860186611d71565b611d87565b92610220850160ff80611f1783611df2565b16036121dd575b506101c08501866001600160a01b03611f3683611bd2565b166121c4575b50506040516370a0823160e01b81523060048201526001600160a01b0391909116929091602083602481875afa9283156103fc575f936121a3575b506040516370a0823160e01b81523060048201526001600160a01b03919091169790946020866024818c5afa9586156103fc575f96612182575b50303b1561010f575f91611fd96040519485938493633dd6f8d760e21b855260048501611dfc565b038183305af180156103fc5761216e575b506040516370a0823160e01b815230600482015291602090839060249082905afa9182156103fc575f9261214d575b506040516370a0823160e01b815230600482015295602090879060249082905afa9586156103fc575f9661211e575b509161205861205e928694611c15565b95611c15565b930361210f575f91610260820135196120b5575b50610200013590808211156120ae57505b80151590816120a4575b506120955790565b63211aa2b960e01b5f5260045ffd5b905081105f61208d565b9050612083565b819250610280610200920161ffff6120cc82611ca5565b166120da57505b9190612072565b61210a916120fc6120f56120f061210294611ca5565b611e81565b61ffff1690565b90611e95565b612710900490565b6120d3565b639ef74a0d60e01b5f5260045ffd5b859391965061205e926121426120589260203d602011610d7057610d62818361174c565b979294509250612048565b61216791925060203d602011610d7057610d62818361174c565b905f612019565b806103f65f61217c9361174c565b5f611fea565b61219c91965060203d602011610d7057610d62818361174c565b945f611fb1565b6121bd91935060203d602011610d7057610d62818361174c565b915f611f77565b6121d06121d692611bd2565b836122c7565b5f86611f3c565b600a60ff6121ea83611df2565b161015612259578061224061220d61223a61221961221361220d61225297611df2565b60ff1690565b8a611cdb565b516102608b01358c6102408d01356122346102808f01611ca5565b9361245d565b92611df2565b9061224b8288611cdb565b5285611cdb565b505f611f1e565b63711cef1b60e01b5f5260045ffd5b631f2a200560e01b5f5260045ffd5b90806122aa57506101e08101355b80156122685761016082013591600a831161171c57611ed36107b26101808301611bd2565b612285565b9081602091031261010f5751801515810361010f5790565b919091811561241457604051636eb1769f60e11b81523060048201526001600160a01b038481166024830152919091169190602081604481865afa9081156103fc575f916123f5575b501061231a575050565b60405163095ea7b360e01b81526001600160a01b03831660048201525f6024820152602081806044810103815f865af19081156103fc575f916123d6575b5015611d1c5760405163095ea7b360e01b81526001600160a01b039290921660048301525f196024830152602090829060449082905f905af19081156103fc575f916123a7575b5015611d1c57565b6123c9915060203d6020116123cf575b6123c1818361174c565b8101906122af565b5f61239f565b503d6123b7565b6123ef915060203d6020116123cf576123c1818361174c565b5f612358565b61240e915060203d602011610d7057610d62818361174c565b5f612310565b505050565b5f91829182602083519301915af161242f61178f565b901561170e5750565b905f92918392602083519301915af161242f61178f565b9060208201809211611c2257565b91909493829583516020820190818311611c2257106124df5783016020018290526001840161248d575b50505050565b61ffff81166124c65750915b81516124a48261244f565b116124b75701602001525f808080612487565b630f56d5d160e21b5f5260045ffd5b6124d9916120fc6120f561210293611e81565b91612499565b63f3e07dc360e01b5f5260045ffdfea264697066735822122041c4611641799e8f0205e8f56de50db4c18719a1f67f6029ac5d2931f3f32f4764736f6c63430008210033",
+    "runtime_full": "0x6080604052600436101561001a575b3615610018575f80fd5b005b5f3560e01c80633e16b19c146100995780635f66c633146100945780637a8ca6151461008f5780639862d8f71461008a578063aaedc25f14610085578063c23756ae14610080578063e4d30e3d1461007b5763f75be35c0361000e57611660565b611142565b61078c565b6106a4565b610493565b61041a565b61019e565b604036600319011261010f576004356100b181610113565b60243567ffffffffffffffff811161010f573660238201121561010f57806004013567ffffffffffffffff811161010f57366024828401011161010f5761010b9260246100ff9301906117be565b60405191829182610155565b0390f35b5f80fd5b6001600160a01b0381160361010f57565b359061012f82610113565b565b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b906020610166928181520190610131565b90565b602060031982011261010f576004359067ffffffffffffffff821161010f5761036090829003600319011261010f5760040190565b3461010f576101ac36610169565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361040157303b1561010f575f60405180809363e4d30e3d60e01b82526020600483015261020860248301826117ef565b61021860e4830160c08301611891565b61022a610124830161010083016118b6565b6101808101356101a48301526102576102466101a08301610124565b6001600160a01b03166101c4840152565b6103406103cd6103ad61038d61036d61032c6102d361029161027d6101c08a018a611913565b6103606101e48d01526103848c0191611945565b6102b26102a16101e08b01610124565b6001600160a01b03166102048c0152565b6102c06102008a018a611913565b8b8303602319016102248d015290611945565b6102f46102e36102208a01610124565b6001600160a01b03166102448b0152565b6102408801356102648a01526102608801356102848a015261031a610280890189611965565b898203602319016102a48b0152611a3f565b61034d61033c6102a08901610124565b6001600160a01b03166102c48a0152565b61035b6102c0880188611b44565b888203602319016102e48a0152611b58565b61037b6102e0870187611b44565b87820360231901610304890152611b58565b61039b610300860186611b44565b86820360231901610324880152611b58565b6103bb610320850185611b44565b85820360231901610344870152611b58565b910135610364830152038183305af180156103fc576103e857005b806103f65f6100189361174c565b80610410565b611bc7565b638fba40ad60e01b5f5260045ffd5b5f91031261010f57565b3461010f575f36600319011261010f576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b602060031982011261010f576004359067ffffffffffffffff821161010f5761034090829003600319011261010f5760040190565b3461010f576104a13661045e565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361040157303b1561010f575f60405180809363611bab5760e11b8252602060048301526104fd60248301826117ef565b61050d60e4830160c08301611891565b61051f610124830161010083016118b6565b6103206106896106696105ef6105ad61055361053f610180880188611965565b6103406101a48a0152610364890190611a3f565b6101a08701356101c48901526101c08701356101e489015261058c61057b6101e08901610124565b6001600160a01b03166102048a0152565b61059a610200880188611913565b898303602319016102248b015290611945565b6105ce6105bd6102208801610124565b6001600160a01b0316610244890152565b6105dc610240870187611913565b888303602319016102648a015290611945565b6106106105ff6102608701610124565b6001600160a01b0316610284880152565b6102808501356102a48701526102a08501356102c48701526106496106386102c08701610124565b6001600160a01b03166102e4880152565b6106576102e0860186611b44565b86820360231901610304880152611b58565b610677610300850185611b44565b85820360231901610324870152611b58565b910135610344830152038183305af180156103fc576103e857005b3461010f57602036600319011261010f5760043567ffffffffffffffff811161010f576102a0600319823603011261010f577f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163303610401578061071661010b92600401611ea8565b906101848101359061072782610113565b7f54424bcd37c121359634358c4b6124e821af711811c1ad2fb8f96b94b046338c60406101e46101a48401359361075d85610113565b82519101358152602081018690526001600160a01b039384169490931692a36040519081529081906020820190565b3461010f5761079a3661045e565b3033036111335760208101906107be6107b283611bd2565b6001600160a01b031690565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611114575b506107fb610180830183611beb565b9061080c6101a08401358093612277565b926101c0810135801515908161110a575b506110fb5761082b81611bd2565b6108468560c08401926108406107b285611bd2565b906122c7565b60408201956108576107b288611bd2565b6040516370a0823160e01b81523060048201529790602090899060249082905afa9788156103fc575f986110da575b5060608401906108986107b283611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916110bb575b506108d36107b286611bd2565b9960e087019a6108e28c611bd2565b6108eb89611bd2565b90823b1561010f576040516301abf04560e71b81526001600160a01b03918216600482015291166024820152604481018c9052905f908290606490829084905af180156103fc576110a7575b506109446107b284611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc5761097c925f91610eac575b50611c15565b906109896107b285611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc578b9283926109c4925f91610eac5750611c15565b921091821561109d575b505061108e57610a0791610840610a016109e88b94611bd2565b926109fc856102608b019561084087611bd2565b611bd2565b91611bd2565b6080830191610a186107b284611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f9161106f575b50610a75610a576101e08701611bd2565b610a6f610a68610200890189611c27565b3691611c5a565b90612419565b610a816107b285611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610ab8925f91610eac5750611c15565b9461028085013586106110605760a0850191610ad66107b284611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611041575b50610b26610b156102208901611bd2565b610a6f610a686102408b018b611c27565b610b326107b285611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610b69925f91610eac5750611c15565b996102a08701358b10611032578a88101561102b5787915b821561101c57610a016107b2610bb792610baa86610b9e8c611bd2565b6108406107b285611bd2565b6109fc86610b9e8a611bd2565b610bc086611bd2565b90823b1561010f57604051637abef8d160e01b81526001600160a01b0391821660048201529116602482015260448101839052905f908290606490829084905af180156103fc57611008575b50610c178188611c15565b91610c22828c611c15565b945f945f9785610eea575b5086610d77575b506107b2610c4191611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610d48575b506001600160ff1b0381118015610d38575b610d295761032091610c9291611caf565b9601358612610d1a577fca4202436e8d09dae0f884d1f04d2b4a4b2e34472419c7d71435f525d1e2d68199610d15978a6040519b8c9b8c979491926101409996939c9b9a9794919c6101608a019d8a5260208a015260408901526060880152608087015260a086015260c085015260e08401526101008301526101208201520152565b0390a1005b63d9b3452f60e01b5f5260045ffd5b630748aac760e11b5f5260045ffd5b506001600160ff1b038211610c81565b610d6a915060203d602011610d70575b610d62818361174c565b810190611bdc565b5f610c6f565b503d610d58565b610d94919750610d878791611bd2565b6108406102c08b01611bd2565b610da06107b287611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610ecb575b50610e596103008901896040610e51610e4a6109fc85610e448e87610e00610df68583611c90565b6020810190611c27565b9290610e3f6060610e118886611c90565b013591610e3760a0610e318a6080610e29828b611c90565b013598611c90565b01611ca5565b953691611c5a565b61245d565b95611c90565b938d611c90565b013591612438565b610e656107b288611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc57610c41926107b292610ea4925f91610eac5750611c15565b979150610c34565b610ec5915060203d602011610d7057610d62818361174c565b5f610976565b610ee4915060203d602011610d7057610d62818361174c565b5f610dce565b610f07919650610efa8691611bd2565b6108406102c08c01611bd2565b610f136107b282611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91610fe9575b50610f9f896102e081016040610e51610f8b8a85610f62610df68783611c90565b9290610e3f6060610f738a86611c90565b013591610e3760a0610e318c6080610e29828b611c90565b92610f996109fc8287611c90565b94611c90565b610fab6107b283611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc57610fe2925f91610eac5750611c15565b945f610c2d565b611002915060203d602011610d7057610d62818361174c565b5f610f41565b806103f65f6110169361174c565b5f610c0c565b6316a0341160e11b5f5260045ffd5b8a91610b81565b634bca4ffb60e01b5f5260045ffd5b61105a915060203d602011610d7057610d62818361174c565b5f610b04565b633329ce5360e11b5f5260045ffd5b611088915060203d602011610d7057610d62818361174c565b5f610a46565b63e57c748d60e01b5f5260045ffd5b109050885f6109ce565b806103f65f6110b59361174c565b5f610937565b6110d4915060203d602011610d7057610d62818361174c565b5f6108c6565b6110f491985060203d602011610d7057610d62818361174c565b965f610886565b634975cb0960e01b5f5260045ffd5b905084105f61081d565b61112d915060203d602011610d7057610d62818361174c565b5f6107ec565b63029a949d60e31b5f5260045ffd5b3461010f5761115036610169565b30330361113357602081016111676107b282611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f91611625575b5061119f82611bd2565b9060c08401936111c36111b46107b287611bd2565b936101808301359485916122c7565b6111cf6107b286611bd2565b9360e08201946111de86611bd2565b6111e783611bd2565b90823b1561010f576040516301abf04560e71b81526001600160a01b0391821660048201529116602482015260448101869052905f908290606490829084905af180156103fc57611611575b506112668461124460808501611bd2565b6112578261022087019261084084611bd2565b610840610a0160a08701611bd2565b60408201926112776107b285611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916115f2575b506112c76112b66101a08601611bd2565b610a6f610a686101c0880188611c27565b6112d36107b286611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc5761130a925f91610eac5750611c15565b9561024084013587106115e35760608401976113286107b28a611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f916115c4575b506113786113676101e08801611bd2565b610a6f610a686102008a018a611c27565b6113846107b28b611bd2565b6040516370a0823160e01b81523060048201529190602090839060249082905afa80156103fc576113bb925f91610eac5750611c15565b9561026086013587106115b557868910156115ae5788995b8a1561101c57611404926109fc8c610b9e6107b2946109fc836113f8610a0199611bd2565b6108406107b289611bd2565b61140d85611bd2565b90823b1561010f57604051637abef8d160e01b81526001600160a01b0391821660048201529116602482015260448101899052905f908290606490829084905af180156103fc5761159a575b5061147d6107b261147789611472610280880188611beb565b612277565b93611bd2565b6040516370a0823160e01b815230600482015290602090829060249082905afa9081156103fc575f9161157b575b506001600160ff1b038111801561156b575b610d2957610340916114ce91611caf565b9201358212610d1a57857fc10039525f5b2267277206d3941570cb5f25bc01b6a317eed793cda290c891ce96610d1594604051978897889390979695926101c095926101e08601998652602086015260408501526060840152608083015260a08201525f60c08201525f60e08201525f6101008201525f6101208201525f6101408201525f6101608201525f6101808201525f6101a08201520152565b506001600160ff1b0382116114bd565b611594915060203d602011610d7057610d62818361174c565b5f6114ab565b806103f65f6115a89361174c565b5f611459565b86996113d3565b631b15f3a360e21b5f5260045ffd5b6115dd915060203d602011610d7057610d62818361174c565b5f611356565b6349d1e43560e11b5f5260045ffd5b61160b915060203d602011610d7057610d62818361174c565b5f6112a5565b806103f65f61161f9361174c565b5f611233565b61163e915060203d602011610d7057610d62818361174c565b5f611195565b906004916101441161010f57565b919061014083011161010f57565b61018036600319011261010f5761167636611644565b6101443567ffffffffffffffff811161010f57611697903690600401611652565b610164359130330361113357600a831161171c575f5b8381106116b657005b6116c36109fc8284611cdb565b6001600160a01b03811615611713575f8091816116e08588611cf1565b91906116f16040518094819361172b565b03925af16116fd61178f565b901561170e57506001905b016116ad565b611d0d565b50600190611708565b63f5dedbff60e01b5f5260045ffd5b908092918237015f815290565b634e487b7160e01b5f52604160045260245ffd5b90601f8019910116810190811067ffffffffffffffff82111761176e57604052565b611738565b67ffffffffffffffff811161176e57601f01601f191660200190565b3d156117b9573d906117a082611773565b916117ae604051938461174c565b82523d5f602084013e565b606090565b30330361113357825f9392849360405192839283378101848152039134905af16117e661178f565b901561170e5790565b9060a06118838161012f94803561180581610113565b600180841b03168552602081013561181c81610113565b600180841b03166020860152604081013561183681610113565b600180841b03166040860152606081013561185081610113565b600180841b0316606086015261187d608082013561186d81610113565b6001600160a01b03166080870152565b01610124565b6001600160a01b0316910152565b6020809180356118a081610113565b6001600160a01b03168452013561188381610113565b6060809180356118c581610113565b6001600160a01b0316845260208101356118de81610113565b6001600160a01b0316602085015260408101356118fa81610113565b6001600160a01b03166040850152013561188381610113565b9035601e198236030181121561010f57016020813591019167ffffffffffffffff821161010f57813603831361010f57565b908060209392818452848401375f828201840152601f01601f1916010190565b903561029e198236030181121561010f570190565b905f905b600a821061198b57505050565b602080600192853561199c81610113565b848060a01b031681520193019101909161197e565b903561013e198236030181121561010f570190565b6101408201915f81835b600a83106119e057505050505090565b9091929394602080611a0383886001950387526119fd8a87611913565b90611945565b970193019301919392906119d0565b60ff81160361010f57565b359061012f82611a12565b61ffff81160361010f57565b359061012f82611a28565b9061016690611a4e818461197a565b610280611b3b81611a7a611a666101408801886119b1565b6102a06101408701526102a08601906119c6565b95610160810135610160860152611aa8611a976101808301610124565b6001600160a01b0316610180870152565b611ac9611ab86101a08301610124565b6001600160a01b03166101a0870152565b611aea611ad96101c08301610124565b6001600160a01b03166101c0870152565b6101e08101356101e0860152610200810135610200860152611b1d611b126102208301611a1d565b60ff16610220870152565b61024081013561024086015261026081013561026086015201611a34565b61ffff16910152565b903560be198236030181121561010f570190565b908135611b6481610113565b6001600160a01b0316815260a061ffff81611b96611b856020870187611913565b60c0602088015260c0870191611945565b946040810135604086015260608101356060860152608081013560808601520135611bc081611a28565b1691015290565b6040513d5f823e3d90fd5b3561016681610113565b9081602091031261010f575190565b90359061029e198136030182121561010f570190565b634e487b7160e01b5f52601160045260245ffd5b91908203918211611c2257565b611c01565b903590601e198136030182121561010f570180359067ffffffffffffffff821161010f5760200191813603831361010f57565b929192611c6682611773565b91611c74604051938461174c565b82948184528183011161010f578281602093845f960137010152565b90359060be198136030182121561010f570190565b3561016681611a28565b81810392915f138015828513169184121617611c2257565b634e487b7160e01b5f52603260045260245ffd5b90600a811015611cec5760051b0190565b611cc7565b600a821015611cec57611d099160051b810190611c27565b9091565b805115611d1c57602081519101fd5b633204506f60e01b5f5260045ffd5b919061014060405193611d3e828661174c565b8491810192831161010f57905b828210611d5757505050565b602080918335611d6681610113565b815201910190611d4b565b90359061013e198136030182121561010f570190565b61014060405191611d98828461174c565b829181019036821161010f5780925b828410611db5575050505090565b833567ffffffffffffffff811161010f57820136601f8201121561010f57602091611de7839236908481359101611c5a565b815201930192611da7565b3561016681611a12565b939291906101808501905f865b600a8210611e61575050610180610140870152506102c08501905f5b600a8110611e395750506101609150930152565b9091602080611e5560019361017f198b82030187528751610131565b95019493019101611e25565b82516001600160a01b031681526020928301926001929092019101611e09565b61ffff16612710039061ffff8211611c2257565b81810292918115918404141715611c2257565b6101e081013580156122685761016082013591600a831161171c57611ed36107b26101808301611bd2565b611ee36107b26101a08401611bd2565b93611eee3684611d2b565b94611f05611f00610140860186611d71565b611d87565b92610220850160ff80611f1783611df2565b16036121dd575b506101c08501866001600160a01b03611f3683611bd2565b166121c4575b50506040516370a0823160e01b81523060048201526001600160a01b0391909116929091602083602481875afa9283156103fc575f936121a3575b506040516370a0823160e01b81523060048201526001600160a01b03919091169790946020866024818c5afa9586156103fc575f96612182575b50303b1561010f575f91611fd96040519485938493633dd6f8d760e21b855260048501611dfc565b038183305af180156103fc5761216e575b506040516370a0823160e01b815230600482015291602090839060249082905afa9182156103fc575f9261214d575b506040516370a0823160e01b815230600482015295602090879060249082905afa9586156103fc575f9661211e575b509161205861205e928694611c15565b95611c15565b930361210f575f91610260820135196120b5575b50610200013590808211156120ae57505b80151590816120a4575b506120955790565b63211aa2b960e01b5f5260045ffd5b905081105f61208d565b9050612083565b819250610280610200920161ffff6120cc82611ca5565b166120da57505b9190612072565b61210a916120fc6120f56120f061210294611ca5565b611e81565b61ffff1690565b90611e95565b612710900490565b6120d3565b639ef74a0d60e01b5f5260045ffd5b859391965061205e926121426120589260203d602011610d7057610d62818361174c565b979294509250612048565b61216791925060203d602011610d7057610d62818361174c565b905f612019565b806103f65f61217c9361174c565b5f611fea565b61219c91965060203d602011610d7057610d62818361174c565b945f611fb1565b6121bd91935060203d602011610d7057610d62818361174c565b915f611f77565b6121d06121d692611bd2565b836122c7565b5f86611f3c565b600a60ff6121ea83611df2565b161015612259578061224061220d61223a61221961221361220d61225297611df2565b60ff1690565b8a611cdb565b516102608b01358c6102408d01356122346102808f01611ca5565b9361245d565b92611df2565b9061224b8288611cdb565b5285611cdb565b505f611f1e565b63711cef1b60e01b5f5260045ffd5b631f2a200560e01b5f5260045ffd5b90806122aa57506101e08101355b80156122685761016082013591600a831161171c57611ed36107b26101808301611bd2565b612285565b9081602091031261010f5751801515810361010f5790565b919091811561241457604051636eb1769f60e11b81523060048201526001600160a01b038481166024830152919091169190602081604481865afa9081156103fc575f916123f5575b501061231a575050565b60405163095ea7b360e01b81526001600160a01b03831660048201525f6024820152602081806044810103815f865af19081156103fc575f916123d6575b5015611d1c5760405163095ea7b360e01b81526001600160a01b039290921660048301525f196024830152602090829060449082905f905af19081156103fc575f916123a7575b5015611d1c57565b6123c9915060203d6020116123cf575b6123c1818361174c565b8101906122af565b5f61239f565b503d6123b7565b6123ef915060203d6020116123cf576123c1818361174c565b5f612358565b61240e915060203d602011610d7057610d62818361174c565b5f612310565b505050565b5f91829182602083519301915af161242f61178f565b901561170e5750565b905f92918392602083519301915af161242f61178f565b9060208201809211611c2257565b91909493829583516020820190818311611c2257106124df5783016020018290526001840161248d575b50505050565b61ffff81166124c65750915b81516124a48261244f565b116124b75701602001525f808080612487565b630f56d5d160e21b5f5260045ffd5b6124d9916120fc6120f561210293611e81565b91612499565b63f3e07dc360e01b5f5260045ffdfea264697066735822122041c4611641799e8f0205e8f56de50db4c18719a1f67f6029ac5d2931f3f32f4764736f6c63430008210033"
+  },
+  "opcodes": {
+    "opcodes_sample": [
+      "PUSH1",
+      "PUSH1",
+      "MSTORE",
+      "PUSH1",
+      "CALLDATASIZE",
+      "LT",
+      "ISZERO",
+      "0x61",
+      "JUMPI",
+      "JUMPDEST",
+      "CALLDATASIZE",
+      "ISZERO",
+      "0x61",
+      "JUMPI",
+      "PUSH0",
+      "DUP1",
+      "REVERT",
+      "JUMPDEST",
+      "STOP",
+      "JUMPDEST",
+      "PUSH0",
+      "CALLDATALOAD",
+      "PUSH1",
+      "SHR",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "0x63",
+      "SUB",
+      "0x61",
+      "JUMPI",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "PUSH1",
+      "CALLDATASIZE",
+      "PUSH1",
+      "NOT",
+      "ADD",
+      "0x12",
+      "0x61",
+      "JUMPI",
+      "PUSH1",
+      "CALLDATALOAD",
+      "0x61",
+      "0x81",
+      "0x61",
+      "JUMP",
+      "JUMPDEST",
+      "PUSH1"
+    ],
+    "opcode_count": 6164,
+    "unique_opcodes": 85,
+    "opcode_frequency": {
+      "0x61": 1081,
+      "PUSH1": 578,
+      "JUMPDEST": 468,
+      "JUMP": 383,
+      "ADD": 372,
+      "SWAP1": 312,
+      "JUMPI": 227,
+      "MSTORE": 212,
+      "0x81": 204,
+      "0x82": 200,
+      "0x91": 168,
+      "PUSH0": 151,
+      "POP": 114,
+      "0x83": 105,
+      "SHL": 104,
+      "SUB": 99,
+      "ISZERO": 84,
+      "CALLDATALOAD": 83,
+      "DUP1": 77,
+      "0x92": 73
+    }
+  },
+  "method_identifiers": {
+    "buy_conditional_arbitrage(((address,address,address,address,address,address),(address,address),(address,address,address,address),uint256,address,bytes,address,bytes,address,uint256,uint256,(address[10],bytes[10],uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,uint16),address,(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),int256))": "e4d30e3d",
+    "execute10(address[10],bytes[10],uint256)": "f75be35c",
+    "executeOne(address,bytes)": "3e16b19c",
+    "runBuy(((address,address,address,address,address,address),(address,address),(address,address,address,address),uint256,address,bytes,address,bytes,address,uint256,uint256,(address[10],bytes[10],uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,uint16),address,(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),int256))": "5f66c633",
+    "runSell(((address,address,address,address,address,address),(address,address),(address,address,address,address),(address[10],bytes[10],uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,uint16),uint256,uint256,address,bytes,address,bytes,address,uint256,uint256,address,(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),int256))": "9862d8f7",
+    "runTrade((address[10],bytes[10],uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,uint16))": "aaedc25f",
+    "runner()": "7a8ca615",
+    "sell_conditional_arbitrage(((address,address,address,address,address,address),(address,address),(address,address,address,address),(address[10],bytes[10],uint256,address,address,address,uint256,uint256,uint8,uint256,uint256,uint16),uint256,uint256,address,bytes,address,bytes,address,uint256,uint256,address,(address,bytes,uint256,uint256,uint256,uint16),(address,bytes,uint256,uint256,uint256,uint16),int256))": "c23756ae"
+  },
+  "storage_layout": {
+    "storage": [],
+    "types": {}
+  },
+  "asm": "",
+  "metadata": {
+    "compiler": "0.8.33+commit.64118f21",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evm_version": "osaka"
+  }
+}

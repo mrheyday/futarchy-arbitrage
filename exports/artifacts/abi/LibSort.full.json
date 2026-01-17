@@ -1,0 +1,67 @@
+{
+  "abi": [],
+  "bytecode": {
+    "object": "0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212207132fe5ec89e9778dab23d8bcbd26a99ad29efefdcf81a65cc532f8e91b5c15064736f6c63430008210033",
+    "sourceMap": "210:35703:19:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x5f80fdfea26469706673582212207132fe5ec89e9778dab23d8bcbd26a99ad29efefdcf81a65cc532f8e91b5c15064736f6c63430008210033",
+    "sourceMap": "210:35703:19:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Solady (https://github.com/Vectorized/solady/blob/main/src/utils/LibSort.sol)\",\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Optimized sorts and operations for sorted arrays.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"lib/solady/src/utils/LibSort.sol\":\"LibSort\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"lib/solady/src/utils/LibSort.sol\":{\"keccak256\":\"0x62689a6f06d3088a9fd3b2033421aadeb1a1525cf7aa60a9be6cf6cc0dce8120\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd79d967d852a32baf209e1cf6e74c70f4ac495323d716d1d15c0094457e5a29\",\"dweb:/ipfs/QmWAb1dBWTTtGc7bGdAXpLy9yjQ7XEmwsA22CMSoQKA8GA\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "lib/solady/src/utils/LibSort.sol": "LibSort"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "lib/solady/src/utils/LibSort.sol": {
+        "keccak256": "0x62689a6f06d3088a9fd3b2033421aadeb1a1525cf7aa60a9be6cf6cc0dce8120",
+        "urls": [
+          "bzz-raw://bd79d967d852a32baf209e1cf6e74c70f4ac495323d716d1d15c0094457e5a29",
+          "dweb:/ipfs/QmWAb1dBWTTtGc7bGdAXpLy9yjQ7XEmwsA22CMSoQKA8GA"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 19
+}

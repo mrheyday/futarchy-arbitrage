@@ -1,0 +1,79 @@
+{
+  "abi": [
+    {
+      "type": "error",
+      "name": "NonReentrant",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"NonReentrant\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"Implements a mutex using TLOAD/TSTORE opcodes.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"TransientReentrancyGuard\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Gas-efficient reentrancy protection using EIP-1153 transient storage.\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/TransientReentrancyGuard.sol\":\"TransientReentrancyGuard\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/TransientReentrancyGuard.sol\":{\"keccak256\":\"0x6db9e538db33898d81e0204cb2bac9919c3fa915dddfb95f82722208632ba881\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e67250198b7710ac89a5832c0b2ca7b0e83ba290e9536f6b10f8024a885cf2ae\",\"dweb:/ipfs/QmesT8B8TWuktcehizm576CgaCv1uHGV9P9ha1jMWH9nb9\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "NonReentrant"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/TransientReentrancyGuard.sol": "TransientReentrancyGuard"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/TransientReentrancyGuard.sol": {
+        "keccak256": "0x6db9e538db33898d81e0204cb2bac9919c3fa915dddfb95f82722208632ba881",
+        "urls": [
+          "bzz-raw://e67250198b7710ac89a5832c0b2ca7b0e83ba290e9536f6b10f8024a885cf2ae",
+          "dweb:/ipfs/QmesT8B8TWuktcehizm576CgaCv1uHGV9P9ha1jMWH9nb9"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 18
+}

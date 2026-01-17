@@ -23,10 +23,10 @@ from dataclasses import dataclass
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config.logging_config import setup_logger
-from helpers.web3_setup import get_web3_instance
-from helpers.balancer_helpers import get_balancer_price
-from helpers.swapr_helpers import get_swapr_price
+from src.config.logging_config import setup_logger
+from src.helpers.web3_setup import get_web3_instance
+from src.helpers.balancer_helpers import get_balancer_price
+from src.helpers.swapr_helpers import get_swapr_price
 
 logger = setup_logger("price_aggregator")
 
@@ -184,17 +184,20 @@ class PriceAggregator:
     ) -> Optional[PriceSource]:
         """Fetch price from Balancer"""
         try:
-            # TODO: Implement actual Balancer price fetch
-            # For now, use placeholder
-            price = Decimal("1.05")  # Mock price
-            liquidity = Decimal("10000")  # Mock liquidity
-            
+            # Use the balancer_helpers wrapper which calls balancer_price.get_pool_price
+            price, liquidity = get_balancer_price(
+                token_in=token_in,
+                token_out=token_out,
+                w3=self.w3,
+                amount_in=amount_in,
+            )
+
             return PriceSource(
                 source="Balancer",
                 price=price,
                 liquidity=liquidity,
                 timestamp=self.w3.eth.get_block("latest")["timestamp"],
-                is_valid=True,
+                is_valid=price > 0,
             )
         except Exception as e:
             logger.error(f"Balancer price fetch failed: {e}")
@@ -215,17 +218,20 @@ class PriceAggregator:
     ) -> Optional[PriceSource]:
         """Fetch price from Swapr"""
         try:
-            # TODO: Implement actual Swapr price fetch
-            # For now, use placeholder
-            price = Decimal("1.03")  # Mock price
-            liquidity = Decimal("5000")  # Mock liquidity
-            
+            # Use the swapr_helpers wrapper which calls swapr_price.get_pool_price
+            price, liquidity = get_swapr_price(
+                token_in=token_in,
+                token_out=token_out,
+                w3=self.w3,
+                amount_in=amount_in,
+            )
+
             return PriceSource(
                 source="Swapr",
                 price=price,
                 liquidity=liquidity,
                 timestamp=self.w3.eth.get_block("latest")["timestamp"],
-                is_valid=True,
+                is_valid=price > 0,
             )
         except Exception as e:
             logger.error(f"Swapr price fetch failed: {e}")

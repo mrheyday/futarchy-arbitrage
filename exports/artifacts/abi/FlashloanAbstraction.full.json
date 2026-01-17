@@ -1,0 +1,119 @@
+{
+  "abi": [
+    {
+      "type": "error",
+      "name": "FlashloanFailed",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220a57e5d8abe4ed8dcac5fe292555010400a340c821680cfedde4dfe5f1616638464736f6c63430008210033",
+    "sourceMap": "5791:643:9:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x5f80fdfea2646970667358221220a57e5d8abe4ed8dcac5fe292555010400a340c821680cfedde4dfe5f1616638464736f6c63430008210033",
+    "sourceMap": "5791:643:9:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"FlashloanFailed\",\"type\":\"error\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/InstitutionalSolverCore.sol\":\"FlashloanAbstraction\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/InstitutionalSolverCore.sol\":{\"keccak256\":\"0xd1acdf4fe7940a1744963f32a3e50c2ad11837257538ae52792a7d61de8c71b3\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://11de34f8c88d73ea549fd02d25bf3c01c4966287c0ce24187949936ad7b79c22\",\"dweb:/ipfs/QmQBMPLv7e2AGL1Vgwbng5rkrroC9vdTkGb6QZm8dTBWWP\"]},\"contracts/TransientReentrancyGuard.sol\":{\"keccak256\":\"0x6db9e538db33898d81e0204cb2bac9919c3fa915dddfb95f82722208632ba881\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e67250198b7710ac89a5832c0b2ca7b0e83ba290e9536f6b10f8024a885cf2ae\",\"dweb:/ipfs/QmesT8B8TWuktcehizm576CgaCv1uHGV9P9ha1jMWH9nb9\"]},\"lib/solady/src/utils/LibSort.sol\":{\"keccak256\":\"0x62689a6f06d3088a9fd3b2033421aadeb1a1525cf7aa60a9be6cf6cc0dce8120\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://bd79d967d852a32baf209e1cf6e74c70f4ac495323d716d1d15c0094457e5a29\",\"dweb:/ipfs/QmWAb1dBWTTtGc7bGdAXpLy9yjQ7XEmwsA22CMSoQKA8GA\"]},\"lib/solady/src/utils/SafeCastLib.sol\":{\"keccak256\":\"0x184c2be02a160a07f7e27fea5753d878c5015c0632faa115ed2f4e90614df284\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c721441b505ec68ecfcc08cf8019342f6f304e94165af3e02db726377de2055a\",\"dweb:/ipfs/Qmcwe7wcjeGs7px92YR4XCFB6YS1x8T1Aq9FoDC7LKC4BA\"]},\"lib/solady/src/utils/clz/FixedPointMathLib.sol\":{\"keccak256\":\"0x489084ba28f94372237b5de76586f58aef364c105389ca3f53c3722adc052009\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f521961724e036bde106c0d25fd940a5603991286975a84826981323074b48eb\",\"dweb:/ipfs/QmUhnbkQAq8TU4FxoFuGrHCtGd85bfBtggt3urnYeHPyEJ\"]},\"lib/solady/src/utils/clz/LibBit.sol\":{\"keccak256\":\"0x8afb68e18b09f20421a102c2e1db6afe8f4db062ed5300c6024fa759628c4fe1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e6bba285a6afec4561ad93405ca7361f552a1994cda44b0645cc49f786623bb4\",\"dweb:/ipfs/QmXqF5Rmycou9jBpXVgwAuL628pmBbKpBPCUghUaPKRYaV\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "FlashloanFailed"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/InstitutionalSolverCore.sol": "FlashloanAbstraction"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/InstitutionalSolverCore.sol": {
+        "keccak256": "0xd1acdf4fe7940a1744963f32a3e50c2ad11837257538ae52792a7d61de8c71b3",
+        "urls": [
+          "bzz-raw://11de34f8c88d73ea549fd02d25bf3c01c4966287c0ce24187949936ad7b79c22",
+          "dweb:/ipfs/QmQBMPLv7e2AGL1Vgwbng5rkrroC9vdTkGb6QZm8dTBWWP"
+        ],
+        "license": "MIT"
+      },
+      "contracts/TransientReentrancyGuard.sol": {
+        "keccak256": "0x6db9e538db33898d81e0204cb2bac9919c3fa915dddfb95f82722208632ba881",
+        "urls": [
+          "bzz-raw://e67250198b7710ac89a5832c0b2ca7b0e83ba290e9536f6b10f8024a885cf2ae",
+          "dweb:/ipfs/QmesT8B8TWuktcehizm576CgaCv1uHGV9P9ha1jMWH9nb9"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/LibSort.sol": {
+        "keccak256": "0x62689a6f06d3088a9fd3b2033421aadeb1a1525cf7aa60a9be6cf6cc0dce8120",
+        "urls": [
+          "bzz-raw://bd79d967d852a32baf209e1cf6e74c70f4ac495323d716d1d15c0094457e5a29",
+          "dweb:/ipfs/QmWAb1dBWTTtGc7bGdAXpLy9yjQ7XEmwsA22CMSoQKA8GA"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/SafeCastLib.sol": {
+        "keccak256": "0x184c2be02a160a07f7e27fea5753d878c5015c0632faa115ed2f4e90614df284",
+        "urls": [
+          "bzz-raw://c721441b505ec68ecfcc08cf8019342f6f304e94165af3e02db726377de2055a",
+          "dweb:/ipfs/Qmcwe7wcjeGs7px92YR4XCFB6YS1x8T1Aq9FoDC7LKC4BA"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/clz/FixedPointMathLib.sol": {
+        "keccak256": "0x489084ba28f94372237b5de76586f58aef364c105389ca3f53c3722adc052009",
+        "urls": [
+          "bzz-raw://f521961724e036bde106c0d25fd940a5603991286975a84826981323074b48eb",
+          "dweb:/ipfs/QmUhnbkQAq8TU4FxoFuGrHCtGd85bfBtggt3urnYeHPyEJ"
+        ],
+        "license": "MIT"
+      },
+      "lib/solady/src/utils/clz/LibBit.sol": {
+        "keccak256": "0x8afb68e18b09f20421a102c2e1db6afe8f4db062ed5300c6024fa759628c4fe1",
+        "urls": [
+          "bzz-raw://e6bba285a6afec4561ad93405ca7361f552a1994cda44b0645cc49f786623bb4",
+          "dweb:/ipfs/QmXqF5Rmycou9jBpXVgwAuL628pmBbKpBPCUghUaPKRYaV"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 9
+}

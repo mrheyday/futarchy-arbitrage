@@ -1,0 +1,26 @@
+[
+  {
+    "type": "event",
+    "name": "ComplianceChecked",
+    "inputs": [
+      {
+        "name": "entity",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "flags",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "ComplianceViolation",
+    "inputs": []
+  }
+]

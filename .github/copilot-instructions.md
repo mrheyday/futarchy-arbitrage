@@ -4,7 +4,7 @@
 
 Gnosis Chain arbitrage bot that exploits price discrepancies between **Balancer** and **Swapr (Algebra)** pools for conditional tokens (YES/NO) in futarchy markets, using sDAI as the primary trading asset.
 
-**Current date context**: January 2026. The project has evolved through multiple executor versions (V2→V5), with V5 as the current production contract.
+**Current date context**: January 2026. The project has evolved through multiple executor versions (V2→V5), with V5 as the current production contract. Recent developments (Jan 2026) include Python 3.14 migration, institutional solver system, and prediction arbitrage bot capabilities.
 
 ## Core Architecture
 
@@ -29,8 +29,10 @@ The bot monitors Balancer and Swapr pools, detecting when **both** YES and NO pr
 |------|-------------|------|----------|
 | **EIP-7702 Atomic** | `eip7702_bot.py` | `*_eip7702*.py` | **Production** — Single bundled tx, MEV-resistant |
 | **Sequential** | `simple_bot.py`, `complex_bot.py` | `buy_cond.py`, `sell_cond.py` | Testing, fallback, side discovery |
+| **Prediction Arbitrage** | `arbitrage_bot_v2.py` | `PredictionArbExecutorV1.sol` | Prediction token trades (new) |
+| **Institutional Solver** | `unified_bot.py` | `InstitutionalSolverSystem.sol` | Multi-market coordination (new) |
 
-EIP-7702 uses `PectraWrapper.sol` for delegation; sequential uses Tenderly simulation then multi-tx execution.
+EIP-7702 uses `PectraWrapper.sol` for delegation; sequential uses Tenderly simulation then multi-tx execution. Prediction arbitrage adds V1 executor for non-conditional markets. Institutional Solver enables centralized multi-market orchestration.
 
 ### PNK/Kleros Markets (Special Case)
 
@@ -67,6 +69,19 @@ Fetches Supabase `market_events` metadata and populates `SWAPR_POOL_YES_ADDRESS`
 
 **Required env vars**: `RPC_URL`, `PRIVATE_KEY`, `FUTARCHY_PROPOSAL_ADDRESS`, pool addresses, `TENDERLY_*` for simulation
 
+**Preview vs Execute Mode** (Jan 2026+):
+```bash
+# Preview mode (safe, shows gas estimate)
+python -m src.arbitrage_commands.eip7702_bot --amount 0.1 --interval 120
+
+# Execute mode (actually broadcasts)
+python -m src.arbitrage_commands.eip7702_bot --amount 0.1 --interval 120 --execute
+
+# Dry-run (simulates only, max iterations)
+python -m src.arbitrage_commands.eip7702_bot --amount 0.001 --dry-run --max-iterations 5
+```
+**Note**: Executors default to preview-only; add `--execute` to broadcast transactions. Use `--execute --force-send` to skip gas estimation.
+
 ## Bot Selection & Running
 
 **Decision tree**:
@@ -94,7 +109,19 @@ python -m src.executor.arbitrage_executor --flow sell --amount 0.01 --cheaper ye
 
 ## Developer Patterns & Conventions
 
-### Transaction Building Pattern
+### Modern Python Setup (Python 3.14+, Jan 2026)
+
+The project has migrated to Python 3.14 with `uv` package manager for faster builds. Use:
+
+```bash
+# Install dependencies with uv (fast, parallel)
+uv pip install -r requirements.txt
+
+# Or traditional pip
+pip install -r requirements.txt
+```
+
+Use modern Python 3.10+ type hints (no `from __future__ import annotations` needed in most cases). See `pyproject.toml` for packaging configuration.
 
 All trades follow **simulation-first**: build Tenderly-compatible dict → simulate → execute on-chain.
 
@@ -159,9 +186,11 @@ from src.config.tokens import get_token_decimals
 - V3 (`FutarchyArbExecutorV3.sol`) — Error handling improvements  
 - V2 (`FutarchyArbitrageExecutorV2.sol`) — Early batch executor
 
-**New contracts**:
+**New contracts** (Jan 2026):
 - `PectraWrapper.sol` — EIP-7702 delegation & authorization
 - `SafetyModule.sol` — Circuit breakers (slippage, gas, daily loss limits)
+- `InstitutionalSolverSystem.sol` — Multi-market coordination with CLZ optimizations
+- `PredictionArbExecutorV1.sol` — Prediction token arbitrage (non-conditional markets)
 
 **Compilation**:
 ```bash

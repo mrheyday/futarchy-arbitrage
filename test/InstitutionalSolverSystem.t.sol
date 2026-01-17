@@ -71,6 +71,7 @@ contract InstitutionalSolverSystemTest is Test {
     function testCommitBid() public {
         solver.openAuction(1);
 
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 commitHash = keccak256(abi.encodePacked(uint256(100 ether), bytes32("salt")));
 
         vm.prank(solver1);
@@ -78,6 +79,7 @@ contract InstitutionalSolverSystemTest is Test {
     }
 
     function testCommitBidRevertsWhenAuctionClosed() public {
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 commitHash = keccak256(abi.encodePacked(uint256(100 ether), bytes32("salt")));
 
         vm.prank(solver1);
@@ -88,6 +90,7 @@ contract InstitutionalSolverSystemTest is Test {
     function testRevealBid() public {
         uint256 auctionId = 1;
         uint256 bidValue = 100 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 salt = bytes32("secret_salt");
         bytes32 commitHash = keccak256(abi.encodePacked(bidValue, salt));
 
@@ -105,6 +108,7 @@ contract InstitutionalSolverSystemTest is Test {
     function testRevealBidRevertsWhenAuctionOpen() public {
         uint256 auctionId = 1;
         uint256 bidValue = 100 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 salt = bytes32("secret_salt");
         bytes32 commitHash = keccak256(abi.encodePacked(bidValue, salt));
 
@@ -123,11 +127,13 @@ contract InstitutionalSolverSystemTest is Test {
 
         // Solver 1 bid
         uint256 bid1 = 100 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 salt1 = bytes32("salt1");
         bytes32 hash1 = keccak256(abi.encodePacked(bid1, salt1));
 
         // Solver 2 bid
         uint256 bid2 = 150 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 salt2 = bytes32("salt2");
         bytes32 hash2 = keccak256(abi.encodePacked(bid2, salt2));
 
@@ -253,7 +259,9 @@ contract InstitutionalSolverSystemTest is Test {
     function testRevealBidWithWrongSalt() public {
         uint256 auctionId = 1;
         uint256 bid = 1 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 correctSalt = bytes32("correct");
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 wrongSalt = bytes32("wrong");
 
         solver.openAuction(auctionId);
@@ -346,6 +354,7 @@ contract InstitutionalSolverSystemTest is Test {
         // Test with large intent data
         bytes memory largeData = new bytes(1000);
         for (uint256 i = 0; i < 1000; i++) {
+            // forge-lint: disable-next-line(unsafe-typecast)
             largeData[i] = bytes1(uint8(i % 256));
         }
 
@@ -401,6 +410,7 @@ contract InstitutionalSolverSystemTest is Test {
     function testRevealBidToOpenAuction() public {
         uint256 auctionId = 1;
         uint256 bid = 1 ether;
+        // forge-lint: disable-next-line(unsafe-typecast)
         bytes32 salt = bytes32("salt");
 
         solver.openAuction(auctionId);

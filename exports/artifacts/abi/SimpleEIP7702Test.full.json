@@ -1,0 +1,208 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "execute",
+      "inputs": [
+        {
+          "name": "target",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "data",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "test",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "event",
+      "name": "TestExecuted",
+      "inputs": [
+        {
+          "name": "caller",
+          "type": "address",
+          "indexed": false,
+          "internalType": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CallFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlySelf",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x608080604052346015576101e2908161001a8239f35b5f80fdfe6080806040526004361015610012575f80fd5b5f3560e01c908163b61d27f614610072575063f8a8fd6d14610032575f80fd5b5f36600319011261006e577f6be926737056d5e79d2c898c6835a6762397715de85c7071699800e7722b2da260408051338152346020820152a1005b5f80fd5b606036600319011261006e57600435906001600160a01b038216820361006e576044359167ffffffffffffffff831161006e573660238401121561006e5782600401359167ffffffffffffffff831161006e57366024848601011161006e5730330361019d5780835f95946024879601833781018481520391602435905af13d15610195573d9067ffffffffffffffff82116101815760405191601f8101601f19908116603f0116830167ffffffffffffffff8111848210176101815760405282523d5f602084013e5b15610172576040602091815192839181835280519182918282860152018484015e5f828201840152601f01601f19168101030190f35b633204506f60e01b5f5260045ffd5b634e487b7160e01b5f52604160045260245ffd5b60609061013c565b63029a949d60e31b5f5260045ffdfea2646970667358221220dddd865b781be31763b302f5c6813f52323945052b573406f06c0f9ca0c98cbe64736f6c63430008210033",
+    "sourceMap": "157:683:16:-:0;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080806040526004361015610012575f80fd5b5f3560e01c908163b61d27f614610072575063f8a8fd6d14610032575f80fd5b5f36600319011261006e577f6be926737056d5e79d2c898c6835a6762397715de85c7071699800e7722b2da260408051338152346020820152a1005b5f80fd5b606036600319011261006e57600435906001600160a01b038216820361006e576044359167ffffffffffffffff831161006e573660238401121561006e5782600401359167ffffffffffffffff831161006e57366024848601011161006e5730330361019d5780835f95946024879601833781018481520391602435905af13d15610195573d9067ffffffffffffffff82116101815760405191601f8101601f19908116603f0116830167ffffffffffffffff8111848210176101815760405282523d5f602084013e5b15610172576040602091815192839181835280519182918282860152018484015e5f828201840152601f01601f19168101030190f35b633204506f60e01b5f5260045ffd5b634e487b7160e01b5f52604160045260245ffd5b60609061013c565b63029a949d60e31b5f5260045ffdfea2646970667358221220dddd865b781be31763b302f5c6813f52323945052b573406f06c0f9ca0c98cbe64736f6c63430008210033",
+    "sourceMap": "157:683:16:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;157:683:16;;;;415:35;157:683;;;428:10;157:683;;440:9;157:683;;;;415:35;157:683;;;;;;;;-1:-1:-1;;157:683:16;;;;;;;-1:-1:-1;;;;;157:683:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;661:4;639:10;:27;635:50;;157:683;;;;;;;;;;;;;;;;733:31;157:683;;;733:31;;;157:683;;;;;;;;;;;;;;;;;-1:-1:-1;;157:683:16;;;;;;;;;;;;;;;;;;;;;;;;;;;;778:8;774:33;;157:683;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;157:683:16;;;;;;;774:33;795:12;;;157:683;795:12;157:683;;795:12;157:683;;;;;;;;;;;;;;;;;635:50;675:10;;;157:683;675:10;157:683;;675:10",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "execute(address,uint256,bytes)": "b61d27f6",
+    "test()": "f8a8fd6d"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"CallFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlySelf\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"}],\"name\":\"TestExecuted\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"execute\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"test\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"title\":\"SimpleEIP7702Test\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"execute(address,uint256,bytes)\":{\"notice\":\"Execute a single call\"},\"test()\":{\"notice\":\"Simple test function\"}},\"notice\":\"Minimal implementation contract for testing EIP-7702\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/SimpleEIP7702Test.sol\":\"SimpleEIP7702Test\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/SimpleEIP7702Test.sol\":{\"keccak256\":\"0x4aeee54f1ab6e5a15a54ffdbe40a385a99707979f5e471c0bc9f52ec1b3504f6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://1b6a3971865803b5f7aff279c4a22281241258be5f4b747d52e42b25d20d565f\",\"dweb:/ipfs/QmVXvGyXUu4B9xvuNQAUnDB1Fhk135f9yi9Xwfb1FTb37m\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "CallFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "OnlySelf"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "caller",
+              "type": "address",
+              "indexed": false
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TestExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "execute",
+          "outputs": [
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "test"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "execute(address,uint256,bytes)": {
+            "notice": "Execute a single call"
+          },
+          "test()": {
+            "notice": "Simple test function"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/SimpleEIP7702Test.sol": "SimpleEIP7702Test"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/SimpleEIP7702Test.sol": {
+        "keccak256": "0x4aeee54f1ab6e5a15a54ffdbe40a385a99707979f5e471c0bc9f52ec1b3504f6",
+        "urls": [
+          "bzz-raw://1b6a3971865803b5f7aff279c4a22281241258be5f4b747d52e42b25d20d565f",
+          "dweb:/ipfs/QmVXvGyXUu4B9xvuNQAUnDB1Fhk135f9yi9Xwfb1FTb37m"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 16
+}

@@ -1,0 +1,352 @@
+[
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute2",
+    "inputs": [
+      {
+        "name": "target1",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data1",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "target2",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data2",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute3",
+    "inputs": [
+      {
+        "name": "target1",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data1",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "target2",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data2",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "target3",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data3",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute5",
+    "inputs": [
+      {
+        "name": "t1",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d1",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t2",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d2",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t3",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d3",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t4",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d4",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t5",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d5",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "executeBuy11",
+    "inputs": [
+      {
+        "name": "t1",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d1",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t2",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d2",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t3",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d3",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t4",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d4",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t5",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d5",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t6",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d6",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t7",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d7",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t8",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d8",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t9",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d9",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t10",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d10",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "t11",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "d11",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "r1",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "r2",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "r3",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "r4",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "r5",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "r6",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "event",
+    "name": "Executed",
+    "inputs": [
+      {
+        "name": "target",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "Call10Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call11Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call1Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call2Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call3Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call4Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call5Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call6Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call7Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call8Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Call9Failed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySelf",
+    "inputs": []
+  }
+]

@@ -22,6 +22,19 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest", "black", "isort", "mypy", "flake8"]
 
+[project.scripts]
+# Build & Indexing Tools
+futarchy-index = "scripts.index_artifacts:main"
+futarchy-compile = "scripts.compile_all:main"
+
+# Deployment Tools
+futarchy-deploy-v5 = "scripts.deploy_executor_v5:main"
+futarchy-deploy-prediction = "scripts.deploy_prediction_arb_v1:main"
+futarchy-deploy-solver = "scripts.deploy_institutional_solver:main"
+
+# Verification Tools
+futarchy-verify = "scripts.verify_contract:main"
+
 [tool.black]
 line-length = 120
 target-version = ['py39']

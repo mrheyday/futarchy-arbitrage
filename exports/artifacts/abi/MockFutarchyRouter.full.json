@@ -1,0 +1,162 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "mergePositions",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "splitPosition",
+      "inputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "bytecode": {
+    "object": "0x60808060405234601357609c908160188239f35b5f80fdfe608060405260043610156010575f80fd5b5f3560e01c80637abef8d114602c5763d5f8228014602c575f80fd5b3460625760603660031901126062576004356001600160a01b0381168103606257506024356001600160a01b0381168103606257005b5f80fdfea2646970667358221220d46fa89cac4d55aa1d5a5732ebf1e021119967320a52e133dcd7cd27a697790664736f6c63430008210033",
+    "sourceMap": "1893:411:32:-:0;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405260043610156010575f80fd5b5f3560e01c80637abef8d114602c5763d5f8228014602c575f80fd5b3460625760603660031901126062576004356001600160a01b0381168103606257506024356001600160a01b0381168103606257005b5f80fdfea2646970667358221220d46fa89cac4d55aa1d5a5732ebf1e021119967320a52e133dcd7cd27a697790664736f6c63430008210033",
+    "sourceMap": "1893:411:32:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;1893:411:32;;;;;;-1:-1:-1;;;;;1893:411:32;;;;;;-1:-1:-1;1893:411:32;;-1:-1:-1;;;;;1893:411:32;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "mergePositions(address,address,uint256)": "7abef8d1",
+    "splitPosition(address,address,uint256)": "d5f82280"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"mergePositions\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"splitPosition\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"test/mocks/MockProtocols.sol\":\"MockFutarchyRouter\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"test/mocks/MockProtocols.sol\":{\"keccak256\":\"0x8c0ce9c4de88542d163cd923d9befc570ef7cfa4830526018c9b379f36662e5e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e1b628b8e811e3b7238ab3cde626efa708400c5aec453ff604fd471b6ec40b20\",\"dweb:/ipfs/QmWYQYg8UmZ9eUZFRvVmqpvDDSWPHmKJ8KfXMwWSFAUExg\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "mergePositions"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "splitPosition"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "test/mocks/MockProtocols.sol": "MockFutarchyRouter"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "test/mocks/MockProtocols.sol": {
+        "keccak256": "0x8c0ce9c4de88542d163cd923d9befc570ef7cfa4830526018c9b379f36662e5e",
+        "urls": [
+          "bzz-raw://e1b628b8e811e3b7238ab3cde626efa708400c5aec453ff604fd471b6ec40b20",
+          "dweb:/ipfs/QmWYQYg8UmZ9eUZFRvVmqpvDDSWPHmKJ8KfXMwWSFAUExg"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 32
+}

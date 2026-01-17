@@ -9,8 +9,9 @@ contract MockBalancerVault {
         poolExists[poolId] = true;
     }
 
-    function swap(bytes32 poolId, address tokenIn, address tokenOut, uint256 amountIn, uint256 minAmountOut)
+    function swap(bytes32 poolId, address, address, uint256 amountIn, uint256)
         external
+        view
         returns (uint256)
     {
         require(poolExists[poolId], "Pool not registered");
@@ -32,6 +33,7 @@ contract MockBalancerVault {
         uint256 /*deadline*/
     )
         external
+        pure
         returns (int256[] memory)
     {
         int256[] memory deltas = new int256[](2);
@@ -59,6 +61,7 @@ contract MockSwaprRouter {
         uint160 /*sqrtPriceLimitX96*/
     )
         external
+        pure
         returns (uint256)
     {
         // Simple 1:1 swap
@@ -82,6 +85,7 @@ contract MockSwaprRouter {
         uint160 /*sqrtPriceLimitX96*/
     )
         external
+        pure
         returns (uint256)
     {
         // Simple 1:1 swap
@@ -122,6 +126,7 @@ contract MockBalancerBatchRouter {
         bytes memory /*ops*/
     )
         external
+        pure
         returns (uint256[] memory)
     {
         uint256[] memory amounts = new uint256[](1);

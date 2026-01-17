@@ -1,3 +1,4 @@
+
 # Futarchy Arbitrage Bot - Complete Setup & Usage Guide
 
 > **For AI Agents & Developers**: This document provides step-by-step instructions for setting up, configuring, and operating the Futarchy Arbitrage Bot. Follow sections in order for first-time setup.
@@ -758,3 +759,14 @@ python3 scripts/deploy_executor_v5.py
 - **docs/SLACK_ALERTS_QUICKSTART.md**: Alert setup
 - **.augment/rules/imported/copilot-instructions.md**: Copilot context
 
+// hardhat.config.cjs
+module.exports = {
+  solidity: {
+    version: "0.8.20",
+    settings: {
+      optimizer: { enabled: true, runs: 1000000 },
+      viaIR: true,  // ← Add this
+    },
+  },
+  // ...
+};

@@ -1,0 +1,26 @@
+[
+  {
+    "type": "event",
+    "name": "ProofVerified",
+    "inputs": [
+      {
+        "name": "verifier",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "proofHash",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "InvalidZKProof",
+    "inputs": []
+  }
+]

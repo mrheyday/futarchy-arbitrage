@@ -1,0 +1,614 @@
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "receive",
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "approveToken",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "executeArbitrage",
+      "inputs": [
+        {
+          "name": "calls",
+          "type": "tuple[]",
+          "internalType": "struct FutarchyArbitrageExecutorV2.Call[]",
+          "components": [
+            {
+              "name": "target",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "callData",
+              "type": "bytes",
+              "internalType": "bytes"
+            }
+          ]
+        },
+        {
+          "name": "profitToken",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "minProfit",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "profit",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getBalance",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "multicall",
+      "inputs": [
+        {
+          "name": "calls",
+          "type": "tuple[]",
+          "internalType": "struct FutarchyArbitrageExecutorV2.Call[]",
+          "components": [
+            {
+              "name": "target",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "callData",
+              "type": "bytes",
+              "internalType": "bytes"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "withdrawETH",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "withdrawToken",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "ArbitrageExecuted",
+      "inputs": [
+        {
+          "name": "profit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TokensWithdrawn",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CallFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "EthTransferFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InsufficientBalance",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InsufficientProfit",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlyOwner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "TransferFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ZeroAddress",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60a0346100a157601f610a4038819003918201601f19168301916001600160401b038311848410176100a5578084926020946040528339810103126100a157516001600160a01b0381168082036100a157156100925760805260405161098690816100ba823960805181818160ce015281816103c80152818161041a0152818161058d0152818161064601526106e60152f35b63d92e233d60e01b5f5260045ffd5b5f80fd5b634e487b7160e01b5f52604160045260245ffdfe6080604052600436101561001a575b3615610018575f80fd5b005b5f3560e01c8063245f29dd146100895780638da5cb5b146100845780639e281a981461007f578063caa5c23f1461007a578063da3e339714610075578063e086e5ec146100705763f8b2cb4f0361000e57610746565b6106d4565b610618565b610559565b6103f7565b6103b3565b3461036d57606036600319011261036d5760043567ffffffffffffffff811161036d576100ba903690600401610371565b90602435916100c8836103a2565b604435927f0000000000000000000000000000000000000000000000000000000000000000906001600160a01b038216330361035e576370a0823160e01b6080908152306084526001600160a01b03919091169290602090602481865afa93841561026a575f9461032f575b5f5b8281106102b75750506040516370a0823160e01b8152306004820152939050602084602481865afa93841561026a575f94610286575b508084111561027e5761017f9084610917565b935b841061026f57826101dc575b6101d8847fc3dff9ec2a9266191f204f1e39b6d5cebfc2c3d718964dd6699f5e8e6d010fb0604051806101c584829190602083019252565b0390a16040519081529081906020820190565b0390f35b60405163a9059cbb60e01b81526001600160a01b039190911660048201526024810192909252602090829060449082905f905af190811561026a575f9161023b575b501561022c5781808061018d565b6312171d8360e31b5f5260045ffd5b61025d915060203d602011610263575b6102558183610807565b810190610938565b8261021e565b503d61024b565b61084a565b632723fc7560e11b5f5260045ffd5b505f93610181565b6102a991945060203d6020116102b0575b6102a18183610807565b81019061083b565b928561016c565b503d610297565b5f806102cc6102c7848787610855565b61088b565b816102e56102db868989610855565b6020810190610898565b91906102f6604051809481936108cb565b03925af16103026108d8565b90156103115750600101610136565b80511561032057805190602001fd5b633204506f60e01b5f5260045ffd5b935060203d602011610357575b80610349610351926107df565b608001610829565b93610134565b503d61033c565b635fc483c560e01b5f5260045ffd5b5f80fd5b9181601f8401121561036d5782359167ffffffffffffffff831161036d576020808501948460051b01011161036d57565b6001600160a01b0381160361036d57565b3461036d575f36600319011261036d576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b3461036d57604036600319011261036d57600435610414816103a2565b602435907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b038116330361035e576040516370a0823160e01b81523060048201526001600160a01b0392909216929182602082602481885afa91821561026a575f92610538575b5080610523575091505b8161049357005b60405163a9059cbb60e01b81526001600160a01b03919091166004820152602481018290526020816044815f875af190811561026a575f91610504575b501561022c576040519081527f6352c5382c4a4578e712449ca65e83cdb392d045dfcf1cad9615189db2da244b90602090a2005b61051d915060203d602011610263576102558183610807565b5f6104d0565b111561048c57631e9acf1760e31b5f5260045ffd5b61055291925060203d6020116102b0576102a18183610807565b905f610482565b3461036d57602036600319011261036d5760043567ffffffffffffffff811161036d5761058a903690600401610371565b907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361035e575f5b8281106105c657005b5f806105d3838686610855565b356105dd816103a2565b816105ec6102db868989610855565b91906105fd604051809481936108cb565b03925af16106096108d8565b901561031157506001016105bd565b3461036d57606036600319011261036d57600435610635816103a2565b602435610641816103a2565b6044357f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361035e5760405163095ea7b360e01b81526001600160a01b0390921660048301526024820152906020908290815f816044810103926001600160a01b03165af1801561026a576106bc57005b6100189060203d602011610263576102558183610807565b3461036d575f36600319011261036d577f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163381900361035e5747908161071f57005b5f80809381935af161072f6108d8565b501561073757005b630db2c7f160e31b5f5260045ffd5b3461036d57602036600319011261036d5760246020600435610767816103a2565b6040516370a0823160e01b815230600482015292839182906001600160a01b03165afa801561026a576101d8915f916107ac575b506040519081529081906020820190565b6107c5915060203d6020116102b0576102a18183610807565b5f61079b565b634e487b7160e01b5f52604160045260245ffd5b601f80199101166080016080811067ffffffffffffffff82111761080257604052565b6107cb565b90601f8019910116810190811067ffffffffffffffff82111761080257604052565b602090607f19011261036d5760805190565b9081602091031261036d575190565b6040513d5f823e3d90fd5b91908110156108775760051b81013590603e198136030182121561036d570190565b634e487b7160e01b5f52603260045260245ffd5b35610895816103a2565b90565b903590601e198136030182121561036d570180359067ffffffffffffffff821161036d5760200191813603831361036d57565b908092918237015f815290565b3d15610912573d9067ffffffffffffffff82116108025760405191610907601f8201601f191660200184610807565b82523d5f602084013e565b606090565b9190820391821161092457565b634e487b7160e01b5f52601160045260245ffd5b9081602091031261036d5751801515810361036d579056fea26469706673582212202c58b9a875eb9b88c217bd7e90248ad53c3da5e0d57d10695ca87b78a5f2751b64736f6c63430008210033",
+    "sourceMap": "495:4615:3:-:0;;;;;;;;;;;;;-1:-1:-1;;495:4615:3;;;;-1:-1:-1;;;;;495:4615:3;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;495:4615:3;;;;;;;1119:20;1115:46;;1171:14;;495:4615;;;;;;;;1171:14;495:4615;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1115:46;1148:13;;;-1:-1:-1;1148:13:3;;-1:-1:-1;1148:13:3;495:4615;-1:-1:-1;495:4615:3;;;;;;-1:-1:-1;495:4615:3;;;;;-1:-1:-1;495:4615:3",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x6080604052600436101561001a575b3615610018575f80fd5b005b5f3560e01c8063245f29dd146100895780638da5cb5b146100845780639e281a981461007f578063caa5c23f1461007a578063da3e339714610075578063e086e5ec146100705763f8b2cb4f0361000e57610746565b6106d4565b610618565b610559565b6103f7565b6103b3565b3461036d57606036600319011261036d5760043567ffffffffffffffff811161036d576100ba903690600401610371565b90602435916100c8836103a2565b604435927f0000000000000000000000000000000000000000000000000000000000000000906001600160a01b038216330361035e576370a0823160e01b6080908152306084526001600160a01b03919091169290602090602481865afa93841561026a575f9461032f575b5f5b8281106102b75750506040516370a0823160e01b8152306004820152939050602084602481865afa93841561026a575f94610286575b508084111561027e5761017f9084610917565b935b841061026f57826101dc575b6101d8847fc3dff9ec2a9266191f204f1e39b6d5cebfc2c3d718964dd6699f5e8e6d010fb0604051806101c584829190602083019252565b0390a16040519081529081906020820190565b0390f35b60405163a9059cbb60e01b81526001600160a01b039190911660048201526024810192909252602090829060449082905f905af190811561026a575f9161023b575b501561022c5781808061018d565b6312171d8360e31b5f5260045ffd5b61025d915060203d602011610263575b6102558183610807565b810190610938565b8261021e565b503d61024b565b61084a565b632723fc7560e11b5f5260045ffd5b505f93610181565b6102a991945060203d6020116102b0575b6102a18183610807565b81019061083b565b928561016c565b503d610297565b5f806102cc6102c7848787610855565b61088b565b816102e56102db868989610855565b6020810190610898565b91906102f6604051809481936108cb565b03925af16103026108d8565b90156103115750600101610136565b80511561032057805190602001fd5b633204506f60e01b5f5260045ffd5b935060203d602011610357575b80610349610351926107df565b608001610829565b93610134565b503d61033c565b635fc483c560e01b5f5260045ffd5b5f80fd5b9181601f8401121561036d5782359167ffffffffffffffff831161036d576020808501948460051b01011161036d57565b6001600160a01b0381160361036d57565b3461036d575f36600319011261036d576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b3461036d57604036600319011261036d57600435610414816103a2565b602435907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b038116330361035e576040516370a0823160e01b81523060048201526001600160a01b0392909216929182602082602481885afa91821561026a575f92610538575b5080610523575091505b8161049357005b60405163a9059cbb60e01b81526001600160a01b03919091166004820152602481018290526020816044815f875af190811561026a575f91610504575b501561022c576040519081527f6352c5382c4a4578e712449ca65e83cdb392d045dfcf1cad9615189db2da244b90602090a2005b61051d915060203d602011610263576102558183610807565b5f6104d0565b111561048c57631e9acf1760e31b5f5260045ffd5b61055291925060203d6020116102b0576102a18183610807565b905f610482565b3461036d57602036600319011261036d5760043567ffffffffffffffff811161036d5761058a903690600401610371565b907f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361035e575f5b8281106105c657005b5f806105d3838686610855565b356105dd816103a2565b816105ec6102db868989610855565b91906105fd604051809481936108cb565b03925af16106096108d8565b901561031157506001016105bd565b3461036d57606036600319011261036d57600435610635816103a2565b602435610641816103a2565b6044357f00000000000000000000000000000000000000000000000000000000000000006001600160a01b0316330361035e5760405163095ea7b360e01b81526001600160a01b0390921660048301526024820152906020908290815f816044810103926001600160a01b03165af1801561026a576106bc57005b6100189060203d602011610263576102558183610807565b3461036d575f36600319011261036d577f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163381900361035e5747908161071f57005b5f80809381935af161072f6108d8565b501561073757005b630db2c7f160e31b5f5260045ffd5b3461036d57602036600319011261036d5760246020600435610767816103a2565b6040516370a0823160e01b815230600482015292839182906001600160a01b03165afa801561026a576101d8915f916107ac575b506040519081529081906020820190565b6107c5915060203d6020116102b0576102a18183610807565b5f61079b565b634e487b7160e01b5f52604160045260245ffd5b601f80199101166080016080811067ffffffffffffffff82111761080257604052565b6107cb565b90601f8019910116810190811067ffffffffffffffff82111761080257604052565b602090607f19011261036d5760805190565b9081602091031261036d575190565b6040513d5f823e3d90fd5b91908110156108775760051b81013590603e198136030182121561036d570190565b634e487b7160e01b5f52603260045260245ffd5b35610895816103a2565b90565b903590601e198136030182121561036d570180359067ffffffffffffffff821161036d5760200191813603831361036d57565b908092918237015f815290565b3d15610912573d9067ffffffffffffffff82116108025760405191610907601f8201601f191660200184610807565b82523d5f602084013e565b606090565b9190820391821161092457565b634e487b7160e01b5f52601160045260245ffd5b9081602091031261036d5751801515810361036d579056fea26469706673582212202c58b9a875eb9b88c217bd7e90248ad53c3da5e0d57d10695ca87b78a5f2751b64736f6c63430008210033",
+    "sourceMap": "495:4615:3:-:0;;;;;;;;;-1:-1:-1;495:4615:3;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;:::i;:::-;;:::i;:::-;;:::i;:::-;;:::i;:::-;;;;;;-1:-1:-1;;495:4615:3;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;:::i;:::-;;;1028:5;;;-1:-1:-1;;;;;495:4615:3;;1014:10;:19;1010:43;;-1:-1:-1;;;495:4615:3;2493:44;;;2531:4;2493:44;495:4615;-1:-1:-1;;;;;495:4615:3;;;;;;;;2493:44;495:4615;;2493:44;;;;;;;495:4615;2493:44;;;495:4615;;2597:16;;;;;;-1:-1:-1;;495:4615:3;;-1:-1:-1;;;3162:44:3;;2531:4;495:4615;3162:44;;495:4615;;;-1:-1:-1;495:4615:3;;;;3162:44;;;;;;;;495:4615;3162:44;;;2577:524;-1:-1:-1;3225:28:3;;;;;;3256;;;;:::i;:::-;3225:63;;3336:18;;3332:51;;3448:16;3444:101;;3225:63;495:4615;;3561:25;495:4615;;3561:25;;;;495:4615;;;;;;;;3561:25;;;;495:4615;;;;;;;;;;;;;;;;;3444:101;495:4615;;-1:-1:-1;;;3471:49:3;;-1:-1:-1;;;;;495:4615:3;;;;;3471:49;;495:4615;;;;;;;;;;;;;;;;-1:-1:-1;;3471:49:3;;;;;;;495:4615;3471:49;;;3444:101;3470:50;;3466:79;;3444:101;;;;;3466:79;3529:16;;;495:4615;3529:16;495:4615;;3529:16;3471:49;;;;495:4615;3471:49;495:4615;3471:49;;;;;;;;:::i;:::-;;;;;:::i;:::-;;;;;;;;;;;:::i;3332:51::-;3363:20;;;495:4615;3363:20;495:4615;;3363:20;3225:63;;495:4615;3225:63;;;3162:44;;;;;495:4615;3162:44;495:4615;3162:44;;;;;;;;:::i;:::-;;;;;:::i;:::-;;;;;;;;;;2582:13;495:4615;2668:8;:15;:8;;;;;:::i;:::-;:15;:::i;:::-;2689:8;:17;:8;;;;;:::i;:::-;495:4615;2689:17;;;;:::i;:::-;495:4615;;;;;;;;;;:::i;:::-;2668:39;;;;;;:::i;:::-;2725:8;;2721:311;;495:4615;;;2582:13;;2721:311;495:4615;;2757:17;:13;;2798:136;;;495:4615;2798:136;;2753:265;2987:12;;;495:4615;2987:12;495:4615;;2987:12;2493:44;;;495:4615;2493:44;495:4615;2493:44;;;;;;;;;:::i;:::-;495:4615;2493:44;;:::i;:::-;;;;;-1:-1:-1;2493:44:3;;;1010:43;1042:11;;;495:4615;1042:11;495:4615;;1042:11;495:4615;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;-1:-1:-1;;;;;495:4615:3;;;;;:::o;:::-;;;;;;-1:-1:-1;;495:4615:3;;;;;;539:30;-1:-1:-1;;;;;495:4615:3;;;;;;;;;;;;-1:-1:-1;;495:4615:3;;;;;;;;;:::i;:::-;;;1028:5;;-1:-1:-1;;;;;495:4615:3;;1014:10;:19;1010:43;;495:4615;;-1:-1:-1;;;3845:38:3;;3877:4;495:4615;3845:38;;495:4615;-1:-1:-1;;;;;495:4615:3;;;;;;;;;;;;3845:38;;;;;;;-1:-1:-1;3845:38:3;;;495:4615;-1:-1:-1;3898:11:3;;;-1:-1:-1;3911:16:3;-1:-1:-1;3894:98:3;4007:10;4003:157;;495:4615;4003:157;495:4615;;-1:-1:-1;;;4038:37:3;;-1:-1:-1;;;;;495:4615:3;;;;;4038:37;;495:4615;;;;;;;;;;;-1:-1:-1;4038:37:3;;;;;;;;-1:-1:-1;4038:37:3;;;4003:157;4037:38;;4033:67;;495:4615;;;;;4119:30;;495:4615;;4119:30;495:4615;4038:37;;;;495:4615;4038:37;495:4615;4038:37;;;;;;;:::i;:::-;;;;3894:98;3946:16;3942:50;3894:98;3942:50;3971:21;;;-1:-1:-1;3971:21:3;495:4615;-1:-1:-1;3971:21:3;3845:38;;;;;495:4615;3845:38;495:4615;3845:38;;;;;;;:::i;:::-;;;;;495:4615;;;;;;-1:-1:-1;;495:4615:3;;;;;;;;;;;;;;;;;;:::i;:::-;;1028:5;-1:-1:-1;;;;;495:4615:3;1014:10;:19;1010:43;;-1:-1:-1;1413:16:3;;;;;;495:4615;1398:13;-1:-1:-1;1484:8:3;;;;;;:::i;:::-;495:4615;;;;:::i;:::-;1505:8;:17;:8;;;;;:::i;:17::-;495:4615;;;;;;;;;;:::i;:::-;1484:39;;;;;;:::i;:::-;1541:8;;1537:380;;495:4615;;;1398:13;;495:4615;;;;;;-1:-1:-1;;495:4615:3;;;;;;;;;:::i;:::-;;;;;;:::i;:::-;;;1028:5;-1:-1:-1;;;;;495:4615:3;1014:10;:19;1010:43;;495:4615;;-1:-1:-1;;;5009:38:3;;-1:-1:-1;;;;;495:4615:3;;;;5009:38;;495:4615;;;;;;;;;;;-1:-1:-1;495:4615:3;;;;5009:38;;-1:-1:-1;;;;;495:4615:3;5009:38;;;;;;;;495:4615;5009:38;;;495:4615;5009:38;495:4615;5009:38;;;;;;;:::i;495:4615::-;;;;;;-1:-1:-1;;495:4615:3;;;;1028:5;-1:-1:-1;;;;;495:4615:3;1014:10;:19;;;1010:43;;4300:21;4335:11;;4331:153;;495:4615;4331:153;495:4615;4380:39;;;;;;;;;:::i;:::-;;4437:8;4433:40;;495:4615;4433:40;4454:19;;;495:4615;4454:19;495:4615;;4454:19;495:4615;;;;;;-1:-1:-1;;495:4615:3;;;;4694:38;495:4615;;;;;;:::i;:::-;;;-1:-1:-1;;;4694:38:3;;4726:4;495:4615;4694:38;;495:4615;;;;;;-1:-1:-1;;;;;495:4615:3;4694:38;;;;;;495:4615;4694:38;-1:-1:-1;4694:38:3;;;495:4615;-1:-1:-1;495:4615:3;;;;;;;;;;;;;4694:38;;;;495:4615;4694:38;495:4615;4694:38;;;;;;;:::i;:::-;;;;495:4615;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;2493:44;;495:4615;;;;;;;:::o;:::-;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;:::i;:::-;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;-1:-1:-1;;495:4615:3;;;;;:::i;:::-;;;;-1:-1:-1;495:4615:3;;;;:::o;:::-;;;:::o;:::-;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+    "linkReferences": {},
+    "immutableReferences": {
+      "5084": [
+        {
+          "start": 206,
+          "length": 32
+        },
+        {
+          "start": 968,
+          "length": 32
+        },
+        {
+          "start": 1050,
+          "length": 32
+        },
+        {
+          "start": 1421,
+          "length": 32
+        },
+        {
+          "start": 1606,
+          "length": 32
+        },
+        {
+          "start": 1766,
+          "length": 32
+        }
+      ]
+    }
+  },
+  "methodIdentifiers": {
+    "approveToken(address,address,uint256)": "da3e3397",
+    "executeArbitrage((address,bytes)[],address,uint256)": "245f29dd",
+    "getBalance(address)": "f8b2cb4f",
+    "multicall((address,bytes)[])": "caa5c23f",
+    "owner()": "8da5cb5b",
+    "withdrawETH()": "e086e5ec",
+    "withdrawToken(address,uint256)": "9e281a98"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"CallFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"EthTransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientProfit\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"OnlyOwner\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"TransferFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ZeroAddress\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"profit\",\"type\":\"uint256\"}],\"name\":\"ArbitrageExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TokensWithdrawn\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"approveToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"callData\",\"type\":\"bytes\"}],\"internalType\":\"struct FutarchyArbitrageExecutorV2.Call[]\",\"name\":\"calls\",\"type\":\"tuple[]\"},{\"internalType\":\"address\",\"name\":\"profitToken\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"minProfit\",\"type\":\"uint256\"}],\"name\":\"executeArbitrage\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"profit\",\"type\":\"uint256\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"callData\",\"type\":\"bytes\"}],\"internalType\":\"struct FutarchyArbitrageExecutorV2.Call[]\",\"name\":\"calls\",\"type\":\"tuple[]\"}],\"name\":\"multicall\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawETH\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"details\":\"Only owner can execute functions. Focuses on safety and simplicity.\",\"kind\":\"dev\",\"methods\":{\"approveToken(address,address,uint256)\":{\"params\":{\"amount\":\"Amount to approve\",\"spender\":\"Spender address\",\"token\":\"Token address\"}},\"executeArbitrage((address,bytes)[],address,uint256)\":{\"params\":{\"calls\":\"Array of calls to execute\",\"minProfit\":\"Minimum required profit\",\"profitToken\":\"Token to measure profit in\"},\"returns\":{\"profit\":\"Actual profit achieved\"}},\"getBalance(address)\":{\"params\":{\"token\":\"Token address\"},\"returns\":{\"_0\":\"Token balance\"}},\"multicall((address,bytes)[])\":{\"params\":{\"calls\":\"Array of calls to execute\"}},\"withdrawToken(address,uint256)\":{\"params\":{\"amount\":\"Amount to withdraw (0 = all)\",\"token\":\"Token address\"}}},\"title\":\"FutarchyArbitrageExecutorV2\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"approveToken(address,address,uint256)\":{\"notice\":\"Approve token spending\"},\"executeArbitrage((address,bytes)[],address,uint256)\":{\"notice\":\"Execute arbitrage with profit verification\"},\"getBalance(address)\":{\"notice\":\"Check token balance\"},\"multicall((address,bytes)[])\":{\"notice\":\"Execute multiple calls in a single transaction\"},\"withdrawETH()\":{\"notice\":\"Withdraw ETH from contract\"},\"withdrawToken(address,uint256)\":{\"notice\":\"Withdraw tokens from contract\"}},\"notice\":\"Simplified multicall contract for arbitrage execution\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/FutarchyArbitrageExecutorV2.sol\":\"FutarchyArbitrageExecutorV2\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/FutarchyArbitrageExecutorV2.sol\":{\"keccak256\":\"0x74201c255a3fab4521d4d2b674d121a91e5e737edda6a4eeb8a497135ba79e55\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8a0ddd9a505f021907427b96056d62117809b451664fec0745515c77dc890ae9\",\"dweb:/ipfs/QmTqCdfM7EQmkvzyR9d7anERANXdcuN6o4LWDaf6DFuyFY\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_owner",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "CallFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "EthTransferFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InsufficientBalance"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InsufficientProfit"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "OnlyOwner"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "TransferFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "ZeroAddress"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "profit",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ArbitrageExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "TokensWithdrawn",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "approveToken"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct FutarchyArbitrageExecutorV2.Call[]",
+              "name": "calls",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "callData",
+                  "type": "bytes"
+                }
+              ]
+            },
+            {
+              "internalType": "address",
+              "name": "profitToken",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minProfit",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "executeArbitrage",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "profit",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getBalance",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct FutarchyArbitrageExecutorV2.Call[]",
+              "name": "calls",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "callData",
+                  "type": "bytes"
+                }
+              ]
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "multicall"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawETH"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "withdrawToken"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "payable",
+          "type": "receive"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "approveToken(address,address,uint256)": {
+            "params": {
+              "amount": "Amount to approve",
+              "spender": "Spender address",
+              "token": "Token address"
+            }
+          },
+          "executeArbitrage((address,bytes)[],address,uint256)": {
+            "params": {
+              "calls": "Array of calls to execute",
+              "minProfit": "Minimum required profit",
+              "profitToken": "Token to measure profit in"
+            },
+            "returns": {
+              "profit": "Actual profit achieved"
+            }
+          },
+          "getBalance(address)": {
+            "params": {
+              "token": "Token address"
+            },
+            "returns": {
+              "_0": "Token balance"
+            }
+          },
+          "multicall((address,bytes)[])": {
+            "params": {
+              "calls": "Array of calls to execute"
+            }
+          },
+          "withdrawToken(address,uint256)": {
+            "params": {
+              "amount": "Amount to withdraw (0 = all)",
+              "token": "Token address"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "approveToken(address,address,uint256)": {
+            "notice": "Approve token spending"
+          },
+          "executeArbitrage((address,bytes)[],address,uint256)": {
+            "notice": "Execute arbitrage with profit verification"
+          },
+          "getBalance(address)": {
+            "notice": "Check token balance"
+          },
+          "multicall((address,bytes)[])": {
+            "notice": "Execute multiple calls in a single transaction"
+          },
+          "withdrawETH()": {
+            "notice": "Withdraw ETH from contract"
+          },
+          "withdrawToken(address,uint256)": {
+            "notice": "Withdraw tokens from contract"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/FutarchyArbitrageExecutorV2.sol": "FutarchyArbitrageExecutorV2"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/FutarchyArbitrageExecutorV2.sol": {
+        "keccak256": "0x74201c255a3fab4521d4d2b674d121a91e5e737edda6a4eeb8a497135ba79e55",
+        "urls": [
+          "bzz-raw://8a0ddd9a505f021907427b96056d62117809b451664fec0745515c77dc890ae9",
+          "dweb:/ipfs/QmTqCdfM7EQmkvzyR9d7anERANXdcuN6o4LWDaf6DFuyFY"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 3
+}

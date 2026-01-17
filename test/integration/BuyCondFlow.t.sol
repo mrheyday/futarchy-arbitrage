@@ -92,7 +92,7 @@ contract BuyCondFlowTest is Test {
 
         // Simulate split - executor gives sDAI, receives YES and NO
         vm.prank(address(executor));
-        sdai.transfer(address(futarchyRouter), splitAmount);
+        require(sdai.transfer(address(futarchyRouter), splitAmount), "Transfer failed");
         sdaiYes.mint(address(executor), splitAmount);
         sdaiNo.mint(address(executor), splitAmount);
 
@@ -105,9 +105,9 @@ contract BuyCondFlowTest is Test {
         uint256 noOut = splitAmount * 2;
 
         vm.prank(address(executor));
-        sdaiYes.transfer(address(swaprRouter), splitAmount);
+        require(sdaiYes.transfer(address(swaprRouter), splitAmount), "Transfer failed");
         vm.prank(address(executor));
-        sdaiNo.transfer(address(swaprRouter), splitAmount);
+        require(sdaiNo.transfer(address(swaprRouter), splitAmount), "Transfer failed");
         companyYes.mint(address(executor), yesOut);
         companyNo.mint(address(executor), noOut);
 
@@ -119,9 +119,9 @@ contract BuyCondFlowTest is Test {
         uint256 mergeAmount = yesOut < noOut ? yesOut : noOut;
 
         vm.prank(address(executor));
-        companyYes.transfer(address(futarchyRouter), mergeAmount);
+        require(companyYes.transfer(address(futarchyRouter), mergeAmount), "Transfer failed");
         vm.prank(address(executor));
-        companyNo.transfer(address(futarchyRouter), mergeAmount);
+        require(companyNo.transfer(address(futarchyRouter), mergeAmount), "Transfer failed");
         company.mint(address(executor), mergeAmount);
 
         assertEq(company.balanceOf(address(executor)), mergeAmount, "Merge failed");
@@ -131,7 +131,7 @@ contract BuyCondFlowTest is Test {
         uint256 sdaiReceived = (mergeAmount * BALANCER_COMPANY_PRICE) / 1 ether;
 
         vm.prank(address(executor));
-        company.transfer(address(balancerVault), mergeAmount);
+        require(company.transfer(address(balancerVault), mergeAmount), "Transfer failed");
         sdai.mint(address(executor), sdaiReceived);
 
         uint256 finalBalance = sdai.balanceOf(address(executor));
@@ -152,14 +152,10 @@ contract BuyCondFlowTest is Test {
 
         uint256 initialBalance = sdai.balanceOf(address(executor));
 
-        // Simulate full flow with slippage
-        // Expected output should be reduced by slippage %
-        uint256 expectedMinProfit = (SDAI_AMOUNT * (10000 - slippageBps)) / 10000;
-
         // Run flow (simplified)
         uint256 splitAmount = SDAI_AMOUNT;
         vm.prank(address(executor));
-        sdai.transfer(address(futarchyRouter), splitAmount);
+        require(sdai.transfer(address(futarchyRouter), splitAmount), "Transfer failed");
         sdaiYes.mint(address(executor), splitAmount);
         sdaiNo.mint(address(executor), splitAmount);
 
@@ -190,8 +186,6 @@ contract BuyCondFlowTest is Test {
         // This test validates that the executor should check profitability before executing
         // In real implementation, this check happens in the bot or executor
 
-        uint256 initialBalance = sdai.balanceOf(address(executor));
-
         // Simulate unprofitable scenario
         // Balancer: 0.95 sDAI per Company (cheap)
         // Swapr: 0.55 sDAI per conditional (expensive)
@@ -206,7 +200,7 @@ contract BuyCondFlowTest is Test {
 
         // Run minimal flow to measure gas
         vm.prank(address(executor));
-        sdai.transfer(address(futarchyRouter), SDAI_AMOUNT);
+        require(sdai.transfer(address(futarchyRouter), SDAI_AMOUNT), "Transfer failed");
         sdaiYes.mint(address(executor), SDAI_AMOUNT);
         sdaiNo.mint(address(executor), SDAI_AMOUNT);
 

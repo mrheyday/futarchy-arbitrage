@@ -1,0 +1,585 @@
+{
+  "abi": [
+    {
+      "type": "fallback",
+      "stateMutability": "payable"
+    },
+    {
+      "type": "receive",
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "execute",
+      "inputs": [
+        {
+          "name": "calls",
+          "type": "tuple[]",
+          "internalType": "struct FutarchyBatchExecutor.Call[]",
+          "components": [
+            {
+              "name": "target",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "value",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "internalType": "bytes"
+            }
+          ]
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "executeBuyConditional",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "executeSellConditional",
+      "inputs": [
+        {
+          "name": "",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "executeWithResults",
+      "inputs": [
+        {
+          "name": "calls",
+          "type": "tuple[]",
+          "internalType": "struct FutarchyBatchExecutor.Call[]",
+          "components": [
+            {
+              "name": "target",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "value",
+              "type": "uint256",
+              "internalType": "uint256"
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "internalType": "bytes"
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "name": "results",
+          "type": "bytes[]",
+          "internalType": "bytes[]"
+        }
+      ],
+      "stateMutability": "payable"
+    },
+    {
+      "type": "function",
+      "name": "setApprovals",
+      "inputs": [
+        {
+          "name": "tokens",
+          "type": "address[]",
+          "internalType": "address[]"
+        },
+        {
+          "name": "spenders",
+          "type": "address[]",
+          "internalType": "address[]"
+        },
+        {
+          "name": "amounts",
+          "type": "uint256[]",
+          "internalType": "uint256[]"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "ApprovalSet",
+      "inputs": [
+        {
+          "name": "token",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "spender",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "amount",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BatchExecuted",
+      "inputs": [
+        {
+          "name": "callsExecuted",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "CallExecuted",
+      "inputs": [
+        {
+          "name": "target",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "data",
+          "type": "bytes",
+          "indexed": false,
+          "internalType": "bytes"
+        },
+        {
+          "name": "success",
+          "type": "bool",
+          "indexed": false,
+          "internalType": "bool"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "ApprovalFailed",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "ApprovalReturnedFalse",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CallFailed",
+      "inputs": [
+        {
+          "name": "index",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "returnData",
+          "type": "bytes",
+          "internalType": "bytes"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InsufficientBalance",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InvalidAuthority",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "LengthMismatch",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x60808060405234601557610767908161001a8239f35b5f80fdfe60806040526004361015610010575b005b5f3560e01c80631e86b5141461025e5780633f707e6b146101d55780635c96612d146101d05780636de9a38a146101d057639f616ef60361000e5760203660031901126101cc576004356001600160401b0381116101cc57610076903690600401610413565b3033036101bd5761008681610527565b9161009460405193846104f2565b818352601f196100a383610527565b015f5b8181106101ac5750505f5b82811061014a57837fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602085604051908152a16040518091602082016020835281518091526040830190602060408260051b8601019301915f905b82821061011b57505050500390f35b9193600191939550602061013a8192603f198a82030186528851610496565b960192019201859493919261010c565b61016561016061015b83868661053e565b61057b565b61067d565b901561018b5790600191610179828761063a565b52610184818661063a565b50016100b1565b604051635c0dee5d60e01b81529182916101a89160048401610620565b0390fd5b8060606020809388010152016100a6565b636f6a1b8760e11b5f5260045ffd5b5f80fd5b610443565b60203660031901126101cc576004356001600160401b0381116101cc57610200903690600401610413565b903033036101bd575f5b82811061023e577fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602084604051908152a1005b61024f61016061015b83868661053e565b901561018b575060010161020a565b346101cc5760603660031901126101cc576004356001600160401b0381116101cc5761028e903690600401610413565b6024356001600160401b0381116101cc576102ad903690600401610413565b9190926044356001600160401b0381116101cc576102cf903690600401610413565b9290923033036101bd57848214801590610409575b6103fa575f5b8281106102f357005b6103066103018285876104ba565b6104de565b9061031561030182898b6104ba565b6103208285896104ba565b355f8060405193602085019063095ea7b360e01b825260018060a01b0316948560248201528460448201526044815261035a6064826104f2565b519082885af161036861064e565b90156103eb578051806103b7575b50506040519081526001936001600160a01b0316907f831618689250168d97439719454d49da08400cc172d64eac411c802f0e28230990602090a3016102ea565b81602091810103126101cc57602001518015908115036101cc576103dc578a80610376565b637a58cf0d60e11b5f5260045ffd5b6340b27c2160e11b5f5260045ffd5b631fec674760e31b5f5260045ffd5b50808214156102e4565b9181601f840112156101cc578235916001600160401b0383116101cc576020808501948460051b0101116101cc57565b60203660031901126101cc576004356001600160401b0381116101cc57366023820112156101cc578060040135906001600160401b0382116101cc5736602483830101116101cc5750503033036101bd57005b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b91908110156104ca5760051b0190565b634e487b7160e01b5f52603260045260245ffd5b356001600160a01b03811681036101cc5790565b90601f801991011681019081106001600160401b0382111761051357604052565b634e487b7160e01b5f52604160045260245ffd5b6001600160401b0381116105135760051b60200190565b91908110156104ca5760051b81013590605e19813603018212156101cc570190565b6001600160401b03811161051357601f01601f191660200190565b6060813603126101cc5760405190606082018281106001600160401b038211176105135760405280356001600160a01b03811681036101cc578252602081013560208301526040810135906001600160401b0382116101cc570136601f820112156101cc5780356105eb81610560565b916105f960405193846104f2565b81835236602083830101116101cc57815f9260208093018386013783010152604082015290565b604090610637939281528160208201520190610496565b90565b80518210156104ca5760209160051b010190565b3d15610678573d9061065f82610560565b9161066d60405193846104f2565b82523d5f602084013e565b606090565b90602082019081518015159081610727575b506107185760018060a01b03835116917fd6ccaa80f602e884644c27c8f83689468df0b077a05fb3b05cb6d2e1cb6b859c5f8083516040880196875191602083519301915af16106dd61064e565b94819660018060a01b03905116935190519161070b6040519384938452606060208501526060840190610496565b90151560408301520390a2565b631e9acf1760e31b5f5260045ffd5b905047105f61068f56fea2646970667358221220993e2397614c99d292b70c679539d3263cb61f405003257fc0f15a1bfbcc87ec64736f6c63430008210033",
+    "sourceMap": "576:5986:4:-:0;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x60806040526004361015610010575b005b5f3560e01c80631e86b5141461025e5780633f707e6b146101d55780635c96612d146101d05780636de9a38a146101d057639f616ef60361000e5760203660031901126101cc576004356001600160401b0381116101cc57610076903690600401610413565b3033036101bd5761008681610527565b9161009460405193846104f2565b818352601f196100a383610527565b015f5b8181106101ac5750505f5b82811061014a57837fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602085604051908152a16040518091602082016020835281518091526040830190602060408260051b8601019301915f905b82821061011b57505050500390f35b9193600191939550602061013a8192603f198a82030186528851610496565b960192019201859493919261010c565b61016561016061015b83868661053e565b61057b565b61067d565b901561018b5790600191610179828761063a565b52610184818661063a565b50016100b1565b604051635c0dee5d60e01b81529182916101a89160048401610620565b0390fd5b8060606020809388010152016100a6565b636f6a1b8760e11b5f5260045ffd5b5f80fd5b610443565b60203660031901126101cc576004356001600160401b0381116101cc57610200903690600401610413565b903033036101bd575f5b82811061023e577fe9cc9bbe7de1cbb097a6357ca3182909488efe8d793e25665befc064a02d10a7602084604051908152a1005b61024f61016061015b83868661053e565b901561018b575060010161020a565b346101cc5760603660031901126101cc576004356001600160401b0381116101cc5761028e903690600401610413565b6024356001600160401b0381116101cc576102ad903690600401610413565b9190926044356001600160401b0381116101cc576102cf903690600401610413565b9290923033036101bd57848214801590610409575b6103fa575f5b8281106102f357005b6103066103018285876104ba565b6104de565b9061031561030182898b6104ba565b6103208285896104ba565b355f8060405193602085019063095ea7b360e01b825260018060a01b0316948560248201528460448201526044815261035a6064826104f2565b519082885af161036861064e565b90156103eb578051806103b7575b50506040519081526001936001600160a01b0316907f831618689250168d97439719454d49da08400cc172d64eac411c802f0e28230990602090a3016102ea565b81602091810103126101cc57602001518015908115036101cc576103dc578a80610376565b637a58cf0d60e11b5f5260045ffd5b6340b27c2160e11b5f5260045ffd5b631fec674760e31b5f5260045ffd5b50808214156102e4565b9181601f840112156101cc578235916001600160401b0383116101cc576020808501948460051b0101116101cc57565b60203660031901126101cc576004356001600160401b0381116101cc57366023820112156101cc578060040135906001600160401b0382116101cc5736602483830101116101cc5750503033036101bd57005b805180835260209291819084018484015e5f828201840152601f01601f1916010190565b91908110156104ca5760051b0190565b634e487b7160e01b5f52603260045260245ffd5b356001600160a01b03811681036101cc5790565b90601f801991011681019081106001600160401b0382111761051357604052565b634e487b7160e01b5f52604160045260245ffd5b6001600160401b0381116105135760051b60200190565b91908110156104ca5760051b81013590605e19813603018212156101cc570190565b6001600160401b03811161051357601f01601f191660200190565b6060813603126101cc5760405190606082018281106001600160401b038211176105135760405280356001600160a01b03811681036101cc578252602081013560208301526040810135906001600160401b0382116101cc570136601f820112156101cc5780356105eb81610560565b916105f960405193846104f2565b81835236602083830101116101cc57815f9260208093018386013783010152604082015290565b604090610637939281528160208201520190610496565b90565b80518210156104ca5760209160051b010190565b3d15610678573d9061065f82610560565b9161066d60405193846104f2565b82523d5f602084013e565b606090565b90602082019081518015159081610727575b506107185760018060a01b03835116917fd6ccaa80f602e884644c27c8f83689468df0b077a05fb3b05cb6d2e1cb6b859c5f8083516040880196875191602083519301915af16106dd61064e565b94819660018060a01b03905116935190519161070b6040519384938452606060208501526060840190610496565b90151560408301520390a2565b631e9acf1760e31b5f5260045ffd5b905047105f61068f56fea2646970667358221220993e2397614c99d292b70c679539d3263cb61f405003257fc0f15a1bfbcc87ec64736f6c63430008210033",
+    "sourceMap": "576:5986:4:-:0;;;;;;;;;-1:-1:-1;576:5986:4;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;576:5986:4;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;:::i;:::-;2046:4;2024:10;:27;2020:58;;576:5986;;;:::i;:::-;;;;;;;;:::i;:::-;;;;-1:-1:-1;;576:5986:4;;;:::i;:::-;;;;;;;;;2140:13;;576:5986;2155:16;;;;;;576:5986;2434:27;576:5986;;;;;;;2434:27;576:5986;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;2140:13;2230:22;;2243:8;;;;;:::i;:::-;2230:22;:::i;:::-;;:::i;:::-;2270:8;;2266:46;;2326:23;576:5986;2326:23;;;;;:::i;:::-;;;;;;:::i;:::-;;576:5986;2140:13;;2266:46;576:5986;;-1:-1:-1;;;2287:25:4;;576:5986;;;2287:25;;576:5986;2287:25;;;:::i;:::-;;;;576:5986;;;;;;;;;;;;;2020:58;3004:18;;;576:5986;2060:18;576:5986;;2060:18;576:5986;;;;;;:::i;:::-;;;-1:-1:-1;;576:5986:4;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;:::i;:::-;1554:4;;1532:10;:27;1528:58;;576:5986;4682:16;;;;;;4924:27;576:5986;;;;;;;4924:27;576:5986;4667:13;4757:22;;4770:8;;;;;:::i;4757:22::-;4797:8;;4793:46;;576:5986;;;4667:13;;576:5986;;;;;;-1:-1:-1;;576:5986:4;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;:::i;:::-;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;:::i;:::-;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;:::i;:::-;2990:4;;;;2968:10;:27;2964:58;;3036:32;;;;;:67;;;576:5986;3032:96;;576:5986;3159:17;;;;;;576:5986;3144:13;3202:9;;;;;;:::i;:::-;;:::i;:::-;3213:11;;;;;;;:::i;:::-;3226:10;;;;;:::i;:::-;576:5986;;;;;5959:68;576:5986;5959:68;;;;;;;;576:5986;;;;;;5959:68;;576:5986;5959:68;;576:5986;;;;;;;5959:68;;;;;;:::i;:::-;6080:16;;;;;;;;:::i;:::-;6110:8;;6106:37;;576:5986;;6200:21;6196:94;;3144:13;-1:-1:-1;;576:5986:4;;;;;;;-1:-1:-1;;;;;576:5986:4;;6306:35;;576:5986;;6306:35;576:5986;3144:13;;6196:94;6228:30;576:5986;6228:30;;;576:5986;;;;;6228:30;576:5986;;;;;;;;;6223:67;;6196:94;;;;6223:67;6267:23;;;576:5986;6267:23;576:5986;;6267:23;6106:37;6127:16;;;576:5986;6127:16;576:5986;;6127:16;3032:96;3112:16;;;576:5986;3112:16;576:5986;;3112:16;3036:67;3072:31;;;;;3036:67;;576:5986;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;;;;;;;:::o;:::-;;;-1:-1:-1;;576:5986:4;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;;;;4179:4;;4157:10;:27;4153:58;;576:5986;;;;;;;;;;;;;;;;;;-1:-1:-1;576:5986:4;;;;;;;;-1:-1:-1;;576:5986:4;;;;:::o;:::-;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;:::o;:::-;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;:::o;:::-;;;;-1:-1:-1;576:5986:4;;;;;-1:-1:-1;576:5986:4;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;-1:-1:-1;;;;;576:5986:4;;;;;;-1:-1:-1;;576:5986:4;;;;:::o;:::-;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;576:5986:4;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;:::i;:::-;;;;;;;;;;;;;;-1:-1:-1;576:5986:4;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;;;;;;;:::i;:::-;;:::o;:::-;;;;;;;;;;;;;;;:::o;:::-;;;;;;;;;;:::i;:::-;;;;;;;;:::i;:::-;;;;-1:-1:-1;576:5986:4;;;;:::o;:::-;;;:::o;5183:425::-;;5365:10;;;576:5986;;;5365:14;;;:52;;;;5183:425;5361:86;;;576:5986;;;;;;;;;5544:57;-1:-1:-1;576:5986:4;;;5518:9;;;;;;5482:46;5365:10;5482:46;;;;;;;;;:::i;:::-;5458:70;;576:5986;;;;;;;;;;;5582:9;;576:5986;;5518:9;576:5986;;;;;;;5365:10;576:5986;;;;;;;;:::i;:::-;;;;5518:9;576:5986;;;5544:57;;;5183:425::o;5361:86::-;5426:21;;;-1:-1:-1;5426:21:4;;-1:-1:-1;5426:21:4;5365:52;5383:21;;;:34;5365:52;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "execute((address,uint256,bytes)[])": "3f707e6b",
+    "executeBuyConditional(bytes)": "6de9a38a",
+    "executeSellConditional(bytes)": "5c96612d",
+    "executeWithResults((address,uint256,bytes)[])": "9f616ef6",
+    "setApprovals(address[],address[],uint256[])": "1e86b514"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"ApprovalFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ApprovalReturnedFalse\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"returnData\",\"type\":\"bytes\"}],\"name\":\"CallFailed\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InsufficientBalance\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"InvalidAuthority\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"LengthMismatch\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"spender\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"ApprovalSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"callsExecuted\",\"type\":\"uint256\"}],\"name\":\"BatchExecuted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"name\":\"CallExecuted\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"internalType\":\"struct FutarchyBatchExecutor.Call[]\",\"name\":\"calls\",\"type\":\"tuple[]\"}],\"name\":\"execute\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"executeBuyConditional\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"executeSellConditional\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"internalType\":\"struct FutarchyBatchExecutor.Call[]\",\"name\":\"calls\",\"type\":\"tuple[]\"}],\"name\":\"executeWithResults\",\"outputs\":[{\"internalType\":\"bytes[]\",\"name\":\"results\",\"type\":\"bytes[]\"}],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"tokens\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"spenders\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"name\":\"setApprovals\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"details\":\"This contract is designed to be used with EIP-7702 where an EOA delegates to this implementation      to execute multiple operations atomically in a single transaction. The contract supports: - Batch execution of arbitrary calls - Token approvals management - Specialized futarchy operations (split/merge positions) - Integration with Swapr and Balancer protocols\",\"kind\":\"dev\",\"methods\":{\"execute((address,uint256,bytes)[])\":{\"details\":\"Can only be called by the EOA itself (when using EIP-7702)\",\"params\":{\"calls\":\"Array of calls to execute in order\"}},\"executeBuyConditional(bytes)\":{\"details\":\"Specialized function for the buy conditional flow\"},\"executeSellConditional(bytes)\":{\"details\":\"Specialized function for the sell conditional flow\"},\"executeWithResults((address,uint256,bytes)[])\":{\"details\":\"This variant returns the results of each call for more complex arbitrage logic\",\"params\":{\"calls\":\"Array of calls to execute\"},\"returns\":{\"results\":\"Array of return data from each call\"}},\"setApprovals(address[],address[],uint256[])\":{\"details\":\"Useful for setting up all necessary approvals before arbitrage operations\",\"params\":{\"amounts\":\"Array of amounts to approve (must match tokens length)\",\"spenders\":\"Array of spender addresses (must match tokens length)\",\"tokens\":\"Array of token addresses\"}}},\"title\":\"FutarchyBatchExecutor\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"execute((address,uint256,bytes)[])\":{\"notice\":\"Execute a batch of calls\"},\"executeBuyConditional(bytes)\":{\"notice\":\"Execute arbitrage: Buy conditional tokens\"},\"executeSellConditional(bytes)\":{\"notice\":\"Execute arbitrage: Sell conditional tokens\"},\"executeWithResults((address,uint256,bytes)[])\":{\"notice\":\"Execute a batch of calls with return value tracking\"},\"setApprovals(address[],address[],uint256[])\":{\"notice\":\"Helper function to set multiple token approvals\"}},\"notice\":\"Implementation contract for EIP-7702 batched futarchy arbitrage operations\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/FutarchyBatchExecutor.sol\":\"FutarchyBatchExecutor\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/FutarchyBatchExecutor.sol\":{\"keccak256\":\"0xfb80b8721ce66efc7dc7bb95cfe522a49d85d8e92eaeb17141c08ad43c683f4d\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8e1a767fabe4d373bd91d23a55270bec9d3ac7f8b30b2902d60cb49c01cd38d8\",\"dweb:/ipfs/QmYFFhMgj6vF3Y7wkn7xSBviDSs4dQsXv62mEKMXjnZdRJ\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "ApprovalFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "ApprovalReturnedFalse"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "returnData",
+              "type": "bytes"
+            }
+          ],
+          "type": "error",
+          "name": "CallFailed"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InsufficientBalance"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InvalidAuthority"
+        },
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "LengthMismatch"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "token",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "address",
+              "name": "spender",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "ApprovalSet",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "callsExecuted",
+              "type": "uint256",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "BatchExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address",
+              "indexed": true
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256",
+              "indexed": false
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes",
+              "indexed": false
+            },
+            {
+              "internalType": "bool",
+              "name": "success",
+              "type": "bool",
+              "indexed": false
+            }
+          ],
+          "type": "event",
+          "name": "CallExecuted",
+          "anonymous": false
+        },
+        {
+          "inputs": [],
+          "stateMutability": "payable",
+          "type": "fallback"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct FutarchyBatchExecutor.Call[]",
+              "name": "calls",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ]
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "execute"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "executeBuyConditional"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "executeSellConditional"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "struct FutarchyBatchExecutor.Call[]",
+              "name": "calls",
+              "type": "tuple[]",
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ]
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function",
+          "name": "executeWithResults",
+          "outputs": [
+            {
+              "internalType": "bytes[]",
+              "name": "results",
+              "type": "bytes[]"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address[]",
+              "name": "tokens",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "spenders",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "amounts",
+              "type": "uint256[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "setApprovals"
+        },
+        {
+          "inputs": [],
+          "stateMutability": "payable",
+          "type": "receive"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "execute((address,uint256,bytes)[])": {
+            "details": "Can only be called by the EOA itself (when using EIP-7702)",
+            "params": {
+              "calls": "Array of calls to execute in order"
+            }
+          },
+          "executeBuyConditional(bytes)": {
+            "details": "Specialized function for the buy conditional flow"
+          },
+          "executeSellConditional(bytes)": {
+            "details": "Specialized function for the sell conditional flow"
+          },
+          "executeWithResults((address,uint256,bytes)[])": {
+            "details": "This variant returns the results of each call for more complex arbitrage logic",
+            "params": {
+              "calls": "Array of calls to execute"
+            },
+            "returns": {
+              "results": "Array of return data from each call"
+            }
+          },
+          "setApprovals(address[],address[],uint256[])": {
+            "details": "Useful for setting up all necessary approvals before arbitrage operations",
+            "params": {
+              "amounts": "Array of amounts to approve (must match tokens length)",
+              "spenders": "Array of spender addresses (must match tokens length)",
+              "tokens": "Array of token addresses"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "execute((address,uint256,bytes)[])": {
+            "notice": "Execute a batch of calls"
+          },
+          "executeBuyConditional(bytes)": {
+            "notice": "Execute arbitrage: Buy conditional tokens"
+          },
+          "executeSellConditional(bytes)": {
+            "notice": "Execute arbitrage: Sell conditional tokens"
+          },
+          "executeWithResults((address,uint256,bytes)[])": {
+            "notice": "Execute a batch of calls with return value tracking"
+          },
+          "setApprovals(address[],address[],uint256[])": {
+            "notice": "Helper function to set multiple token approvals"
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/FutarchyBatchExecutor.sol": "FutarchyBatchExecutor"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/FutarchyBatchExecutor.sol": {
+        "keccak256": "0xfb80b8721ce66efc7dc7bb95cfe522a49d85d8e92eaeb17141c08ad43c683f4d",
+        "urls": [
+          "bzz-raw://8e1a767fabe4d373bd91d23a55270bec9d3ac7f8b30b2902d60cb49c01cd38d8",
+          "dweb:/ipfs/QmYFFhMgj6vF3Y7wkn7xSBviDSs4dQsXv62mEKMXjnZdRJ"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 4
+}

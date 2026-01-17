@@ -1,0 +1,405 @@
+[
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute10",
+    "inputs": [
+      {
+        "name": "targets",
+        "type": "address[10]",
+        "internalType": "address[10]"
+      },
+      {
+        "name": "calldatas",
+        "type": "bytes[10]",
+        "internalType": "bytes[10]"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "executeOne",
+    "inputs": [
+      {
+        "name": "target",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "sellConditional",
+    "inputs": [
+      {
+        "name": "p",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV3.SellParams",
+        "components": [
+          {
+            "name": "sdai",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "gno",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "gnoYes",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "gnoNo",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "sdaiYes",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "sdaiNo",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "futarchyRouter",
+            "type": "address",
+            "internalType": "contract IFutarchyRouter"
+          },
+          {
+            "name": "proposal",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "sdaiSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "sdaiSwapSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "sdaiSwapCalldata",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "sdaiSwapMsgValue",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "sdaiAmountInCap",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minGnoOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "splitGnoAmount",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "yesSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "yesSwapCalldata",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "noSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "noSwapCalldata",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "swapSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "minSdaiYesOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minSdaiNoOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "liqSwapSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "liqYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV3.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "liqNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV3.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "minNetSdai",
+            "type": "int256",
+            "internalType": "int256"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "SellExecuted",
+    "inputs": [
+      {
+        "name": "sdaiSpent",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "gnoBought",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "gnoSplit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "sdaiYesOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "sdaiNoOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "merged",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "netSdai",
+        "type": "int256",
+        "indexed": false,
+        "internalType": "int256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "AmountOffsetOOB",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BadSplitAmount",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BalanceTooLarge",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowGnoOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowNoSdai",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowYesSdai",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MinOutOffsetOOB",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NetSdaiBelowTolerance",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NothingToMerge",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySelf",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SdaiOverspend",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TooManyCalls",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "UnderMint",
+    "inputs": []
+  }
+]

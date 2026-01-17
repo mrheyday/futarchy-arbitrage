@@ -1,0 +1,1760 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "_runner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "buy_conditional_arbitrage",
+    "inputs": [
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV4.BuyArgs",
+        "components": [
+          {
+            "name": "t",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Tokens",
+            "components": [
+              {
+                "name": "comp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "cur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              }
+            ]
+          },
+          {
+            "name": "f",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+            "components": [
+              {
+                "name": "router",
+                "type": "address",
+                "internalType": "contract IFutarchyRouter"
+              },
+              {
+                "name": "proposal",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "p",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Pools",
+            "components": [
+              {
+                "name": "yesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "noPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predYesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predNoPool",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "amountCurIn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "yesBuyTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "yesBuyData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "noBuyTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "noBuyData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "buySpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "minYesCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minNoCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "sellCompanyOps",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+            "components": [
+              {
+                "name": "targets",
+                "type": "address[10]",
+                "internalType": "address[10]"
+              },
+              {
+                "name": "calldatas",
+                "type": "bytes[10]",
+                "internalType": "bytes[10]"
+              },
+              {
+                "name": "count",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "tokenIn",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "tokenOut",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "spender",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amountIn",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOut",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "patchIndex",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "liqSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "compYesToCurYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "compNoToCurNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "minNetCur",
+            "type": "int256",
+            "internalType": "int256"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "execute10",
+    "inputs": [
+      {
+        "name": "targets",
+        "type": "address[10]",
+        "internalType": "address[10]"
+      },
+      {
+        "name": "calldatas",
+        "type": "bytes[10]",
+        "internalType": "bytes[10]"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "executeOne",
+    "inputs": [
+      {
+        "name": "target",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "runBuy",
+    "inputs": [
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV4.BuyArgs",
+        "components": [
+          {
+            "name": "t",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Tokens",
+            "components": [
+              {
+                "name": "comp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "cur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              }
+            ]
+          },
+          {
+            "name": "f",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+            "components": [
+              {
+                "name": "router",
+                "type": "address",
+                "internalType": "contract IFutarchyRouter"
+              },
+              {
+                "name": "proposal",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "p",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Pools",
+            "components": [
+              {
+                "name": "yesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "noPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predYesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predNoPool",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "amountCurIn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "yesBuyTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "yesBuyData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "noBuyTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "noBuyData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "buySpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "minYesCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minNoCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "sellCompanyOps",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+            "components": [
+              {
+                "name": "targets",
+                "type": "address[10]",
+                "internalType": "address[10]"
+              },
+              {
+                "name": "calldatas",
+                "type": "bytes[10]",
+                "internalType": "bytes[10]"
+              },
+              {
+                "name": "count",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "tokenIn",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "tokenOut",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "spender",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amountIn",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOut",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "patchIndex",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "liqSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "compYesToCurYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "compNoToCurNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "minNetCur",
+            "type": "int256",
+            "internalType": "int256"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "runSell",
+    "inputs": [
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV4.SellArgs",
+        "components": [
+          {
+            "name": "t",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Tokens",
+            "components": [
+              {
+                "name": "comp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "cur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              }
+            ]
+          },
+          {
+            "name": "f",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+            "components": [
+              {
+                "name": "router",
+                "type": "address",
+                "internalType": "contract IFutarchyRouter"
+              },
+              {
+                "name": "proposal",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "p",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Pools",
+            "components": [
+              {
+                "name": "yesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "noPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predYesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predNoPool",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "buyCompanyOps",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+            "components": [
+              {
+                "name": "targets",
+                "type": "address[10]",
+                "internalType": "address[10]"
+              },
+              {
+                "name": "calldatas",
+                "type": "bytes[10]",
+                "internalType": "bytes[10]"
+              },
+              {
+                "name": "count",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "tokenIn",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "tokenOut",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "spender",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amountIn",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOut",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "patchIndex",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "amountCurIn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "yesSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "yesSwapData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "noSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "noSwapData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "swapSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "minYesCurOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minNoCurOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "liqSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "predYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "minNetCur",
+            "type": "int256",
+            "internalType": "int256"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "runTrade",
+    "inputs": [
+      {
+        "name": "b",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+        "components": [
+          {
+            "name": "targets",
+            "type": "address[10]",
+            "internalType": "address[10]"
+          },
+          {
+            "name": "calldatas",
+            "type": "bytes[10]",
+            "internalType": "bytes[10]"
+          },
+          {
+            "name": "count",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "tokenIn",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "tokenOut",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "spender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "amountIn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "patchIndex",
+            "type": "uint8",
+            "internalType": "uint8"
+          },
+          {
+            "name": "amountOffset",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minOutOffset",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "slippageBps",
+            "type": "uint16",
+            "internalType": "uint16"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "out",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "runner",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "sell_conditional_arbitrage",
+    "inputs": [
+      {
+        "name": "a",
+        "type": "tuple",
+        "internalType": "struct FutarchyArbExecutorV4.SellArgs",
+        "components": [
+          {
+            "name": "t",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Tokens",
+            "components": [
+              {
+                "name": "comp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "cur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noComp",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "yesCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              },
+              {
+                "name": "noCur",
+                "type": "address",
+                "internalType": "contract IERC20"
+              }
+            ]
+          },
+          {
+            "name": "f",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Futarchy",
+            "components": [
+              {
+                "name": "router",
+                "type": "address",
+                "internalType": "contract IFutarchyRouter"
+              },
+              {
+                "name": "proposal",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "p",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Pools",
+            "components": [
+              {
+                "name": "yesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "noPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predYesPool",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "predNoPool",
+                "type": "address",
+                "internalType": "address"
+              }
+            ]
+          },
+          {
+            "name": "buyCompanyOps",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.Execute10Batch",
+            "components": [
+              {
+                "name": "targets",
+                "type": "address[10]",
+                "internalType": "address[10]"
+              },
+              {
+                "name": "calldatas",
+                "type": "bytes[10]",
+                "internalType": "bytes[10]"
+              },
+              {
+                "name": "count",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "tokenIn",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "tokenOut",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "spender",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amountIn",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOut",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "patchIndex",
+                "type": "uint8",
+                "internalType": "uint8"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "amountCurIn",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minCompOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "yesSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "yesSwapData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "noSwapTarget",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "noSwapData",
+            "type": "bytes",
+            "internalType": "bytes"
+          },
+          {
+            "name": "swapSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "minYesCurOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "minNoCurOut",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "liqSpender",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "predYes",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "predNo",
+            "type": "tuple",
+            "internalType": "struct FutarchyArbExecutorV4.CalldataPatch",
+            "components": [
+              {
+                "name": "target",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "data",
+                "type": "bytes",
+                "internalType": "bytes"
+              },
+              {
+                "name": "msgValue",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "amountOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutOffset",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "slippageBps",
+                "type": "uint16",
+                "internalType": "uint16"
+              }
+            ]
+          },
+          {
+            "name": "minNetCur",
+            "type": "int256",
+            "internalType": "int256"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "BuyExecuted",
+    "inputs": [
+      {
+        "name": "curSplit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "yesCompOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "noCompOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "mergedComp",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "compSold",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "curReceived",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqCompYesIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqCompYesOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqCompNoIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqCompNoOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "netCur",
+        "type": "int256",
+        "indexed": false,
+        "internalType": "int256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "SellExecuted",
+    "inputs": [
+      {
+        "name": "curSpent",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "compBought",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "compSplit",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "yesCurOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "noCurOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "mergedCur",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqYesOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "liqNoOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "netCur",
+        "type": "int256",
+        "indexed": false,
+        "internalType": "int256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TradeExecuted",
+    "inputs": [
+      {
+        "name": "tokenIn",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "tokenOut",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amountIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amountOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "AmountOffsetOOB",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BalanceTooLarge",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CallFailed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowCompOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowNoCompOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowNoCurOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowYesCompOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "LowYesCurOut",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MinOutOffsetOOB",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NetCurBelowTolerance",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotRunner",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NothingToMerge",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySelf",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OutputBelowMin",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PatchIndexOOB",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SpentMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "TooManyCalls",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "UnderMint",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ZeroAmount",
+    "inputs": []
+  }
+]

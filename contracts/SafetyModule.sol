@@ -121,6 +121,7 @@ contract SafetyModule {
 
         // Check daily loss limit
         int256 newDailyTotal = dailyProfitLoss + profitLoss;
+        // forge-lint: disable-next-line(unsafe-typecast)
         if (newDailyTotal < 0 && uint256(-newDailyTotal) > dailyLossLimit) {
             emit DailyLossCircuitTripped(newDailyTotal, dailyLossLimit);
             revert DailyLossLimitExceeded(newDailyTotal, dailyLossLimit);

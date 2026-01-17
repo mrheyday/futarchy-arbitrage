@@ -1,0 +1,748 @@
+{
+  "name": "SafetyModule",
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "calculateSlippage",
+      "inputs": [
+        {
+          "name": "expected",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "pure"
+    },
+    {
+      "type": "function",
+      "name": "checkTradeAllowed",
+      "inputs": [
+        {
+          "name": "expectedOutput",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "minOutput",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "profitLoss",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "cooldownSeconds",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyLossLimit",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyProfitLoss",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "int256",
+          "internalType": "int256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "dailyResetTimestamp",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "emergencyPause",
+      "inputs": [
+        {
+          "name": "reason",
+          "type": "string",
+          "internalType": "string"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "getSafetyStatus",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "isPaused",
+          "type": "bool",
+          "internalType": "bool"
+        },
+        {
+          "name": "timeUntilNextTrade",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "currentDailyPL",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "timeUntilDailyReset",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "lastTradeTimestamp",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxGasPrice",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "maxSlippageBps",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "paused",
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool",
+          "internalType": "bool"
+        }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "resetDailyCounter",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address",
+          "internalType": "address"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "unpause",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updateParameters",
+      "inputs": [
+        {
+          "name": "_maxSlippageBps",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_maxGasPrice",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_dailyLossLimit",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "_cooldownSeconds",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "event",
+      "name": "DailyLossCircuitTripped",
+      "inputs": [
+        {
+          "name": "loss",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "EmergencyPause",
+      "inputs": [
+        {
+          "name": "triggeredBy",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        },
+        {
+          "name": "reason",
+          "type": "string",
+          "indexed": false,
+          "internalType": "string"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "EmergencyUnpause",
+      "inputs": [
+        {
+          "name": "triggeredBy",
+          "type": "address",
+          "indexed": true,
+          "internalType": "address"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "GasCircuitTripped",
+      "inputs": [
+        {
+          "name": "gasPrice",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ParametersUpdated",
+      "inputs": [
+        {
+          "name": "maxSlippage",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "maxGasPrice",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "dailyLossLimit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "cooldownSeconds",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "SlippageCircuitTripped",
+      "inputs": [
+        {
+          "name": "slippage",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TradeRecorded",
+      "inputs": [
+        {
+          "name": "profitLoss",
+          "type": "int256",
+          "indexed": false,
+          "internalType": "int256"
+        },
+        {
+          "name": "timestamp",
+          "type": "uint256",
+          "indexed": false,
+          "internalType": "uint256"
+        }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "error",
+      "name": "CooldownActive",
+      "inputs": [
+        {
+          "name": "timeRemaining",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "DailyLossLimitExceeded",
+      "inputs": [
+        {
+          "name": "totalLoss",
+          "type": "int256",
+          "internalType": "int256"
+        },
+        {
+          "name": "limit",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "GasPriceTooHigh",
+      "inputs": [
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "max",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InvalidParameter",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "OnlyOwner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "Paused",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "SlippageExceeded",
+      "inputs": [
+        {
+          "name": "actual",
+          "type": "uint256",
+          "internalType": "uint256"
+        },
+        {
+          "name": "max",
+          "type": "uint256",
+          "internalType": "uint256"
+        }
+      ]
+    }
+  ],
+  "abi_function_count": 17,
+  "abi_event_count": 7,
+  "abi_error_count": 7,
+  "bytecode": {
+    "creation": "0x60808060405234606a575f80546001600160a01b031916331790556101f460015564174876e800600255678ac7230489e80000600355603c600455426201518081019081106056576007556107e7908161006f8239f35b634e487b7160e01b5f526011...",
+    "creation_size": 2135,
+    "runtime": "0x6080806040526004361015610012575f80fd5b5f3560e01c90816319f18dee1461071e575080632aedada6146106845780633788f0d21461064d5780633de39c11146106305780633f4ba83a146105de5780634a92c260146105b55780635c975abb14...",
+    "runtime_size": 2024,
+    "creation_full": "0x60808060405234606a575f80546001600160a01b031916331790556101f460015564174876e800600255678ac7230489e80000600355603c600455426201518081019081106056576007556107e7908161006f8239f35b634e487b7160e01b5f52601160045260245ffd5b5f80fdfe6080806040526004361015610012575f80fd5b5f3560e01c90816319f18dee1461071e575080632aedada6146106845780633788f0d21461064d5780633de39c11146106305780633f4ba83a146105de5780634a92c260146105b55780635c975abb14610591578063779e306b146105745780637f2671c1146105575780638da5cb5b14610530578063b8221bc414610513578063c4aa7395146104f6578063cf5b4fd51461042f578063d7778ea3146101eb578063ee1eab4f14610163578063f2fde38b146100f85763f76e8dec146100d7575f80fd5b346100f4575f3660031901126100f4576020600654604051908152f35b5f80fd5b346100f45760203660031901126100f4576004356001600160a01b038116908190036100f4575f546001600160a01b0381163303610154578115610145576001600160a01b031916175f55005b630309cb8760e51b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b346100f45760803660031901126100f4575f54604435906024359060043590606435906001600160a01b03163303610154576127108211610145577fbca959adb5aa52aaea5a17838313a61bebf160bf6064e31593c79c8432c79fea9360809383600155806002558160035582600455604051938452602084015260408301526060820152a1005b346100f45760603660031901126100f4576004356044359060ff5f5460a01c166104205761021b60243582610745565b90612710820291808304612710149015171561036a5761023a91610752565b600154908181116103dc5782600254803a11610397575060075442101561037e575b600654818101905f838312911290801582169115161761036a575f811280610352575b61030a57600554801515806102f6575b6102cd577f250a4795ecff634e860362fcd7b91353ab383a95cfe7c1d980bd7e5bac830a2460408484600655426005558151908152426020820152a1005b6102e4906102df429160045490610738565b610745565b63c1ab61a160e01b5f5260045260245ffd5b5061030360045482610738565b421061028f565b600354907f461e01f77289362e18e772c6ccbd3131535d2bd2067aaf796c4919d7d31c7b9d60408051838152846020820152a1631791d4b160e21b5f5260045260245260445ffd5b50600160ff1b811461036a57600354815f031161027f565b634e487b7160e01b5f52601160045260245ffd5b5f60065562015180420180421161036a5760075561025c565b7f137d9699275c3cc5de164540580901f12d6019130ad1a2cbaa82e0e5accc140f604080513a8152836020820152a1639411833360e01b5f523a60045260245260445ffd5b7f5f6a4aad38cac04ae230bda190659662a4032c84cd31966a0d71aa9250edd0d460408051838152846020820152a16371c4efed60e01b5f5260045260245260445ffd5b6313d0ff5960e31b5f5260045ffd5b346100f45760203660031901126100f45760043567ffffffffffffffff81116100f457366023820112156100f45780600401359067ffffffffffffffff82116100f45736602483830101116100f4575f54906001600160a01b0382163303610154577fc50068396f19981cb0435611d2c97dde7b6882fdc3185a9fb8080fa756b3974d91600160a01b9060ff60a01b1916175f5582602460405192602084528260208501520160408301375f604084830101526040813394601f80199101168101030190a2005b346100f4575f3660031901126100f4576020600154604051908152f35b346100f4575f3660031901126100f4576020600454604051908152f35b346100f4575f3660031901126100f4575f546040516001600160a01b039091168152602090f35b346100f4575f3660031901126100f4576020600754604051908152f35b346100f4575f3660031901126100f4576020600354604051908152f35b346100f4575f3660031901126100f457602060ff5f5460a01c166040519015158152f35b346100f45760403660031901126100f45760206105d6602435600435610770565b604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03811633036101545760ff60a01b19165f55337f306ca22c455fe433ebbf0542bbf947ea6a725495f9e1043db2a47e3c579403855f80a2005b346100f4575f3660031901126100f4576020600254604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03163303610154575f60065562015180420180421161036a57600755005b346100f4575f3660031901126100f457608060ff5f5460a01c166005548015158061070a575b15610703576106bf6106c69160045490610738565b4290610745565b6006546007548042105f146106fb576106e0904290610745565b915b6040519315158452602084015260408301526060820152f35b505f916106e2565b505f6106c6565b5061071760045482610738565b42106106aa565b346100f4575f3660031901126100f4576020906005548152f35b9190820180921161036a57565b9190820391821161036a57565b811561075c570490565b634e487b7160e01b5f52601260045260245ffd5b9081156107ab57818110156107ab576107899082610745565b90612710820291808304612710149015171561036a576107a891610752565b90565b50505f9056fea26469706673582212206bc28eb940e19bd161680d89a8271f8b25db48931176fea42d9f6173b5001d1f64736f6c63430008210033",
+    "runtime_full": "0x6080806040526004361015610012575f80fd5b5f3560e01c90816319f18dee1461071e575080632aedada6146106845780633788f0d21461064d5780633de39c11146106305780633f4ba83a146105de5780634a92c260146105b55780635c975abb14610591578063779e306b146105745780637f2671c1146105575780638da5cb5b14610530578063b8221bc414610513578063c4aa7395146104f6578063cf5b4fd51461042f578063d7778ea3146101eb578063ee1eab4f14610163578063f2fde38b146100f85763f76e8dec146100d7575f80fd5b346100f4575f3660031901126100f4576020600654604051908152f35b5f80fd5b346100f45760203660031901126100f4576004356001600160a01b038116908190036100f4575f546001600160a01b0381163303610154578115610145576001600160a01b031916175f55005b630309cb8760e51b5f5260045ffd5b635fc483c560e01b5f5260045ffd5b346100f45760803660031901126100f4575f54604435906024359060043590606435906001600160a01b03163303610154576127108211610145577fbca959adb5aa52aaea5a17838313a61bebf160bf6064e31593c79c8432c79fea9360809383600155806002558160035582600455604051938452602084015260408301526060820152a1005b346100f45760603660031901126100f4576004356044359060ff5f5460a01c166104205761021b60243582610745565b90612710820291808304612710149015171561036a5761023a91610752565b600154908181116103dc5782600254803a11610397575060075442101561037e575b600654818101905f838312911290801582169115161761036a575f811280610352575b61030a57600554801515806102f6575b6102cd577f250a4795ecff634e860362fcd7b91353ab383a95cfe7c1d980bd7e5bac830a2460408484600655426005558151908152426020820152a1005b6102e4906102df429160045490610738565b610745565b63c1ab61a160e01b5f5260045260245ffd5b5061030360045482610738565b421061028f565b600354907f461e01f77289362e18e772c6ccbd3131535d2bd2067aaf796c4919d7d31c7b9d60408051838152846020820152a1631791d4b160e21b5f5260045260245260445ffd5b50600160ff1b811461036a57600354815f031161027f565b634e487b7160e01b5f52601160045260245ffd5b5f60065562015180420180421161036a5760075561025c565b7f137d9699275c3cc5de164540580901f12d6019130ad1a2cbaa82e0e5accc140f604080513a8152836020820152a1639411833360e01b5f523a60045260245260445ffd5b7f5f6a4aad38cac04ae230bda190659662a4032c84cd31966a0d71aa9250edd0d460408051838152846020820152a16371c4efed60e01b5f5260045260245260445ffd5b6313d0ff5960e31b5f5260045ffd5b346100f45760203660031901126100f45760043567ffffffffffffffff81116100f457366023820112156100f45780600401359067ffffffffffffffff82116100f45736602483830101116100f4575f54906001600160a01b0382163303610154577fc50068396f19981cb0435611d2c97dde7b6882fdc3185a9fb8080fa756b3974d91600160a01b9060ff60a01b1916175f5582602460405192602084528260208501520160408301375f604084830101526040813394601f80199101168101030190a2005b346100f4575f3660031901126100f4576020600154604051908152f35b346100f4575f3660031901126100f4576020600454604051908152f35b346100f4575f3660031901126100f4575f546040516001600160a01b039091168152602090f35b346100f4575f3660031901126100f4576020600754604051908152f35b346100f4575f3660031901126100f4576020600354604051908152f35b346100f4575f3660031901126100f457602060ff5f5460a01c166040519015158152f35b346100f45760403660031901126100f45760206105d6602435600435610770565b604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03811633036101545760ff60a01b19165f55337f306ca22c455fe433ebbf0542bbf947ea6a725495f9e1043db2a47e3c579403855f80a2005b346100f4575f3660031901126100f4576020600254604051908152f35b346100f4575f3660031901126100f4575f546001600160a01b03163303610154575f60065562015180420180421161036a57600755005b346100f4575f3660031901126100f457608060ff5f5460a01c166005548015158061070a575b15610703576106bf6106c69160045490610738565b4290610745565b6006546007548042105f146106fb576106e0904290610745565b915b6040519315158452602084015260408301526060820152f35b505f916106e2565b505f6106c6565b5061071760045482610738565b42106106aa565b346100f4575f3660031901126100f4576020906005548152f35b9190820180921161036a57565b9190820391821161036a57565b811561075c570490565b634e487b7160e01b5f52601260045260245ffd5b9081156107ab57818110156107ab576107899082610745565b90612710820291808304612710149015171561036a576107a891610752565b90565b50505f9056fea26469706673582212206bc28eb940e19bd161680d89a8271f8b25db48931176fea42d9f6173b5001d1f64736f6c63430008210033"
+  },
+  "opcodes": {
+    "opcodes_sample": [
+      "PUSH1",
+      "DUP1",
+      "PUSH1",
+      "MSTORE",
+      "PUSH1",
+      "CALLDATASIZE",
+      "LT",
+      "ISZERO",
+      "0x61",
+      "JUMPI",
+      "PUSH0",
+      "DUP1",
+      "REVERT",
+      "JUMPDEST",
+      "PUSH0",
+      "CALLDATALOAD",
+      "PUSH1",
+      "SHR",
+      "SWAP1",
+      "0x81",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "POP",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI",
+      "DUP1",
+      "0x63",
+      "EQ",
+      "0x61",
+      "JUMPI"
+    ],
+    "opcode_count": 1210,
+    "unique_opcodes": 64,
+    "opcode_frequency": {
+      "PUSH1": 183,
+      "0x61": 121,
+      "JUMPI": 86,
+      "PUSH0": 57,
+      "JUMPDEST": 56,
+      "MSTORE": 48,
+      "SWAP1": 45,
+      "ADD": 43,
+      "DUP1": 39,
+      "0x81": 36,
+      "SLOAD": 30,
+      "0x63": 26,
+      "0x82": 24,
+      "JUMP": 23,
+      "ISZERO": 22,
+      "0x12": 22,
+      "EQ": 21,
+      "NOT": 21,
+      "SHL": 21,
+      "CALLDATASIZE": 20
+    }
+  },
+  "method_identifiers": {
+    "calculateSlippage(uint256,uint256)": "4a92c260",
+    "checkTradeAllowed(uint256,uint256,int256)": "d7778ea3",
+    "cooldownSeconds()": "b8221bc4",
+    "dailyLossLimit()": "779e306b",
+    "dailyProfitLoss()": "f76e8dec",
+    "dailyResetTimestamp()": "7f2671c1",
+    "emergencyPause(string)": "cf5b4fd5",
+    "getSafetyStatus()": "2aedada6",
+    "lastTradeTimestamp()": "19f18dee",
+    "maxGasPrice()": "3de39c11",
+    "maxSlippageBps()": "c4aa7395",
+    "owner()": "8da5cb5b",
+    "paused()": "5c975abb",
+    "resetDailyCounter()": "3788f0d2",
+    "transferOwnership(address)": "f2fde38b",
+    "unpause()": "3f4ba83a",
+    "updateParameters(uint256,uint256,uint256,uint256)": "ee1eab4f"
+  },
+  "storage_layout": {
+    "storage": [
+      {
+        "astId": 11932,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 11934,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "paused",
+        "offset": 20,
+        "slot": "0",
+        "type": "t_bool"
+      },
+      {
+        "astId": 11936,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "maxSlippageBps",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 11938,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "maxGasPrice",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 11940,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "dailyLossLimit",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 11942,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "cooldownSeconds",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 11944,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "lastTradeTimestamp",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 11946,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "dailyProfitLoss",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_int256"
+      },
+      {
+        "astId": 11948,
+        "contract": "contracts/SafetyModule.sol:SafetyModule",
+        "label": "dailyResetTimestamp",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_int256": {
+        "encoding": "inplace",
+        "label": "int256",
+        "numberOfBytes": "32"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  },
+  "asm": "",
+  "metadata": {
+    "compiler": "0.8.33+commit.64118f21",
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evm_version": "osaka"
+  }
+}

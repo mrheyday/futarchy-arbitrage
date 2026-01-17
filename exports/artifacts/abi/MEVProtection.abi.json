@@ -1,0 +1,26 @@
+[
+  {
+    "type": "event",
+    "name": "MEVCheckPassed",
+    "inputs": [
+      {
+        "name": "entropyHash",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "entropy",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "MEVDetected",
+    "inputs": []
+  }
+]

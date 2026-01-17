@@ -1,0 +1,79 @@
+{
+  "abi": [
+    {
+      "type": "error",
+      "name": "InvalidP256Signature",
+      "inputs": []
+    }
+  ],
+  "bytecode": {
+    "object": "0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220ab7da53eb91217caf7284973141ec7865394f4b5b8c8b7881dc1d3fae002d60564736f6c63430008210033",
+    "sourceMap": "302:1160:12:-:0;;;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x5f80fdfea2646970667358221220ab7da53eb91217caf7284973141ec7865394f4b5b8c8b7881dc1d3fae002d60564736f6c63430008210033",
+    "sourceMap": "302:1160:12:-:0;;",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {},
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"InvalidP256Signature\",\"type\":\"error\"}],\"devdoc\":{\"details\":\"Enables verification of WebAuthn/Passkeys and HSM signatures.      Target Address: 0x100 (Common for RIP-7212 implementations like Gnosis/Base/Arbitrum)\",\"kind\":\"dev\",\"methods\":{},\"title\":\"LibP256\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Wrapper for EIP-7212 (secp256r1) Precompile\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/LibP256.sol\":\"LibP256\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":forge-std/=lib/solady/test/utils/forge-std/\",\":solady-clz/=lib/solady/src/utils/clz/\",\":solady-utils/=lib/solady/src/utils/\",\":solady/=lib/solady/\"],\"viaIR\":true},\"sources\":{\"contracts/LibP256.sol\":{\"keccak256\":\"0xe34c9e9c77f21f6e4190a9269de21ca13880c77d73f4b3b72395fc0b369149c6\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://50bd76d2e6d9997028911de15d64c56d98e4fb789aeeb90f172da74a5b0aaf98\",\"dweb:/ipfs/Qmb69D83ogk77dqpZCWwmD9bMqvrq9iM7jrHdiFRwa2KRT\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.33+commit.64118f21"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "type": "error",
+          "name": "InvalidP256Signature"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "forge-std/=lib/solady/test/utils/forge-std/",
+        "solady-clz/=lib/solady/src/utils/clz/",
+        "solady-utils/=lib/solady/src/utils/",
+        "solady/=lib/solady/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/LibP256.sol": "LibP256"
+      },
+      "evmVersion": "osaka",
+      "libraries": {},
+      "viaIR": true
+    },
+    "sources": {
+      "contracts/LibP256.sol": {
+        "keccak256": "0xe34c9e9c77f21f6e4190a9269de21ca13880c77d73f4b3b72395fc0b369149c6",
+        "urls": [
+          "bzz-raw://50bd76d2e6d9997028911de15d64c56d98e4fb789aeeb90f172da74a5b0aaf98",
+          "dweb:/ipfs/Qmb69D83ogk77dqpZCWwmD9bMqvrq9iM7jrHdiFRwa2KRT"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 12
+}

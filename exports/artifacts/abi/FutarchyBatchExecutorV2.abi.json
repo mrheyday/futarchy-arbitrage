@@ -1,0 +1,243 @@
+[
+  {
+    "type": "receive",
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute20",
+    "inputs": [
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "targets",
+        "type": "address[20]",
+        "internalType": "address[20]"
+      },
+      {
+        "name": "values",
+        "type": "uint256[20]",
+        "internalType": "uint256[20]"
+      },
+      {
+        "name": "calldatas",
+        "type": "bytes[20]",
+        "internalType": "bytes[20]"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "execute20WithResults",
+    "inputs": [
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "targets",
+        "type": "address[20]",
+        "internalType": "address[20]"
+      },
+      {
+        "name": "values",
+        "type": "uint256[20]",
+        "internalType": "uint256[20]"
+      },
+      {
+        "name": "calldatas",
+        "type": "bytes[20]",
+        "internalType": "bytes[20]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool[20]",
+        "internalType": "bool[20]"
+      },
+      {
+        "name": "results",
+        "type": "bytes[20]",
+        "internalType": "bytes[20]"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "executeBuyConditional",
+    "inputs": [
+      {
+        "name": "targets",
+        "type": "address[11]",
+        "internalType": "address[11]"
+      },
+      {
+        "name": "values",
+        "type": "uint256[11]",
+        "internalType": "uint256[11]"
+      },
+      {
+        "name": "calldatas",
+        "type": "bytes[11]",
+        "internalType": "bytes[11]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "results",
+        "type": "bytes[11]",
+        "internalType": "bytes[11]"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "executeOne",
+    "inputs": [
+      {
+        "name": "target",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes",
+        "internalType": "bytes"
+      }
+    ],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "setApprovals",
+    "inputs": [
+      {
+        "name": "tokens",
+        "type": "address[5]",
+        "internalType": "address[5]"
+      },
+      {
+        "name": "spenders",
+        "type": "address[5]",
+        "internalType": "address[5]"
+      },
+      {
+        "name": "amounts",
+        "type": "uint256[5]",
+        "internalType": "uint256[5]"
+      },
+      {
+        "name": "count",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "ApprovalSet",
+    "inputs": [
+      {
+        "name": "token",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "spender",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "BatchExecuted",
+    "inputs": [
+      {
+        "name": "callsExecuted",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "CallExecuted",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "target",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "success",
+        "type": "bool",
+        "indexed": false,
+        "internalType": "bool"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "CallFailed",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "InvalidCount",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlySelf",
+    "inputs": []
+  }
+]
