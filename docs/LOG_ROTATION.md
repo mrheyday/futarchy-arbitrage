@@ -30,12 +30,14 @@ For production deployments, use `logrotate` (Linux) for centralized log manageme
 ### Linux (logrotate)
 
 1. **Install logrotate configuration**:
+
    ```bash
    sudo chmod +x scripts/setup_logrotate.sh
    sudo ./scripts/setup_logrotate.sh
    ```
 
 2. **Verify installation**:
+
    ```bash
    sudo logrotate -d /etc/logrotate.d/futarchy-arbitrage
    ```
@@ -50,11 +52,13 @@ For production deployments, use `logrotate` (Linux) for centralized log manageme
 macOS uses `newsyslog` instead of logrotate:
 
 1. **Create newsyslog config**:
+
    ```bash
    sudo vi /etc/newsyslog.d/futarchy-arbitrage.conf
    ```
 
 2. **Add configuration** (adjust paths):
+
    ```
    # logfilename          [owner:group]    mode count size when  flags [/pid_file] [sig_num]
    /path/to/logs/*.log    user:staff      644  30    10M   *     GJ
@@ -148,12 +152,15 @@ fi
 **Symptom**: Logs not rotating despite configuration
 
 **Solutions**:
+
 1. Check if logrotate service is running:
+
    ```bash
    systemctl status cron  # or crond on RHEL
    ```
 
 2. Check logrotate cron job:
+
    ```bash
    ls -l /etc/cron.daily/logrotate
    ```
@@ -168,6 +175,7 @@ fi
 **Symptom**: `error: skipping "/path/to/log" because parent directory has insecure permissions`
 
 **Solution**:
+
 ```bash
 # Fix logs directory permissions
 sudo chmod 755 logs/
@@ -183,6 +191,7 @@ sudo vi /etc/logrotate.d/futarchy-arbitrage
 **Symptom**: Rotated logs not compressed
 
 **Solutions**:
+
 1. Check if `compress` option is enabled in config
 2. Verify `delaycompress` is set (compression happens on next rotation)
 3. Manually compress old logs:
@@ -236,13 +245,13 @@ sudo vi /etc/filebeat/filebeat.yml
 
 ```yaml
 filebeat.inputs:
-- type: log
-  paths:
-    - /path/to/logs/*.log
-  fields:
-    app: futarchy-arbitrage
-    env: production
-  json.keys_under_root: true
+  - type: log
+    paths:
+      - /path/to/logs/*.log
+    fields:
+      app: futarchy-arbitrage
+      env: production
+    json.keys_under_root: true
 
 output.elasticsearch:
   hosts: ["localhost:9200"]

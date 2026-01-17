@@ -47,12 +47,14 @@ artifacts/
 **File**: `artifacts/abi/<ContractName>.json`
 
 Contract interface definition in JSON format. Contains:
+
 - Function signatures
 - Event definitions
 - Constructor parameters
 - State variable getters
 
 **Usage**:
+
 ```python
 from web3 import Web3
 import json
@@ -68,6 +70,7 @@ contract = web3.eth.contract(address=contract_address, abi=abi)
 **Method Identifiers**: `artifacts/abi/<ContractName>.methods.txt`
 
 Human-readable function selectors:
+
 ```
 buyConditional(uint256,uint256): 0x1a2b3c4d
 sellConditional(uint256,uint256): 0x5e6f7a8b
@@ -78,6 +81,7 @@ sellConditional(uint256,uint256): 0x5e6f7a8b
 **Deployment Code**: `artifacts/bytecode/<ContractName>.bin`
 
 Complete bytecode including:
+
 - Constructor logic
 - Constructor arguments placeholder
 - Runtime code
@@ -85,10 +89,12 @@ Complete bytecode including:
 **Runtime Code**: `artifacts/bytecode/<ContractName>.runtime.bin`
 
 Code deployed on-chain after construction. Used for:
+
 - Bytecode verification on block explorers
 - Contract size analysis (24KB limit)
 
 **Size Check**:
+
 ```bash
 # Check if contract exceeds 24KB limit
 wc -c artifacts/bytecode/InstitutionalSolverCore.runtime.bin
@@ -99,12 +105,14 @@ wc -c artifacts/bytecode/InstitutionalSolverCore.runtime.bin
 **File**: `artifacts/asm/<ContractName>.asm`
 
 EVM assembly code with:
+
 - Named labels
 - Push instructions
 - Jump destinations
 - Data sections
 
 **Example**:
+
 ```asm
 PUSH1 0x80
 PUSH1 0x40
@@ -117,6 +125,7 @@ JUMPI
 ```
 
 **Use Cases**:
+
 - Gas optimization analysis
 - Understanding compiler transformations
 - Debugging low-level issues
@@ -126,6 +135,7 @@ JUMPI
 **Raw Opcodes**: `artifacts/opcodes/<ContractName>.opcodes`
 
 Space-separated opcode sequence:
+
 ```
 PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x0010 JUMPI
 ```
@@ -133,6 +143,7 @@ PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x0010 JUMPI
 **Readable Opcodes**: `artifacts/opcodes/<ContractName>.readable.txt`
 
 Human-readable format with addresses:
+
 ```
 0000: PUSH1
       0x80
@@ -144,6 +155,7 @@ Human-readable format with addresses:
 ```
 
 **Use Cases**:
+
 - Manual gas calculations
 - Opcode-level debugging
 - Security audits (checking for SELFDESTRUCT, DELEGATECALL)
@@ -178,11 +190,13 @@ Mapping of state variables to storage slots:
 ```
 
 **Use Cases**:
+
 - Storage collision detection
 - Upgrade compatibility (for proxies)
 - Direct storage reads via `eth_getStorageAt`
 
 **Reading Storage**:
+
 ```python
 # Read owner from slot 0
 owner_slot = web3.eth.get_storage_at(contract_address, 0)
@@ -194,12 +208,14 @@ owner = web3.to_checksum_address(owner_slot[-20:].hex())
 **File**: `artifacts/ast/<ContractName>.ast.json`
 
 Compiler's internal representation:
+
 - Contract structure
 - Function definitions
 - Type information
 - Source mappings
 
 **Use Cases**:
+
 - Static analysis tools
 - Code generation
 - Documentation generation
@@ -218,6 +234,7 @@ SMT-LIB2 format for formal verification:
 ```
 
 **SMT Checker Targets**:
+
 - `underflow` - Integer underflow
 - `overflow` - Integer overflow
 - `divByZero` - Division by zero
@@ -225,11 +242,13 @@ SMT-LIB2 format for formal verification:
 - `balance` - Ether balance invariants
 
 **Running SMT Checker**:
+
 ```bash
 python3 scripts/compile_all.py --contract SafetyModule --smt
 ```
 
 **Interpreting Results**:
+
 - ✓ No warnings: Formal verification passed
 - ⚠️ Warnings: Potential issues found (false positives possible)
 - ✗ Errors: Verification failed (likely bugs)
@@ -250,6 +269,7 @@ python3 scripts/compile_all.py --no-via-ir  # Legacy optimizer
 ```
 
 **Optimizer Trade-offs**:
+
 - More runs → Higher deployment cost, lower runtime cost
 - Fewer runs → Lower deployment cost, higher runtime cost
 
@@ -260,6 +280,7 @@ python3 scripts/compile_all.py --no-via-ir  # Legacy optimizer
 **Default**: `osaka` (EIP-7702 support)
 
 **Available Versions**:
+
 - `paris` - Pre-merge (no PUSH0)
 - `shanghai` - Post-merge (with PUSH0)
 - `osaka` - Pectra fork (EIP-7702)
@@ -303,6 +324,7 @@ tx_hash = contract.constructor(...).transact()
 ```
 
 **Benefits**:
+
 - Faster deployments (no recompilation)
 - Consistent artifacts across environments
 - Easier debugging (bytecode matches verification)
@@ -310,6 +332,7 @@ tx_hash = contract.constructor(...).transact()
 ## Bytecode Size Analysis
 
 **Check Contract Sizes**:
+
 ```bash
 # Show all contract sizes
 for f in artifacts/bytecode/*.runtime.bin; do
@@ -320,6 +343,7 @@ done
 ```
 
 **24KB Limit Check**:
+
 ```bash
 # Contracts exceeding 24KB (24576 bytes)
 for f in artifacts/bytecode/*.runtime.bin; do
@@ -332,6 +356,7 @@ done
 ```
 
 **Size Reduction Strategies**:
+
 1. **Enable Via-IR**: `--via-ir` (often reduces 10-20%)
 2. **Library Extraction**: Move reusable logic to libraries
 3. **Function Modifiers**: Convert to internal functions
@@ -341,6 +366,7 @@ done
 ## Gas Analysis with Opcodes
 
 **Count Expensive Opcodes**:
+
 ```bash
 # Count SLOAD (200 gas each)
 grep -o "SLOAD" artifacts/opcodes/FutarchyArbExecutorV5.opcodes | wc -l
@@ -353,6 +379,7 @@ grep -o "CALL\|STATICCALL\|DELEGATECALL" artifacts/opcodes/FutarchyArbExecutorV5
 ```
 
 **Optimization Opportunities**:
+
 - Multiple `SLOAD` of same slot → Cache in memory
 - `SSTORE` in loops → Batch updates
 - `CALL` in loops → Use multicall pattern
@@ -360,6 +387,7 @@ grep -o "CALL\|STATICCALL\|DELEGATECALL" artifacts/opcodes/FutarchyArbExecutorV5
 ## Security Audit with Opcodes
 
 **Check for Dangerous Operations**:
+
 ```bash
 # SELFDESTRUCT (contract can be destroyed)
 grep "SELFDESTRUCT" artifacts/opcodes/*.opcodes
@@ -372,6 +400,7 @@ grep "CREATE2" artifacts/opcodes/*.opcodes
 ```
 
 **Expected Results**:
+
 - `InstitutionalSolverCore`: No SELFDESTRUCT (good)
 - `FutarchyArbExecutorV5`: DELEGATECALL to Balancer/Swapr (expected)
 - `PectraWrapper`: CREATE2 for EIP-7702 delegation (expected)
@@ -385,6 +414,7 @@ Error: Source file requires different compiler version
 ```
 
 **Solution**: Check Solidity pragma in contract:
+
 ```solidity
 pragma solidity 0.8.33;  // Must match --solc-version
 ```
@@ -406,6 +436,7 @@ Warning: SMT solver timeout
 ```
 
 **Solution**: Reduce contract complexity or disable SMT:
+
 ```bash
 python3 scripts/compile_all.py --contract SafetyModule  # No --smt
 ```
@@ -417,6 +448,7 @@ Contract bytecode size: 26543 bytes (exceeds 24KB limit)
 ```
 
 **Solution**:
+
 1. Enable Via-IR: `--via-ir`
 2. Extract libraries
 3. Use proxy pattern
@@ -489,6 +521,7 @@ tx_hash = web3.eth.send_raw_transaction(signed.raw_transaction)
 ## CI/CD Integration
 
 **GitHub Actions Workflow**:
+
 ```yaml
 name: Compile Contracts
 
@@ -500,21 +533,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: recursive  # For lib/solady
-      
+          submodules: recursive # For lib/solady
+
       - name: Install Solidity
         run: |
           sudo add-apt-repository ppa:ethereum/ethereum
           sudo apt-get update
           sudo apt-get install solc
-      
+
       - name: Compile Contracts
         run: ./scripts/compile.sh
-      
+
       - name: Check Contract Sizes
         run: |
           python3 -c "import json; data = json.load(open('artifacts/compilation_summary.json')); print('Large contracts:', [k for k,v in data['contracts'].items() if v.get('bytecode_size', 0) > 24576])"
-      
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:

@@ -1,0 +1,4 @@
+solady/=lib/solady/
+solady-clz/=lib/solady/src/utils/clz/
+solady-utils/=lib/solady/src/utils/
+forge-std/=lib/solady/test/utils/forge-std/

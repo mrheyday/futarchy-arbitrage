@@ -68,6 +68,7 @@
   - [ ] All access control tests pass
 
 - [ ] **Gas Benchmarks**
+
   ```bash
   forge test --profile institutional --gas-report
   ```

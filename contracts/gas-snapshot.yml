@@ -2,19 +2,19 @@ name: Gas Snapshot
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   snapshot:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
-        
+
       - name: Run Snapshot
         run: forge snapshot
-        
+
       - name: Check for changes
         run: git diff --exit-code .gas-snapshot

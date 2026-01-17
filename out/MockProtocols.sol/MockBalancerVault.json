@@ -1,1 +1,46 @@
-{"abi":[{"type":"function","name":"batchSwap","inputs":[{"name":"","type":"uint8","internalType":"uint8"},{"name":"","type":"bytes","internalType":"bytes"},{"name":"","type":"address[]","internalType":"address[]"},{"name":"","type":"bytes","internalType":"bytes"},{"name":"","type":"int256[]","internalType":"int256[]"},{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"int256[]","internalType":"int256[]"}],"stateMutability":"nonpayable"},{"type":"function","name":"poolExists","inputs":[{"name":"","type":"bytes32","internalType":"bytes32"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"registerPool","inputs":[{"name":"poolId","type":"bytes32","internalType":"bytes32"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"swap","inputs":[{"name":"poolId","type":"bytes32","internalType":"bytes32"},{"name":"tokenIn","type":"address","internalType":"address"},{"name":"tokenOut","type":"address","internalType":"address"},{"name":"amountIn","type":"uint256","internalType":"uint256"},{"name":"minAmountOut","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"}],"id":21}
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "batchSwap",
+      "inputs": [
+        { "name": "", "type": "uint8", "internalType": "uint8" },
+        { "name": "", "type": "bytes", "internalType": "bytes" },
+        { "name": "", "type": "address[]", "internalType": "address[]" },
+        { "name": "", "type": "bytes", "internalType": "bytes" },
+        { "name": "", "type": "int256[]", "internalType": "int256[]" },
+        { "name": "", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "int256[]", "internalType": "int256[]" }],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "poolExists",
+      "inputs": [{ "name": "", "type": "bytes32", "internalType": "bytes32" }],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerPool",
+      "inputs": [{ "name": "poolId", "type": "bytes32", "internalType": "bytes32" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "swap",
+      "inputs": [
+        { "name": "poolId", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "tokenIn", "type": "address", "internalType": "address" },
+        { "name": "tokenOut", "type": "address", "internalType": "address" },
+        { "name": "amountIn", "type": "uint256", "internalType": "uint256" },
+        { "name": "minAmountOut", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "id": 21
+}

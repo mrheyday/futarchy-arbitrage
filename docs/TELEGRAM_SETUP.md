@@ -43,11 +43,13 @@ You need to know where the bot should send messages. You have two options:
 4. Get your chat ID using one of these methods:
 
 **Method 1: Using @userinfobot**
+
 - Search for `@userinfobot` in Telegram
 - Start a conversation
 - Your chat ID will be displayed (it's a number like `123456789`)
 
 **Method 2: Using the Bot API**
+
 ```bash
 # Replace YOUR_BOT_TOKEN with your actual token
 curl https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
@@ -61,6 +63,7 @@ curl https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
 2. Add your bot to the group (search by username)
 3. Send a message in the group
 4. Get the group chat ID:
+
 ```bash
 curl https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates
 
@@ -103,6 +106,7 @@ python -m src.monitoring.telegram_alerts
 ```
 
 Expected output:
+
 ```
 ✅ Telegram alerter initialized
 
@@ -111,6 +115,7 @@ Expected output:
 ```
 
 You should receive 3 test messages in your Telegram chat:
+
 1. Bot start notification
 2. Sample trade alert
 3. Trading summary
@@ -127,6 +132,7 @@ python -m src.arbitrage_commands.eip7702_bot \
 ```
 
 You should receive:
+
 - Bot start notification when bot launches
 - Trade notification if opportunity is found (dry run won't execute)
 - Bot stop notification when you press Ctrl+C
@@ -140,6 +146,7 @@ The bot sends different types of alerts:
 Sent after each successful or failed trade execution:
 
 **Content:**
+
 - Trade type (BUY/SELL)
 - Amount traded
 - Profit/loss in sDAI and percentage
@@ -149,6 +156,7 @@ Sent after each successful or failed trade execution:
 - Execution time
 
 **Example:**
+
 ```
 🟢 BUY Trade SUCCESSFUL ✅
 
@@ -174,6 +182,7 @@ Transaction: 0x1234...abcdef
 Sent when bot starts or stops:
 
 **Bot Start:**
+
 ```
 🤖 Bot Status: START
 
@@ -188,6 +197,7 @@ Network: Gnosis Chain
 ```
 
 **Bot Stop:**
+
 ```
 🛑 Bot Status: STOP
 
@@ -285,6 +295,7 @@ for alerter in alerters:
 **Error:** `Invalid Telegram bot token or chat ID`
 
 **Solutions:**
+
 1. Verify token format: `123456789:ABCdef...` (should contain a colon)
 2. Check for extra spaces or quotes in `.env` file
 3. Generate a new token via @BotFather if compromised
@@ -294,6 +305,7 @@ for alerter in alerters:
 **Error:** `Chat not found`
 
 **Solutions:**
+
 1. Make sure you've started a conversation with the bot (send any message first)
 2. For groups, ensure the bot is still a member
 3. Verify chat ID is correct (use `/getUpdates` to check)
@@ -304,6 +316,7 @@ for alerter in alerters:
 **Error:** `Failed to connect to Telegram API`
 
 **Solutions:**
+
 1. Check internet connection
 2. Verify firewall isn't blocking `api.telegram.org`
 3. Try again - Telegram API may be temporarily down
@@ -315,6 +328,7 @@ If sending too many messages:
 **Error:** `429 Too Many Requests`
 
 **Solutions:**
+
 1. Reduce message frequency
 2. Batch updates instead of sending individual messages
 3. Wait 30-60 seconds before retrying

@@ -9,7 +9,7 @@ echo "========================================"
 
 # Activate virtual environment if it exists
 if [ -d "futarchy_env" ]; then
-    source futarchy_env/bin/activate
+	source futarchy_env/bin/activate
 fi
 
 # Run comprehensive compiler

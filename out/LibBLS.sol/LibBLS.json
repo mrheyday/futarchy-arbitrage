@@ -1,1 +1,7 @@
-{"abi":[{"type":"error","name":"BLSVerificationFailed","inputs":[]},{"type":"error","name":"InvalidPoint","inputs":[]}],"id":3}
+{
+  "abi": [
+    { "type": "error", "name": "BLSVerificationFailed", "inputs": [] },
+    { "type": "error", "name": "InvalidPoint", "inputs": [] }
+  ],
+  "id": 3
+}

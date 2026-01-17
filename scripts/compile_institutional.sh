@@ -13,9 +13,9 @@ echo "=========================================="
 
 # Contract files to compile
 CONTRACTS=(
-    "contracts/InstitutionalSolverCore.sol"
-    "contracts/SupportingModules.sol"
-    "contracts/InstitutionalSolverSystem.sol"
+	"contracts/InstitutionalSolverCore.sol"
+	"contracts/SupportingModules.sol"
+	"contracts/InstitutionalSolverSystem.sol"
 )
 
 # Output directory
@@ -23,11 +23,11 @@ OUT_DIR="out/institutional"
 mkdir -p "$OUT_DIR"
 
 # Check if solc is installed
-if ! command -v solc &> /dev/null; then
-    echo "Error: solc not found. Installing solc 0.8.33..."
-    # Installation would happen here
-    echo "Please install solc 0.8.33 manually or use Foundry"
-    exit 1
+if ! command -v solc &>/dev/null; then
+	echo "Error: solc not found. Installing solc 0.8.33..."
+	# Installation would happen here
+	echo "Please install solc 0.8.33 manually or use Foundry"
+	exit 1
 fi
 
 # Get solc version
@@ -46,44 +46,44 @@ echo "  - EVM Version: Cancun (Fusaka-ready)"
 echo ""
 
 # Check if Foundry is available (preferred)
-if command -v forge &> /dev/null; then
-    echo "Using Foundry forge for compilation..."
-    echo ""
-    
-    # Compile with institutional profile
-    forge build --profile institutional
-    
-    echo ""
-    echo "Compilation successful!"
-    echo "Output directory: out/"
-    echo ""
-    
-    # Show contract sizes
-    if [ -f "out/InstitutionalSolverSystem.sol/InstitutionalSolverSystem.json" ]; then
-        echo "Contract sizes:"
-        forge inspect InstitutionalSolverSystem bytecode --profile institutional | wc -c | awk '{printf "  InstitutionalSolverSystem: %.2f KB\n", $1/2/1024}'
-    fi
+if command -v forge &>/dev/null; then
+	echo "Using Foundry forge for compilation..."
+	echo ""
+
+	# Compile with institutional profile
+	forge build --profile institutional
+
+	echo ""
+	echo "Compilation successful!"
+	echo "Output directory: out/"
+	echo ""
+
+	# Show contract sizes
+	if [ -f "out/InstitutionalSolverSystem.sol/InstitutionalSolverSystem.json" ]; then
+		echo "Contract sizes:"
+		forge inspect InstitutionalSolverSystem bytecode --profile institutional | wc -c | awk '{printf "  InstitutionalSolverSystem: %.2f KB\n", $1/2/1024}'
+	fi
 else
-    echo "Foundry not found. Using solc directly..."
-    echo ""
-    
-    # Compile each contract
-    for contract in "${CONTRACTS[@]}"; do
-        echo "Compiling: $contract"
-        
-        CONTRACT_NAME=$(basename "$contract" .sol)
-        
-        # Note: This is simplified - real compilation would need to handle imports
-        # solc $SOLC_ARGS --bin --abi --output-dir "$OUT_DIR/$CONTRACT_NAME" "$contract" 2>&1 || {
-        #     echo "Warning: Compilation failed for $contract (may need Solady dependencies)"
-        # }
-        
-        echo "  -> Skipping (use Foundry for full compilation with dependencies)"
-    done
-    
-    echo ""
-    echo "Note: For production compilation, use Foundry forge with:"
-    echo "  forge build --profile institutional"
+	echo "Foundry not found. Using solc directly..."
+	echo ""
+
+	# Compile each contract
+	for contract in "${CONTRACTS[@]}"; do
+		echo "Compiling: $contract"
+
+		CONTRACT_NAME=$(basename "$contract" .sol)
+
+		# Note: This is simplified - real compilation would need to handle imports
+		# solc $SOLC_ARGS --bin --abi --output-dir "$OUT_DIR/$CONTRACT_NAME" "$contract" 2>&1 || {
+		#     echo "Warning: Compilation failed for $contract (may need Solady dependencies)"
+		# }
+
+		echo "  -> Skipping (use Foundry for full compilation with dependencies)"
+	done
+
+	echo ""
+	echo "Note: For production compilation, use Foundry forge with:"
+	echo "  forge build --profile institutional"
 fi
 
 echo ""

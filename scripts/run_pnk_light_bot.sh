@@ -12,29 +12,29 @@ echo -e "${GREEN}Starting PNK Light Bot...${NC}"
 
 # Check if virtual environment exists
 if [ -d "futarchy_env" ]; then
-    echo -e "${YELLOW}Activating futarchy_env...${NC}"
-    source futarchy_env/bin/activate
+	echo -e "${YELLOW}Activating futarchy_env...${NC}"
+	source futarchy_env/bin/activate
 elif [ -d "venv" ]; then
-    echo -e "${YELLOW}Activating venv...${NC}"
-    source venv/bin/activate
+	echo -e "${YELLOW}Activating venv...${NC}"
+	source venv/bin/activate
 else
-    echo -e "${RED}Error: No virtual environment found!${NC}"
-    echo "Please create a virtual environment first."
-    exit 1
+	echo -e "${RED}Error: No virtual environment found!${NC}"
+	echo "Please create a virtual environment first."
+	exit 1
 fi
 
 # Check if .env.pnk exists
 if [ -f ".env.pnk" ]; then
-    echo -e "${YELLOW}Loading .env.pnk...${NC}"
-    source .env.pnk
+	echo -e "${YELLOW}Loading .env.pnk...${NC}"
+	source .env.pnk
 else
-    echo -e "${RED}Error: .env.pnk not found!${NC}"
-    echo "Please create .env.pnk with the following variables:"
-    echo "  - WETH_ADDRESS"
-    echo "  - RPC_URL"
-    echo "  - PNK_TOKEN_ADDRESS (optional)"
-    echo "  - WXDAI_ADDRESS (optional)"
-    exit 1
+	echo -e "${RED}Error: .env.pnk not found!${NC}"
+	echo "Please create .env.pnk with the following variables:"
+	echo "  - WETH_ADDRESS"
+	echo "  - RPC_URL"
+	echo "  - PNK_TOKEN_ADDRESS (optional)"
+	echo "  - WXDAI_ADDRESS (optional)"
+	exit 1
 fi
 
 # Set default values if not provided
@@ -49,5 +49,5 @@ echo ""
 
 # Run the bot
 python -m src.arbitrage_commands.pnk_light_bot \
-    --interval ${INTERVAL} \
-    --min-profit ${MIN_PROFIT}
+	--interval ${INTERVAL} \
+	--min-profit ${MIN_PROFIT}

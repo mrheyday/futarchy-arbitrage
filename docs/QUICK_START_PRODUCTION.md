@@ -141,18 +141,18 @@ async def production_bot():
         slack_webhook=os.getenv("SLACK_WEBHOOK")
     )
     setup_default_alerts(monitor)
-    
+
     # Setup hardware wallet
     hw_wallet = HardwareWalletManager(wallet_type="ledger")
     address = hw_wallet.get_address(verify=True)
-    
+
     # Connect to network
     web3 = get_web3()
-    
+
     print(f"🚀 Production bot starting")
     print(f"📍 Address: {address}")
     print(f"🔔 Alerts: Discord + Slack")
-    
+
     while True:
         try:
             # Health check
@@ -161,25 +161,25 @@ async def production_bot():
                 print("⚠️  RPC unhealthy, skipping iteration")
                 await asyncio.sleep(60)
                 continue
-            
+
             # Check balance
             balance = web3.eth.get_balance(address) / 1e18
             monitor.record_balance("eth", Decimal(str(balance)))
-            
+
             # Record gas price
             gas_price_gwei = web3.eth.gas_price / 1e9
             monitor.record_gas_price(gas_price_gwei)
-            
+
             # TODO: Add your arbitrage logic here
             # If profitable opportunity found:
             # 1. Build transaction
             # 2. Sign with hardware wallet
             # 3. Send and record metrics
-            
+
             print(f"✓ Health check passed | Balance: {balance:.4f} ETH | Gas: {gas_price_gwei:.2f} gwei")
-            
+
             await asyncio.sleep(120)
-            
+
         except KeyboardInterrupt:
             print("\n👋 Shutting down gracefully...")
             break
@@ -237,7 +237,9 @@ sudo journalctl -u futarchy-arb -f
 ## 8. Monitoring Dashboard
 
 ### Discord Alerts
+
 Automatically sent for:
+
 - 🔴 Critical: Low balance, negative profit, RPC failures
 - 🟡 Warning: High gas, small spreads
 - 🟢 Info: Large profitable trades
@@ -266,6 +268,7 @@ monitor.add_alert(
 ## 9. Testing Checklist
 
 Before production:
+
 - [ ] Run all Foundry tests: `forge test`
 - [ ] Test hardware wallet connection
 - [ ] Verify Discord/Slack webhooks
@@ -287,6 +290,7 @@ Before production:
 ## Troubleshooting
 
 ### Ledger Not Detected
+
 ```bash
 # Linux: Add udev rules
 wget -q -O - https://raw.githubusercontent.com/LedgerHQ/udev-rules/master/add_udev_rules.sh | sudo bash
@@ -295,6 +299,7 @@ wget -q -O - https://raw.githubusercontent.com/LedgerHQ/udev-rules/master/add_ud
 ```
 
 ### Discord Webhook Fails
+
 ```python
 # Test webhook manually
 import requests
@@ -306,6 +311,7 @@ print(response.status_code)  # Should be 204
 ```
 
 ### Tests Don't Compile
+
 ```bash
 # Clean and rebuild
 forge clean

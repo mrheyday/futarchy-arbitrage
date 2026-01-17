@@ -58,3 +58,8 @@ ticklens-hardhat/cache/
 ticklens-hardhat/coverage/
 ticklens-hardhat/*.tgz
 ticklens-hardhat/package/
+
+.wake
+pytypes
+.hypothesis/
+wake-coverage.cov

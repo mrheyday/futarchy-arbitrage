@@ -1,1 +1,463 @@
-{"abi":[{"type":"constructor","inputs":[{"name":"_zkVerifier","type":"address","internalType":"address"},{"name":"_paymaster","type":"address","internalType":"address"},{"name":"_providers","type":"address[]","internalType":"address[]"}],"stateMutability":"nonpayable"},{"type":"receive","stateMutability":"payable"},{"type":"function","name":"addFlashloanProvider","inputs":[{"name":"provider","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"authorizeTreasuryAccess","inputs":[{"name":"account","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"batchResolve","inputs":[{"name":"intentIds","type":"uint256[]","internalType":"uint256[]"},{"name":"solvers","type":"address[]","internalType":"address[]"},{"name":"execDatas","type":"bytes[]","internalType":"bytes[]"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"blsPublicKeys","inputs":[{"name":"","type":"address","internalType":"address"},{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"checkCompliance","inputs":[{"name":"entity","type":"address","internalType":"address"},{"name":"requiredFlags","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"closeAuction","inputs":[{"name":"auctionId","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"commitBid","inputs":[{"name":"auctionId","type":"uint256","internalType":"uint256"},{"name":"commitHash","type":"bytes32","internalType":"bytes32"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"depositToTreasury","inputs":[{"name":"token","type":"address","internalType":"address"},{"name":"amount","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"executeFlashloan","inputs":[{"name":"token","type":"address","internalType":"address"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"data","type":"bytes","internalType":"bytes"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"failoverRoute","inputs":[{"name":"intentId","type":"uint256","internalType":"uint256"},{"name":"venue","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"flashloanProviders","inputs":[{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"getReputation","inputs":[{"name":"solver","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"int256","internalType":"int256"}],"stateMutability":"view"},{"type":"function","name":"getTopSolversByReputation","inputs":[{"name":"solverList","type":"address[]","internalType":"address[]"},{"name":"topN","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"topSolvers","type":"address[]","internalType":"address[]"}],"stateMutability":"view"},{"type":"function","name":"openAuction","inputs":[{"name":"auctionId","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"owner","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"p256PublicKeys","inputs":[{"name":"","type":"address","internalType":"address"},{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"type":"function","name":"paymaster","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"registerBLSKey","inputs":[{"name":"pubKey","type":"uint256[2]","internalType":"uint256[2]"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"registerP256Key","inputs":[{"name":"x","type":"uint256","internalType":"uint256"},{"name":"y","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"resolveIntent","inputs":[{"name":"intentId","type":"uint256","internalType":"uint256"},{"name":"solver","type":"address","internalType":"address"},{"name":"execData","type":"bytes","internalType":"bytes"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"revealBid","inputs":[{"name":"auctionId","type":"uint256","internalType":"uint256"},{"name":"value","type":"uint256","internalType":"uint256"},{"name":"salt","type":"bytes32","internalType":"bytes32"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"sealExecution","inputs":[{"name":"intentId","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"seal","type":"bytes32","internalType":"bytes32"}],"stateMutability":"view"},{"type":"function","name":"setComplianceFlags","inputs":[{"name":"entity","type":"address","internalType":"address"},{"name":"flags","type":"uint256","internalType":"uint256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"settleAuction","inputs":[{"name":"auctionId","type":"uint256","internalType":"uint256"},{"name":"solvers","type":"address[]","internalType":"address[]"}],"outputs":[{"name":"winner","type":"address","internalType":"address"}],"stateMutability":"nonpayable"},{"type":"function","name":"submitIntent","inputs":[{"name":"intentId","type":"uint256","internalType":"uint256"},{"name":"intentData","type":"bytes","internalType":"bytes"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"updatePaymaster","inputs":[{"name":"newPaymaster","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"updateReputation","inputs":[{"name":"solver","type":"address","internalType":"address"},{"name":"delta","type":"int256","internalType":"int256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"updateZKVerifier","inputs":[{"name":"newVerifier","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"verifyBatchBLS","inputs":[{"name":"solvers","type":"address[]","internalType":"address[]"},{"name":"aggregatedSignature","type":"uint256[4]","internalType":"uint256[4]"},{"name":"message","type":"uint256[4]","internalType":"uint256[4]"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"verifySolverBLS","inputs":[{"name":"solver","type":"address","internalType":"address"},{"name":"signature","type":"uint256[4]","internalType":"uint256[4]"},{"name":"message","type":"uint256[4]","internalType":"uint256[4]"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"verifySolverP256","inputs":[{"name":"solver","type":"address","internalType":"address"},{"name":"hash","type":"bytes32","internalType":"bytes32"},{"name":"r","type":"uint256","internalType":"uint256"},{"name":"s","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"withdrawFromTreasury","inputs":[{"name":"token","type":"address","internalType":"address"},{"name":"amount","type":"uint256","internalType":"uint256"},{"name":"","type":"address","internalType":"address"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"zkVerifier","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"event","name":"AuctionSettled","inputs":[{"name":"auctionId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"winner","type":"address","indexed":true,"internalType":"address"},{"name":"winningBid","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"BLSKeyRegistered","inputs":[{"name":"account","type":"address","indexed":true,"internalType":"address"},{"name":"pubKey","type":"uint256[2]","indexed":false,"internalType":"uint256[2]"}],"anonymous":false},{"type":"event","name":"BatchExecuted","inputs":[{"name":"batchId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"solvers","type":"address[]","indexed":false,"internalType":"address[]"}],"anonymous":false},{"type":"event","name":"BidCommitted","inputs":[{"name":"auctionId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"solver","type":"address","indexed":true,"internalType":"address"},{"name":"commitHash","type":"bytes32","indexed":false,"internalType":"bytes32"}],"anonymous":false},{"type":"event","name":"BidRevealed","inputs":[{"name":"auctionId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"solver","type":"address","indexed":true,"internalType":"address"},{"name":"bidValue","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"ComplianceFlagsSet","inputs":[{"name":"entity","type":"address","indexed":true,"internalType":"address"},{"name":"flags","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"FlashloanProviderAdded","inputs":[{"name":"provider","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"event","name":"IntentResolved","inputs":[{"name":"intentId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"solver","type":"address","indexed":true,"internalType":"address"},{"name":"value","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"IntentSubmitted","inputs":[{"name":"intentId","type":"uint256","indexed":true,"internalType":"uint256"},{"name":"submitter","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"event","name":"P256KeyRegistered","inputs":[{"name":"account","type":"address","indexed":true,"internalType":"address"},{"name":"x","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"y","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"PaymasterUpdated","inputs":[{"name":"newPaymaster","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"event","name":"ReputationUpdated","inputs":[{"name":"solver","type":"address","indexed":true,"internalType":"address"},{"name":"delta","type":"int256","indexed":false,"internalType":"int256"}],"anonymous":false},{"type":"event","name":"TreasuryAccessAuthorized","inputs":[{"name":"account","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"event","name":"TreasuryDeposit","inputs":[{"name":"token","type":"address","indexed":true,"internalType":"address"},{"name":"amount","type":"uint256","indexed":false,"internalType":"uint256"},{"name":"logAmount","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"ZKVerifierUpdated","inputs":[{"name":"newVerifier","type":"address","indexed":true,"internalType":"address"}],"anonymous":false},{"type":"error","name":"AuctionClosed","inputs":[]},{"type":"error","name":"BLSVerificationFailed","inputs":[]},{"type":"error","name":"ComplianceViolation","inputs":[]},{"type":"error","name":"ExecutionFailed","inputs":[]},{"type":"error","name":"FlashloanFailed","inputs":[]},{"type":"error","name":"InvalidBid","inputs":[]},{"type":"error","name":"InvalidIntent","inputs":[]},{"type":"error","name":"MEVDetected","inputs":[]},{"type":"error","name":"NonReentrant","inputs":[]},{"type":"error","name":"ReputationSlash","inputs":[]},{"type":"error","name":"Unauthorized","inputs":[]}],"id":2}
+{
+  "abi": [
+    {
+      "type": "constructor",
+      "inputs": [
+        { "name": "_zkVerifier", "type": "address", "internalType": "address" },
+        { "name": "_paymaster", "type": "address", "internalType": "address" },
+        { "name": "_providers", "type": "address[]", "internalType": "address[]" }
+      ],
+      "stateMutability": "nonpayable"
+    },
+    { "type": "receive", "stateMutability": "payable" },
+    {
+      "type": "function",
+      "name": "addFlashloanProvider",
+      "inputs": [{ "name": "provider", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "authorizeTreasuryAccess",
+      "inputs": [{ "name": "account", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "batchResolve",
+      "inputs": [
+        { "name": "intentIds", "type": "uint256[]", "internalType": "uint256[]" },
+        { "name": "solvers", "type": "address[]", "internalType": "address[]" },
+        { "name": "execDatas", "type": "bytes[]", "internalType": "bytes[]" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "blsPublicKeys",
+      "inputs": [
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "checkCompliance",
+      "inputs": [
+        { "name": "entity", "type": "address", "internalType": "address" },
+        { "name": "requiredFlags", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "closeAuction",
+      "inputs": [{ "name": "auctionId", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "commitBid",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "internalType": "uint256" },
+        { "name": "commitHash", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "depositToTreasury",
+      "inputs": [
+        { "name": "token", "type": "address", "internalType": "address" },
+        { "name": "amount", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "executeFlashloan",
+      "inputs": [
+        { "name": "token", "type": "address", "internalType": "address" },
+        { "name": "amount", "type": "uint256", "internalType": "uint256" },
+        { "name": "data", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "failoverRoute",
+      "inputs": [
+        { "name": "intentId", "type": "uint256", "internalType": "uint256" },
+        { "name": "venue", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "flashloanProviders",
+      "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getReputation",
+      "inputs": [{ "name": "solver", "type": "address", "internalType": "address" }],
+      "outputs": [{ "name": "", "type": "int256", "internalType": "int256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "getTopSolversByReputation",
+      "inputs": [
+        { "name": "solverList", "type": "address[]", "internalType": "address[]" },
+        { "name": "topN", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "topSolvers", "type": "address[]", "internalType": "address[]" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "openAuction",
+      "inputs": [{ "name": "auctionId", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "p256PublicKeys",
+      "inputs": [
+        { "name": "", "type": "address", "internalType": "address" },
+        { "name": "", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "paymaster",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerBLSKey",
+      "inputs": [{ "name": "pubKey", "type": "uint256[2]", "internalType": "uint256[2]" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "registerP256Key",
+      "inputs": [
+        { "name": "x", "type": "uint256", "internalType": "uint256" },
+        { "name": "y", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "resolveIntent",
+      "inputs": [
+        { "name": "intentId", "type": "uint256", "internalType": "uint256" },
+        { "name": "solver", "type": "address", "internalType": "address" },
+        { "name": "execData", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "revealBid",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "internalType": "uint256" },
+        { "name": "value", "type": "uint256", "internalType": "uint256" },
+        { "name": "salt", "type": "bytes32", "internalType": "bytes32" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "sealExecution",
+      "inputs": [{ "name": "intentId", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [{ "name": "seal", "type": "bytes32", "internalType": "bytes32" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setComplianceFlags",
+      "inputs": [
+        { "name": "entity", "type": "address", "internalType": "address" },
+        { "name": "flags", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "settleAuction",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "internalType": "uint256" },
+        { "name": "solvers", "type": "address[]", "internalType": "address[]" }
+      ],
+      "outputs": [{ "name": "winner", "type": "address", "internalType": "address" }],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "submitIntent",
+      "inputs": [
+        { "name": "intentId", "type": "uint256", "internalType": "uint256" },
+        { "name": "intentData", "type": "bytes", "internalType": "bytes" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updatePaymaster",
+      "inputs": [{ "name": "newPaymaster", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updateReputation",
+      "inputs": [
+        { "name": "solver", "type": "address", "internalType": "address" },
+        { "name": "delta", "type": "int256", "internalType": "int256" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "updateZKVerifier",
+      "inputs": [{ "name": "newVerifier", "type": "address", "internalType": "address" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "verifyBatchBLS",
+      "inputs": [
+        { "name": "solvers", "type": "address[]", "internalType": "address[]" },
+        { "name": "aggregatedSignature", "type": "uint256[4]", "internalType": "uint256[4]" },
+        { "name": "message", "type": "uint256[4]", "internalType": "uint256[4]" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "verifySolverBLS",
+      "inputs": [
+        { "name": "solver", "type": "address", "internalType": "address" },
+        { "name": "signature", "type": "uint256[4]", "internalType": "uint256[4]" },
+        { "name": "message", "type": "uint256[4]", "internalType": "uint256[4]" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "verifySolverP256",
+      "inputs": [
+        { "name": "solver", "type": "address", "internalType": "address" },
+        { "name": "hash", "type": "bytes32", "internalType": "bytes32" },
+        { "name": "r", "type": "uint256", "internalType": "uint256" },
+        { "name": "s", "type": "uint256", "internalType": "uint256" }
+      ],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "withdrawFromTreasury",
+      "inputs": [
+        { "name": "token", "type": "address", "internalType": "address" },
+        { "name": "amount", "type": "uint256", "internalType": "uint256" },
+        { "name": "", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "zkVerifier",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "event",
+      "name": "AuctionSettled",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "winner", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "winningBid", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BLSKeyRegistered",
+      "inputs": [
+        { "name": "account", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "pubKey", "type": "uint256[2]", "indexed": false, "internalType": "uint256[2]" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BatchExecuted",
+      "inputs": [
+        { "name": "batchId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "solvers", "type": "address[]", "indexed": false, "internalType": "address[]" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BidCommitted",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "solver", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "commitHash", "type": "bytes32", "indexed": false, "internalType": "bytes32" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BidRevealed",
+      "inputs": [
+        { "name": "auctionId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "solver", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "bidValue", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ComplianceFlagsSet",
+      "inputs": [
+        { "name": "entity", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "flags", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "FlashloanProviderAdded",
+      "inputs": [
+        { "name": "provider", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "IntentResolved",
+      "inputs": [
+        { "name": "intentId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "solver", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "value", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "IntentSubmitted",
+      "inputs": [
+        { "name": "intentId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+        { "name": "submitter", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "P256KeyRegistered",
+      "inputs": [
+        { "name": "account", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "x", "type": "uint256", "indexed": false, "internalType": "uint256" },
+        { "name": "y", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "PaymasterUpdated",
+      "inputs": [
+        { "name": "newPaymaster", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ReputationUpdated",
+      "inputs": [
+        { "name": "solver", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "delta", "type": "int256", "indexed": false, "internalType": "int256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TreasuryAccessAuthorized",
+      "inputs": [
+        { "name": "account", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "TreasuryDeposit",
+      "inputs": [
+        { "name": "token", "type": "address", "indexed": true, "internalType": "address" },
+        { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" },
+        { "name": "logAmount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "ZKVerifierUpdated",
+      "inputs": [
+        { "name": "newVerifier", "type": "address", "indexed": true, "internalType": "address" }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "AuctionClosed", "inputs": [] },
+    { "type": "error", "name": "BLSVerificationFailed", "inputs": [] },
+    { "type": "error", "name": "ComplianceViolation", "inputs": [] },
+    { "type": "error", "name": "ExecutionFailed", "inputs": [] },
+    { "type": "error", "name": "FlashloanFailed", "inputs": [] },
+    { "type": "error", "name": "InvalidBid", "inputs": [] },
+    { "type": "error", "name": "InvalidIntent", "inputs": [] },
+    { "type": "error", "name": "MEVDetected", "inputs": [] },
+    { "type": "error", "name": "NonReentrant", "inputs": [] },
+    { "type": "error", "name": "ReputationSlash", "inputs": [] },
+    { "type": "error", "name": "Unauthorized", "inputs": [] }
+  ],
+  "id": 2
+}

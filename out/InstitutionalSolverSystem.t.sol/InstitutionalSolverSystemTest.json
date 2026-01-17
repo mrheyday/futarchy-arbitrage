@@ -1,1 +1,330 @@
-{"abi":[{"type":"receive","stateMutability":"payable"},{"type":"function","name":"IS_SCRIPT","inputs":[],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"failed","inputs":[],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"view"},{"type":"function","name":"flashloanProviders","inputs":[{"name":"","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"owner","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"paymaster","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"setUp","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"solver","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract InstitutionalSolverSystem"}],"stateMutability":"view"},{"type":"function","name":"solver1","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"solver2","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"},{"type":"function","name":"testAddFlashloanProvider","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testAddFlashloanProviderDuplicate","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testAddFlashloanProviderOnlyOwner","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testAuthorizeTreasuryAccess","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testAuthorizeTreasuryAccessMultipleSolvers","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCheckCompliance","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCloseAuctionOnlyOwner","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCloseAuctionWithoutOpening","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCommitBid","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCommitBidRevertsWhenAuctionClosed","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCommitBidToClosedAuction","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testCommitBidWithZeroValue","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testDepositToTreasury","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testDepositToTreasuryMultipleTimes","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testFuzzReputation","inputs":[{"name":"delta","type":"int256","internalType":"int256"}],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testGetTopSolversByReputation","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testGetTopSolversByReputationWithNegativeReputation","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testOpenAuctionOnlyOwner","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testOpenAuctionSameIdTwice","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testOwnershipInitialization","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testRevealBid","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testRevealBidRevertsWhenAuctionOpen","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testRevealBidToOpenAuction","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testRevealBidWithWrongSalt","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSetComplianceFlags","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSetComplianceFlagsAllCombinations","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSettleAuction","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSettleAuctionWithNoRevealedBids","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSubmitIntent","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSubmitIntentRevertsOnEmptyData","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testSubmitIntentWithMaxLengthData","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testUpdateReputation","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testUpdateReputationOnlyOwner","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testUpdateReputationOverflow","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"testUpdateReputationUnderflow","inputs":[],"outputs":[],"stateMutability":"nonpayable"},{"type":"function","name":"vm","inputs":[],"outputs":[{"name":"","type":"address","internalType":"contract Vm"}],"stateMutability":"view"},{"type":"function","name":"zkVerifier","inputs":[],"outputs":[{"name":"","type":"address","internalType":"address"}],"stateMutability":"view"}],"id":16}
+{
+  "abi": [
+    { "type": "receive", "stateMutability": "payable" },
+    {
+      "type": "function",
+      "name": "IS_SCRIPT",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "failed",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "flashloanProviders",
+      "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "paymaster",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "setUp",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "solver",
+      "inputs": [],
+      "outputs": [
+        { "name": "", "type": "address", "internalType": "contract InstitutionalSolverSystem" }
+      ],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "solver1",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "solver2",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "testAddFlashloanProvider",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testAddFlashloanProviderDuplicate",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testAddFlashloanProviderOnlyOwner",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testAuthorizeTreasuryAccess",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testAuthorizeTreasuryAccessMultipleSolvers",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCheckCompliance",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCloseAuctionOnlyOwner",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCloseAuctionWithoutOpening",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCommitBid",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCommitBidRevertsWhenAuctionClosed",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCommitBidToClosedAuction",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testCommitBidWithZeroValue",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testDepositToTreasury",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testDepositToTreasuryMultipleTimes",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testFuzzReputation",
+      "inputs": [{ "name": "delta", "type": "int256", "internalType": "int256" }],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testGetTopSolversByReputation",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testGetTopSolversByReputationWithNegativeReputation",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testOpenAuctionOnlyOwner",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testOpenAuctionSameIdTwice",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testOwnershipInitialization",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testRevealBid",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testRevealBidRevertsWhenAuctionOpen",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testRevealBidToOpenAuction",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testRevealBidWithWrongSalt",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSetComplianceFlags",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSetComplianceFlagsAllCombinations",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSettleAuction",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSettleAuctionWithNoRevealedBids",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSubmitIntent",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSubmitIntentRevertsOnEmptyData",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testSubmitIntentWithMaxLengthData",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testUpdateReputation",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testUpdateReputationOnlyOwner",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testUpdateReputationOverflow",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "testUpdateReputationUnderflow",
+      "inputs": [],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    },
+    {
+      "type": "function",
+      "name": "vm",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "contract Vm" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "zkVerifier",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    }
+  ],
+  "id": 16
+}

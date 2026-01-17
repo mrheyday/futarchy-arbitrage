@@ -1,1 +1,35 @@
-{"abi":[{"type":"event","name":"AuctionSettled","inputs":[{"name":"winner","type":"address","indexed":false,"internalType":"address"},{"name":"winningBid","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"event","name":"BidCommitted","inputs":[{"name":"solver","type":"address","indexed":false,"internalType":"address"},{"name":"commitHash","type":"bytes32","indexed":false,"internalType":"bytes32"}],"anonymous":false},{"type":"event","name":"BidRevealed","inputs":[{"name":"solver","type":"address","indexed":false,"internalType":"address"},{"name":"bidValue","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"type":"error","name":"AuctionClosed","inputs":[]},{"type":"error","name":"InvalidBid","inputs":[]},{"type":"error","name":"TieBreakFailed","inputs":[]}],"id":1}
+{
+  "abi": [
+    {
+      "type": "event",
+      "name": "AuctionSettled",
+      "inputs": [
+        { "name": "winner", "type": "address", "indexed": false, "internalType": "address" },
+        { "name": "winningBid", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BidCommitted",
+      "inputs": [
+        { "name": "solver", "type": "address", "indexed": false, "internalType": "address" },
+        { "name": "commitHash", "type": "bytes32", "indexed": false, "internalType": "bytes32" }
+      ],
+      "anonymous": false
+    },
+    {
+      "type": "event",
+      "name": "BidRevealed",
+      "inputs": [
+        { "name": "solver", "type": "address", "indexed": false, "internalType": "address" },
+        { "name": "bidValue", "type": "uint256", "indexed": false, "internalType": "uint256" }
+      ],
+      "anonymous": false
+    },
+    { "type": "error", "name": "AuctionClosed", "inputs": [] },
+    { "type": "error", "name": "InvalidBid", "inputs": [] },
+    { "type": "error", "name": "TieBreakFailed", "inputs": [] }
+  ],
+  "id": 1
+}

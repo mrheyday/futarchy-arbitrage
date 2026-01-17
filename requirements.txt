@@ -1,7 +1,7 @@
-web3>=7.0.0
-eth-account>=0.13.0
-eth-utils>=4.0.0
-eth-keys>=0.5.0
+web3 >=7.0.0
+eth-account >=0.13.0
+eth-utils >=4.0.0
+eth-keys >=0.5.0
 requests
 python-dotenv
 supabase

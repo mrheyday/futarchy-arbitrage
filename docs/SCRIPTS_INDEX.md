@@ -10,15 +10,16 @@
 
 ### Comprehensive Compilation
 
-| Script                      | Purpose                            | Output              | Notes                                  |
-| --------------------------- | ---------------------------------- | ------------------- | -------------------------------------- |
-| `compile_all.py`            | **Full artifact generation**       | `artifacts/`        | **Recommended** - ABI, bytecode, ASM, opcodes, SMT |
-| `compile.sh`                | Quick compile wrapper              | `artifacts/`        | Bash wrapper with env activation       |
-| `example_compilation.py`    | Interactive compilation example    | `artifacts/` + demo | Demonstrates full workflow             |
-| `compile_without_yul.py`    | Legacy compiler (no Via-IR)        | `build/`            | Use `compile_all.py` instead           |
-| `compile_institutional.sh`  | Institutional solver compilation   | Foundry output      | Solidity 0.8.33 + Via-IR               |
+| Script                     | Purpose                          | Output              | Notes                                              |
+| -------------------------- | -------------------------------- | ------------------- | -------------------------------------------------- |
+| `compile_all.py`           | **Full artifact generation**     | `artifacts/`        | **Recommended** - ABI, bytecode, ASM, opcodes, SMT |
+| `compile.sh`               | Quick compile wrapper            | `artifacts/`        | Bash wrapper with env activation                   |
+| `example_compilation.py`   | Interactive compilation example  | `artifacts/` + demo | Demonstrates full workflow                         |
+| `compile_without_yul.py`   | Legacy compiler (no Via-IR)      | `build/`            | Use `compile_all.py` instead                       |
+| `compile_institutional.sh` | Institutional solver compilation | Foundry output      | Solidity 0.8.33 + Via-IR                           |
 
 **Generated Artifacts** (see [BUILD_ARTIFACTS.md](BUILD_ARTIFACTS.md)):
+
 - `artifacts/abi/` - Contract ABIs + method selectors (4-byte)
 - `artifacts/bytecode/` - Deployment + runtime bytecode
 - `artifacts/asm/` - EVM assembly
@@ -28,6 +29,7 @@
 - `artifacts/smt/` - SMT-LIB2 for formal verification
 
 **Quick Examples:**
+
 ```bash
 # Compile all contracts
 ./scripts/compile.sh
@@ -45,15 +47,15 @@ python3 scripts/example_compilation.py FutarchyArbExecutorV5
 
 ### Contract Deployment
 
-| Script                           | Purpose                     | Contract                    | Notes                            |
-| -------------------------------- | --------------------------- | --------------------------- | -------------------------------- |
-| `deploy_executor_v5_precompiled.py` ⭐ | **Deploy V5 (pre-compiled)** | FutarchyArbExecutorV5 | **NEW** - Uses artifacts/, faster |
-| `deploy_executor_v5.py`          | Deploy V5 (inline compile)  | FutarchyArbExecutorV5       | **Current version**, PNK routing |
-| `deploy_executor_v4.py`          | Deploy V4 executor          | FutarchyArbExecutorV4       | EIP-7702 support                 |
-| `deploy_prediction_arb_v1.py`    | Deploy prediction arbitrage | PredictionArbExecutorV1     | Yes+no price sum                 |
-| `deploy_institutional_solver.py` | Deploy institutional solver | InstitutionalSolverSystem   | Full solver system               |
-| `deploy_ticklens.py`             | Deploy TickLens utility     | TickLens                    | Tick data reading                |
-| `deploy_and_verify_v2.py`        | Deploy + verify V2          | FutarchyArbitrageExecutorV2 | Legacy                           |
+| Script                                 | Purpose                      | Contract                    | Notes                             |
+| -------------------------------------- | ---------------------------- | --------------------------- | --------------------------------- |
+| `deploy_executor_v5_precompiled.py` ⭐ | **Deploy V5 (pre-compiled)** | FutarchyArbExecutorV5       | **NEW** - Uses artifacts/, faster |
+| `deploy_executor_v5.py`                | Deploy V5 (inline compile)   | FutarchyArbExecutorV5       | **Current version**, PNK routing  |
+| `deploy_executor_v4.py`                | Deploy V4 executor           | FutarchyArbExecutorV4       | EIP-7702 support                  |
+| `deploy_prediction_arb_v1.py`          | Deploy prediction arbitrage  | PredictionArbExecutorV1     | Yes+no price sum                  |
+| `deploy_institutional_solver.py`       | Deploy institutional solver  | InstitutionalSolverSystem   | Full solver system                |
+| `deploy_ticklens.py`                   | Deploy TickLens utility      | TickLens                    | Tick data reading                 |
+| `deploy_and_verify_v2.py`              | Deploy + verify V2           | FutarchyArbitrageExecutorV2 | Legacy                            |
 
 ### Verification Scripts
 

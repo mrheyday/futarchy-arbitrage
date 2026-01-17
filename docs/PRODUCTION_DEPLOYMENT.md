@@ -29,6 +29,7 @@ pip install -r requirements-extended.txt
 ### 2. Hardware Wallet Setup
 
 #### Ledger
+
 ```bash
 # Install Ledger libraries
 pip install ledgerblue
@@ -38,6 +39,7 @@ pip install ledgerblue
 ```
 
 #### Trezor
+
 ```bash
 # Install Trezor libraries
 pip install trezor[ethereum]
@@ -134,11 +136,11 @@ import asyncio
 async def monitor_loop():
     while True:
         health = await monitor.check_health(web3)
-        
+
         if health["checks"]["rpc"]["status"] != "healthy":
             # Send alert
             await monitor._trigger_alert(...)
-        
+
         await asyncio.sleep(60)
 ```
 
@@ -265,6 +267,7 @@ sudo journalctl -u futarchy-arb -f
 ### 1. Discord Alerts
 
 Alerts are automatically sent to configured Discord webhook:
+
 - 🔴 **Critical**: Balance too low, negative profit, gas price spike
 - 🟡 **Warning**: High gas usage, small spreads
 - 🟢 **Info**: Large profitable trades
@@ -294,21 +297,25 @@ start_http_server(8000)
 ## Security Best Practices
 
 ### 1. Hardware Wallet
+
 - ✅ Always verify addresses on device screen
 - ✅ Confirm transaction details on device
 - ✅ Use separate derivation paths for testing
 
 ### 2. RPC Security
+
 - ✅ Use authenticated RPC endpoints
 - ✅ Implement rate limiting
 - ✅ Monitor for RPC failures
 
 ### 3. Private Keys
+
 - ❌ Never commit private keys to git
 - ❌ Never use hot wallets for large amounts
 - ✅ Use hardware wallets for production
 
 ### 4. Monitoring
+
 - ✅ Set up critical balance alerts
 - ✅ Monitor error rates
 - ✅ Track gas price spikes
