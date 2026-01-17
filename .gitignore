@@ -38,6 +38,11 @@ build/
 deployment_executor_v5_*.json
 temp/
 
+# Foundry build artifacts (at repo root)
+/cache/
+/out/
+/broadcast/
+
 # Configuration files with potential private keys
 config/*.json
 

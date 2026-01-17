@@ -11,9 +11,9 @@ evm_version = "osaka"
 ignored_warnings_from = ["lib/"]
 
 remappings = [
-"solady/=lib/solady/",
-"solady-clz/=lib/solady/src/utils/clz/",
-"solady-utils/=lib/solady/src/utils/",
+  "solady/=lib/solady/",
+  "solady-clz/=lib/solady/src/utils/clz/",
+  "solady-utils/=lib/solady/src/utils/",
 ]
 
 [profile.institutional]
@@ -28,9 +28,9 @@ evm_version = "osaka"
 ignored_warnings_from = ["lib/"]
 
 remappings = [
-"solady/=lib/solady/",
-"solady-clz/=lib/solady/src/utils/clz/",
-"solady-utils/=lib/solady/src/utils/",
+  "solady/=lib/solady/",
+  "solady-clz/=lib/solady/src/utils/clz/",
+  "solady-utils/=lib/solady/src/utils/",
 ]
 
 [profile.coverage]
@@ -45,9 +45,9 @@ evm_version = "osaka"
 ignored_warnings_from = ["lib/"]
 
 remappings = [
-"solady/=lib/solady/",
-"solady-clz/=lib/solady/src/utils/clz/",
-"solady-utils/=lib/solady/src/utils/",
+  "solady/=lib/solady/",
+  "solady-clz/=lib/solady/src/utils/clz/",
+  "solady-utils/=lib/solady/src/utils/",
 ]
 
 # Formatter configuration
@@ -70,11 +70,11 @@ sort_imports = true
 [lint]
 severity = ["high", "med", "low", "gas"]
 exclude_lints = [
-"mixed-case-function",            # Allow snake_case for external API compatibility
-"mixed-case-variable",            # Allow snake_case for external API compatibility
-"screaming-snake-case-immutable", # Allow lowercase immutables for readability
-"asm-keccak256",                  # keccak256 is fine for non-hot paths
-"unused-import",                  # Allow imports for future use
+  "mixed-case-function", # Allow snake_case for external API compatibility
+  "mixed-case-variable", # Allow snake_case for external API compatibility
+  "screaming-snake-case-immutable", # Allow lowercase immutables for readability
+  "asm-keccak256", # keccak256 is fine for non-hot paths
+  "unused-import", # Allow imports for future use
 ]
 ignore = ["lib/**"]
 

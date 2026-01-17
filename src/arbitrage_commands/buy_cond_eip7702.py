@@ -81,6 +81,7 @@ def build_buy_conditional_bundle(
     amount_in: int,
     recipient: str
 ) -> List[Dict[str, Any]]:
+<<<<<<< Updated upstream
     """
     Build the sequence of calls for Buy Conditional Arb.
     Flow: Split sDAI -> Swap YES/NO sDAI to Company -> Merge Company -> Sell Company for sDAI
@@ -213,3 +214,27 @@ def buy_conditional_simple(
             "error": str(e),
             "tx_hash": None,
         }
+=======
+    """
+    Build the sequence of calls for Buy Conditional Arb.
+    Flow: Split sDAI -> Swap YES/NO sDAI to Company -> Merge Company -> Sell Company for sDAI
+    """
+    calls = []
+    
+    # 1. Approve sDAI to FutarchyRouter
+    calls.append(encode_approval(collateral_token, FUTARCHY_ROUTER, amount_in))
+    
+    # 2. Split sDAI
+    calls.append(encode_split(FUTARCHY_ROUTER, proposal, collateral_token, amount_in))
+    
+    # 3. Approve Conditional Tokens to Swapr (Optimized: assume infinite or exact)
+    calls.append(encode_approval(conditional_tokens['YES'], SWAPR_ROUTER, amount_in))
+    calls.append(encode_approval(conditional_tokens['NO'], SWAPR_ROUTER, amount_in))
+    
+    # 4. Swap YES sDAI -> YES Company (Placeholder amounts, in production use simulation results)
+    calls.append(encode_swapr_exact_in(SWAPR_ROUTER, conditional_tokens['YES'], company_token, amount_in, 0, recipient))
+    
+    # ... (Add remaining steps: Swap NO, Merge, Sell on Balancer)
+    
+    return calls
+>>>>>>> Stashed changes

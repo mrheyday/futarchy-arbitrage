@@ -16,6 +16,7 @@ function getAccounts() {
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
+<<<<<<< Updated upstream
     version: "0.8.33",
     settings: { optimizer: { enabled: true, runs: 1000000 } },
     via_ir: true
@@ -23,6 +24,14 @@ module.exports = {
   networks: {
     gnosis: {
       url: GNOSIS_RPC || "https://rpc.gnosischain.com",
+=======
+    version: "0.8.20",
+    settings: { optimizer: { enabled: true, runs: 1000000 } },
+  },
+  networks: {
+    gnosis: {
+      url: RPC_FALLBACK || "https://rpc.gnosischain.com",
+>>>>>>> Stashed changes
       chainId: 100,
       accounts: getAccounts(),
     },
@@ -38,11 +47,15 @@ module.exports = {
     },
   },
   etherscan: {
+<<<<<<< Updated upstream
     apiKey: {
       gnosis: GNOSISSCAN_API_KEY || "",
       base: BASESCAN_API_KEY || "",
       base_sepolia: BASESCAN_API_KEY || "",
     },
+=======
+    apiKey: { gnosis: GNOSISSCAN_API_KEY || "" },
+>>>>>>> Stashed changes
     customChains: [
       {
         network: "gnosis",
@@ -50,6 +63,7 @@ module.exports = {
         urls: {
           apiURL: "https://api.gnosisscan.io/api",
           browserURL: "https://gnosisscan.io",
+<<<<<<< Updated upstream
         },
       },
       {
@@ -66,6 +80,8 @@ module.exports = {
         urls: {
           apiURL: "https://api-sepolia.basescan.org/api",
           browserURL: "https://sepolia.basescan.org",
+=======
+>>>>>>> Stashed changes
         },
       },
     ],

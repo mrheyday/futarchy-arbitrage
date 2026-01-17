@@ -7,7 +7,10 @@ import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {FixedPointMathLib} from "solady-clz/FixedPointMathLib.sol";
 import {LibBit} from "solady-clz/LibBit.sol";
 import {LibSort} from "solady-utils/LibSort.sol";
+import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {SafeCastLib} from "solady-utils/SafeCastLib.sol";
+import {LibBLS} from "./LibBLS.sol";
+import {LibP256} from "./LibP256.sol";
 
 /**
  * @title InstitutionalSolverSystem
@@ -424,7 +427,12 @@ contract InstitutionalSolverSystem is TransientReentrancyGuard {
         emit P256KeyRegistered(msg.sender, x, y);
     }
 
-    function verifySolverP256(address solver, bytes32 hash, uint256 r, uint256 s) external view returns (bool) {
+    function verifySolverP256(
+        address solver,
+        bytes32 hash,
+        uint256 r,
+        uint256 s
+    ) external view returns (bool) {
         uint256[2] memory pubKey = p256PublicKeys[solver];
         if (pubKey[0] == 0 && pubKey[1] == 0) return false;
 

@@ -9,6 +9,7 @@ description = "Futarchy arbitrage bot for Gnosis Chain"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
+<<<<<<< Updated upstream
 "web3>=7.0.0",
 "eth-account>=0.13.0",
 "eth-utils>=4.0.0",
@@ -17,10 +18,21 @@ dependencies = [
 "python-dotenv",
 "supabase",
 "tabulate",
+=======
+  "web3==6.11.1",
+  "eth-account==0.11.3",
+  "eth-utils",
+  "eth-keys",
+  "requests",
+  "python-dotenv",
+  "supabase",
+  "tabulate",
+>>>>>>> Stashed changes
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "black", "isort", "mypy", "flake8"]
+<<<<<<< Updated upstream
 
 [project.scripts]
 # Build & Indexing Tools
@@ -34,6 +46,8 @@ futarchy-deploy-solver = "scripts.deploy_institutional_solver:main"
 
 # Verification Tools
 futarchy-verify = "scripts.verify_contract:main"
+=======
+>>>>>>> Stashed changes
 
 [tool.black]
 line-length = 120

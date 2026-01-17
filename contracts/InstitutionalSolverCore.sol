@@ -5,6 +5,7 @@ import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {FixedPointMathLib} from "solady-clz/FixedPointMathLib.sol";
 import {LibBit} from "solady-clz/LibBit.sol";
 import {LibSort} from "solady-utils/LibSort.sol";
+import {TransientReentrancyGuard} from "./TransientReentrancyGuard.sol";
 import {SafeCastLib} from "solady-utils/SafeCastLib.sol";
 
 // Module: AuctionEconomics

@@ -27,8 +27,19 @@ from eth_account import Account
 # Import logging
 from src.config.logging_config import setup_logger, log_trade, log_price_check
 
+<<<<<<< Updated upstream
 # Import alerts
 from src.monitoring.telegram_alerts import create_alerter_from_env
+=======
+# Import tracing
+from src.helpers.tracing import (
+    get_tracer,
+    trace_trade_execution,
+    trace_price_check,
+    trace_event,
+    auto_instrument_requests,
+)
+>>>>>>> Stashed changes
 
 # Import price fetching utilities
 from src.helpers.swapr_price import get_pool_price as swapr_price
@@ -42,8 +53,17 @@ from src.arbitrage_commands.sell_cond_eip7702 import sell_conditional_simple
 from src.helpers.bundle_helpers import get_token_balance
 from src.config.network import DEFAULT_RPC_URLS
 
+<<<<<<< Updated upstream
 # Initialize logger
 logger = setup_logger("eip7702_bot", level=10)  # DEBUG level
+=======
+# Initialize logger and tracer
+logger = setup_logger("eip7702_bot", level=10)  # DEBUG level
+tracer = get_tracer(service_name="eip7702-arb-bot")
+
+# Auto-instrument HTTP requests for tracing
+auto_instrument_requests()
+>>>>>>> Stashed changes
 
 # Constants
 MIN_SDAI_BALANCE = 0.01  # Minimum sDAI balance in ether
@@ -85,41 +105,51 @@ def fetch_all_prices(w3: Web3) -> dict[str, float]:
         - ideal_price: Calculated ideal Company price
         - balancer_price: Company price on Balancer
     """
-    # Get pool addresses from environment
-    addr_yes = os.getenv("SWAPR_POOL_YES_ADDRESS")
-    addr_pred_yes = os.getenv("SWAPR_POOL_PRED_YES_ADDRESS")
-    addr_no = os.getenv("SWAPR_POOL_NO_ADDRESS")
-    addr_bal = os.getenv("BALANCER_POOL_ADDRESS")
-    
-    if not all((addr_yes, addr_pred_yes, addr_no, addr_bal)):
-        raise ValueError("Missing required pool address environment variables")
-    
-    # Fetch Swapr prices
-    yes_base, yes_quote, yes_price = fetch_swapr(addr_yes, w3)
-    _, _, pred_yes_price = fetch_swapr(addr_pred_yes, w3)
-    no_base, no_quote, no_price = fetch_swapr(addr_no, w3)
-    
-    # Fetch Balancer price
-    bal_base, bal_quote, bal_price = fetch_balancer(addr_bal, w3)
-    
-    # Calculate ideal price
-    ideal_price = float(pred_yes_price) * float(yes_price) + (
-        1.0 - float(pred_yes_price)
-    ) * float(no_price)
-    
-    return {
-        'yes_price': float(yes_price),
-        'no_price': float(no_price),
-        'pred_yes_price': float(pred_yes_price),
-        'ideal_price': ideal_price,
-        'balancer_price': float(bal_price),
-        'yes_base': yes_base,
-        'yes_quote': yes_quote,
-        'no_base': no_base,
-        'no_quote': no_quote,
-        'bal_base': bal_base,
-        'bal_quote': bal_quote
-    }
+    with tracer.start_span("fetch_all_prices"):
+        # Get pool addresses from environment
+        addr_yes = os.getenv("SWAPR_POOL_YES_ADDRESS")
+        addr_pred_yes = os.getenv("SWAPR_POOL_PRED_YES_ADDRESS")
+        addr_no = os.getenv("SWAPR_POOL_NO_ADDRESS")
+        addr_bal = os.getenv("BALANCER_POOL_ADDRESS")
+        
+        if not all((addr_yes, addr_pred_yes, addr_no, addr_bal)):
+            raise ValueError("Missing required pool address environment variables")
+        
+        # Fetch Swapr prices
+        with tracer.start_span("fetch_swapr_prices"):
+            yes_base, yes_quote, yes_price = fetch_swapr(addr_yes, w3)
+            _, _, pred_yes_price = fetch_swapr(addr_pred_yes, w3)
+            no_base, no_quote, no_price = fetch_swapr(addr_no, w3)
+            trace_event("swapr_prices_fetched", 
+                       yes=yes_price, 
+                       no=no_price, 
+                       pred_yes=pred_yes_price)
+        
+        # Fetch Balancer price
+        with tracer.start_span("fetch_balancer_price"):
+            bal_base, bal_quote, bal_price = fetch_balancer(addr_bal, w3)
+            trace_event("balancer_price_fetched", price=bal_price)
+        
+        # Calculate ideal price
+        ideal_price = float(pred_yes_price) * float(yes_price) + (
+            1.0 - float(pred_yes_price)
+        ) * float(no_price)
+        
+        trace_event("ideal_price_calculated", ideal_price=str(ideal_price))
+        
+        return {
+            'yes_price': float(yes_price),
+            'no_price': float(no_price),
+            'pred_yes_price': float(pred_yes_price),
+            'ideal_price': ideal_price,
+            'balancer_price': float(bal_price),
+            'yes_base': yes_base,
+            'yes_quote': yes_quote,
+            'no_base': no_base,
+            'no_quote': no_quote,
+            'bal_base': bal_base,
+            'bal_quote': bal_quote
+        }
 
 
 # --------------------------------------------------------------------------- #
@@ -271,6 +301,7 @@ def execute_arbitrage(
     Returns:
         Transaction result dictionary
     """
+<<<<<<< Updated upstream
     try:
         if action == 'buy':
             # Buy conditional tokens and sell Company on Balancer
@@ -300,6 +331,57 @@ def execute_arbitrage(
             'status': 'error',
             'error': str(e)
         }
+=======
+    # Determine cheaper token based on action
+    cheaper_token = "yes" if action == 'buy' else "no"
+    
+    with trace_trade_execution(action.upper(), amount, cheaper_token, flow_type="eip7702"):
+        try:
+            trace_event("arbitrage_started", 
+                       action=action, 
+                       amount=str(amount), 
+                       dry_run=dry_run)
+            
+            if action == 'buy':
+                # Buy conditional tokens and sell Company on Balancer
+                logger.info(f"Executing BUY conditional with {amount} sDAI")
+                with tracer.start_span("buy_conditional_flow"):
+                    result = buy_conditional_simple(
+                        amount_sdai=amount,
+                        skip_balancer=False  # Include Balancer swap
+                    )
+            elif action == 'sell':
+                # Buy Company on Balancer and sell conditional tokens
+                logger.info(f"Executing SELL conditional with {amount} sDAI")
+                with tracer.start_span("sell_conditional_flow"):
+                    # Skip merge to stay within 10-operation limit
+                    # This leaves us with conditional sDAI that can be merged later
+                    result = sell_conditional_simple(
+                        amount_sdai=amount,
+                        skip_merge=True  # Skip merge to stay within 10 ops
+                    )
+                    if result.get('status') == 'success':
+                        logger.info("Note: Conditional sDAI tokens held (merge skipped for 10-op limit)")
+            else:
+                raise ValueError(f"Unknown action: {action}")
+            
+            # Record outcome
+            if result.get('status') == 'success':
+                trace_event("arbitrage_success", 
+                           tx_hash=result.get('tx_hash', 'N/A'),
+                           gas_used=str(result.get('gas_used', 0)))
+            else:
+                trace_event("arbitrage_failed", error=result.get('error', 'Unknown'))
+            
+            return result
+        except Exception as e:
+            logger.error(f" Arbitrage execution failed: {e}")
+            trace_event("arbitrage_error", error=str(e))
+            return {
+                'status': 'error',
+                'error': str(e)
+            }
+>>>>>>> Stashed changes
 
 
 # --------------------------------------------------------------------------- #
@@ -343,6 +425,7 @@ def run_bot(
     logger.info(f"Tolerance: {tolerance * 100:.2f}%")
     logger.info(f"Mode: {'DRY RUN' if dry_run else 'LIVE'}")
     logger.debug("")
+<<<<<<< Updated upstream
     
     # Send bot start notification
     if telegram:
@@ -359,6 +442,8 @@ def run_bot(
             )
         except Exception as e:
             logger.error(f"Failed to send Telegram alert: {e}")
+=======
+>>>>>>> Stashed changes
     
     while max_iterations is None or iteration < max_iterations:
         try:
@@ -371,6 +456,7 @@ def run_bot(
                 time.sleep(interval)
                 continue
             
+<<<<<<< Updated upstream
             # Fetch current prices
             prices = fetch_all_prices(w3)
             
@@ -379,6 +465,27 @@ def run_bot(
             logger.debug(f"NO   pool: 1 {prices['no_base']} = {prices['no_price']:.6f} {prices['no_quote']}")
             logger.debug(f"BAL  pool: 1 {prices['bal_base']} = {prices['balancer_price']:.6f} {prices['bal_quote']}")
             logger.debug(f"Ideal price: {prices['ideal_price']:.6f}")
+=======
+            # Fetch current prices with tracing
+            with trace_price_check("futarchy_market", 
+                                  balancer_price=Decimal(str(0)),
+                                  ideal_price=Decimal(str(0))):
+                prices = fetch_all_prices(w3)
+                
+                logger.debug(f"YES  pool: 1 {prices['yes_base']} = {prices['yes_price']:.6f} {prices['yes_quote']}")
+                logger.debug(f"PRED pool: 1 {prices['yes_base']} = {prices['pred_yes_price']:.6f} {prices['yes_quote']}")
+                logger.debug(f"NO   pool: 1 {prices['no_base']} = {prices['no_price']:.6f} {prices['no_quote']}")
+                logger.debug(f"BAL  pool: 1 {prices['bal_base']} = {prices['balancer_price']:.6f} {prices['bal_quote']}")
+                logger.debug(f"Ideal price: {prices['ideal_price']:.6f}")
+                
+                # Update trace with actual prices
+                tracer.set_attributes({
+                    "price.balancer": str(prices['balancer_price']),
+                    "price.ideal": str(prices['ideal_price']),
+                    "price.yes": str(prices['yes_price']),
+                    "price.no": str(prices['no_price']),
+                })
+>>>>>>> Stashed changes
             
             # Calculate opportunity
             action = determine_action(
@@ -403,6 +510,7 @@ def run_bot(
                         logger.info(f" Arbitrage successful!")
                         logger.info(f"  TX: {result.get('tx_hash')}")
                         logger.info(f"  Gas used: {result.get('gas_used')}")
+<<<<<<< Updated upstream
                         
                         # Send Telegram alert for successful trade
                         if telegram:
@@ -419,6 +527,8 @@ def run_bot(
                                 )
                             except Exception as e:
                                 logger.error(f"Failed to send Telegram alert: {e}")
+=======
+>>>>>>> Stashed changes
                         
                         # Show final balances
                         if action == 'buy':
@@ -429,6 +539,7 @@ def run_bot(
                         consecutive_errors = 0
                     else:
                         logger.error(f" Arbitrage failed: {result.get('error', 'Unknown error')}")
+<<<<<<< Updated upstream
                         
                         # Send Telegram alert for failed trade
                         if telegram:
@@ -440,6 +551,8 @@ def run_bot(
                             except Exception as e:
                                 logger.error(f"Failed to send Telegram alert: {e}")
                         
+=======
+>>>>>>> Stashed changes
                         consecutive_errors += 1
                 elif dry_run:
                     print(f"📊 DRY RUN: Would execute {action} for {expected_profit:.6f} sDAI profit")
