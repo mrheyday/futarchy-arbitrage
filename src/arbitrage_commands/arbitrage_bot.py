@@ -25,7 +25,7 @@ import subprocess
 import re
 from decimal import Decimal
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Any
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -39,7 +39,7 @@ from config.network import DEFAULT_RPC_URLS
 class ArbitrageBot:
     """Monitors and executes futarchy arbitrage opportunities."""
     
-    def __init__(self, env_file: Optional[str] = None):
+    def __init__(self, env_file: str | None = None):
         """Initialize the bot with environment configuration."""
         self.load_environment(env_file)
         self.w3 = self.create_web3()
@@ -47,7 +47,7 @@ class ArbitrageBot:
         self.setup_account()
         self.setup_token_contracts()
         
-    def load_environment(self, env_file: Optional[str]) -> None:
+    def load_environment(self, env_file: str | None) -> None:
         """Load environment variables from file."""
         base_env = Path(".env")
         if base_env.exists():
@@ -105,7 +105,7 @@ class ArbitrageBot:
         deployment_files = sorted(glob.glob("deployments/deployment_executor_v5_*.json"))
         if deployment_files:
             try:
-                with open(deployment_files[-1], "r") as f:
+                with open(deployment_files[-1]) as f:
                     data = json.load(f)
                     if data.get("address"):
                         return self.w3.to_checksum_address(data["address"])
@@ -195,7 +195,7 @@ class ArbitrageBot:
                 (1.0 - prices["pred_yes_price"]) * prices["no_price"]
         return ideal
         
-    def determine_opportunity(self, prices: dict, tolerance: float) -> Tuple[Optional[str], Optional[str]]:
+    def determine_opportunity(self, prices: dict, tolerance: float) -> tuple[str | None, str | None]:
         """
         Determine if an arbitrage opportunity exists.
         
@@ -236,7 +236,7 @@ class ArbitrageBot:
             
         return flow, cheaper
         
-    def get_balances(self, address: Optional[str] = None) -> dict:
+    def get_balances(self, address: str | None = None) -> dict:
         """Get current token balances for the specified address (defaults to executor contract)."""
         target_address = address or self.executor_address
         balances = {}
@@ -272,7 +272,7 @@ class ArbitrageBot:
         if warnings:
             print("\n" + "\n".join(warnings))
     
-    def parse_tx_hash(self, output: str) -> Optional[str]:
+    def parse_tx_hash(self, output: str) -> str | None:
         """Parse transaction hash from executor output."""
         # Look for patterns like "Tx sent: 0x..." or "Tx sent: abc123..."
         patterns = [
@@ -292,7 +292,7 @@ class ArbitrageBot:
         return None
     
     def execute_arbitrage(self, flow: str, cheaper: str, amount: float, 
-                         min_profit: float, dry_run: bool, prefund: bool) -> Tuple[bool, Optional[str]]:
+                         min_profit: float, dry_run: bool, prefund: bool) -> tuple[bool, str | None]:
         """
         Execute arbitrage trade via the arbitrage_executor module.
         

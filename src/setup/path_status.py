@@ -25,7 +25,6 @@ import argparse
 import os
 from pathlib import Path
 import json
-from typing import Optional, Tuple
 
 from web3 import Web3
 from eth_utils import to_checksum_address
@@ -33,11 +32,11 @@ from eth_utils import to_checksum_address
 try:
     from dotenv import load_dotenv
 except Exception:  # lightweight fallback
-    def load_dotenv(path: Optional[str] = None, override: bool = False):
+    def load_dotenv(path: str | None = None, override: bool = False):
         if not path:
             return False
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 for line in f:
                     s = line.strip()
                     if not s or s.startswith("#"):
@@ -95,7 +94,7 @@ def _build_w3() -> Web3:
     return w3
 
 
-def _resolve_address_for_path(path: str, *, mnemonic: Optional[str], index_path: Path) -> str:
+def _resolve_address_for_path(path: str, *, mnemonic: str | None, index_path: Path) -> str:
     # Prefer mnemonic if provided
     if mnemonic:
         _, addr = derive_privkey_from_mnemonic(mnemonic, path)
@@ -160,7 +159,7 @@ def main() -> int:
     token_addr = args.token or os.getenv("SDAI_TOKEN_ADDRESS") or SDAI_GNOSIS_DEFAULT
 
     # Resolve mnemonic if provided via env name
-    mnemonic: Optional[str] = args.mnemonic
+    mnemonic: str | None = args.mnemonic
     if not mnemonic and args.mnemonic_env:
         mnemonic = os.getenv(args.mnemonic_env)
     if not mnemonic:

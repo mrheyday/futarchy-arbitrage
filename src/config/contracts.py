@@ -5,10 +5,10 @@ This module is currently in EXPERIMENTAL status.
 Contains contract addresses and related warnings/notes.
 """
 
-from typing import Dict, Any
+from typing import Any
 
 # Contract addresses with documentation
-CONTRACT_ADDRESSES: Dict[str, str] = {
+CONTRACT_ADDRESSES: dict[str, str] = {
     # Core protocol contracts
     "futarchyRouter": "0x7495a583ba85875d59407781b4958ED6e0E1228f",
     "market": "0x6242AbA055957A63d682e9D3de3364ACB53D053A",
@@ -51,7 +51,7 @@ CONTRACT_ADDRESSES: Dict[str, str] = {
 }
 
 # Contract warnings and notes
-CONTRACT_WARNINGS: Dict[str, str] = {
+CONTRACT_WARNINGS: dict[str, str] = {
     "0x592abc3734cd0d458e6e44a2db2992a3d00283a4": """
     WARNING: NEVER USE THIS ROUTER ADDRESS
     This SushiSwap V3 Passthrough Router has a critical flaw where tokens get permanently stuck 
@@ -65,4 +65,4 @@ def is_contract_safe(address: str) -> bool:
 
 def get_contract_warning(address: str) -> str:
     """Get warning message for a contract address if any."""
-    return CONTRACT_WARNINGS.get(address.lower(), "") 
+    return CONTRACT_WARNINGS.get(address.lower(), "")

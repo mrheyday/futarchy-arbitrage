@@ -1,4 +1,5 @@
 # Operational Readiness Guide
+
 # Institutional Solver Intelligence System
 
 ## Pre-Deployment Checklist
@@ -28,17 +29,20 @@
 ### Build & Compilation
 
 - [ ] **Foundry Installed**
+
   ```bash
   forge --version
   # Should show 0.8.33 or later
   ```
 
 - [ ] **Solady Dependencies**
+
   ```bash
   forge install transmissions11/solady
   ```
 
 - [ ] **Compile Contracts**
+
   ```bash
   forge build --profile institutional
   ```
@@ -52,6 +56,7 @@
 ### Testing
 
 - [ ] **Run Unit Tests**
+
   ```bash
   forge test --profile institutional -vvv
   ```
@@ -66,6 +71,7 @@
   ```bash
   forge test --profile institutional --gas-report
   ```
+
   - [ ] Intent submission < 100k gas
   - [ ] Auction settlement < 500k gas
   - [ ] Batch execution within bounds
@@ -86,6 +92,7 @@ python scripts/deploy_institutional_solver.py
 ```
 
 **Expected Output:**
+
 - Deployment transaction hash
 - Contract address
 - Gas used
@@ -137,6 +144,7 @@ client.contract.functions.openAuction(1).transact()
 ### Daily Operations
 
 #### Morning Checklist
+
 - [ ] Check system health
   ```bash
   python -c "from src.helpers.institutional_solver_monitor import SolverMonitor; monitor.health_check()"
@@ -146,6 +154,7 @@ client.contract.functions.openAuction(1).transact()
 - [ ] Verify flashloan provider availability
 
 #### Ongoing Monitoring
+
 - [ ] Monitor via telemetry script
   ```bash
   export INSTITUTIONAL_SOLVER_ADDRESS="contract_address"
@@ -156,6 +165,7 @@ client.contract.functions.openAuction(1).transact()
 - [ ] Check MEV protection metrics
 
 #### End of Day
+
 - [ ] Review all settled auctions
 - [ ] Calculate daily metrics
 - [ ] Backup database
@@ -188,7 +198,9 @@ client.contract.functions.openAuction(1).transact()
 ### System Failures
 
 #### Contract Reverts
+
 1. **Identify Failure**
+
    ```bash
    # Get transaction details
    cast tx <tx_hash> --rpc-url $RPC_URL
@@ -206,6 +218,7 @@ client.contract.functions.openAuction(1).transact()
    - Retry transaction
 
 #### Flashloan Failures
+
 1. **Check Provider Status**
    - Test Aave availability
    - Test Balancer availability
@@ -222,6 +235,7 @@ client.contract.functions.openAuction(1).transact()
 ### Security Incidents
 
 #### Unauthorized Access Attempt
+
 1. **Immediate Actions**
    - Review transaction logs
    - Check owner address
@@ -238,6 +252,7 @@ client.contract.functions.openAuction(1).transact()
    - Deploy fixes if necessary
 
 #### MEV Attack Detection
+
 1. **Detection**
    - Monitor entropy metrics
    - Check for pattern anomalies
@@ -309,6 +324,7 @@ client.update_reputation(bad_solver, -500)
 ### Monitoring Dashboards
 
 **Recommended Metrics:**
+
 - Intent submission rate
 - Auction participation
 - Solver reputation distribution
@@ -320,22 +336,27 @@ client.update_reputation(bad_solver, -500)
 ### Common Issues
 
 #### "AuctionClosed" Error
+
 - **Cause:** Trying to commit bid to closed auction
 - **Solution:** Check auction state before committing
 
 #### "ReputationSlash" Error
+
 - **Cause:** Solver reputation below minimum (100)
 - **Solution:** Update solver reputation or use different solver
 
 #### "ComplianceViolation" Error
+
 - **Cause:** Missing required compliance flags
 - **Solution:** Set compliance flags for solver
 
 #### "FlashloanFailed" Error
+
 - **Cause:** All providers unavailable or amount too small
 - **Solution:** Check provider liquidity, verify amount > 2^10
 
 #### Gas Estimation Failed
+
 - **Cause:** Transaction will revert
 - **Solution:** Run with `debug_traceCall` to identify issue
 
@@ -344,16 +365,19 @@ client.update_reputation(bad_solver, -500)
 ### Support Tiers
 
 **Tier 1: Operational Issues**
+
 - Health check failures
 - Expected error messages
 - Standard configuration
 
 **Tier 2: Technical Issues**
+
 - Unexpected reverts
 - Performance degradation
 - Integration problems
 
 **Tier 3: Security Issues**
+
 - Suspicious activity
 - Access control breaches
 - Contract vulnerabilities

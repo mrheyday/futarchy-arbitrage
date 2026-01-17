@@ -3,15 +3,15 @@ Okay, based on the provided project structure and the goal of simplifying `main.
 **Refactoring Strategy:**
 
 1.  **Create Manager Classes:** Introduce dedicated classes to handle specific functionalities:
-    * `SwapManager`: Handles all types of swaps (Balancer, Passthrough Router, sDAI-YES specific).
-    * `ConditionalTokenManager`: Handles splitting and merging of collateral (GNO/sDAI <-> YES/NO tokens).
-    * `GnoWrapper`: Handles wrapping GNO to waGNO and unwrapping waGNO to GNO.
+    - `SwapManager`: Handles all types of swaps (Balancer, Passthrough Router, sDAI-YES specific).
+    - `ConditionalTokenManager`: Handles splitting and merging of collateral (GNO/sDAI <-> YES/NO tokens).
+    - `GnoWrapper`: Handles wrapping GNO to waGNO and unwrapping waGNO to GNO.
 2.  **Move Logic:** Migrate the core logic for swapping, splitting/merging, and wrapping/unwrapping from `main.py` and potentially other files (like `conditional_token_actions.py`, `aave_balancer.py`) into these manager classes.
 3.  **Refactor `main.py`:**
-    * Initialize the manager classes within the `main` function after initializing the `FutarchyBot`.
-    * Replace direct calls to underlying handlers (e.g., `BalancerSwapHandler`, `PassthroughRouter`, `bot.add_collateral`) with calls to the methods of the new manager classes.
-    * Pass the manager instances to the complex arbitrage functions (`execute_arbitrage_sell_synthetic_gno`, `execute_arbitrage_buy_synthetic_gno`).
-    * Refactor the arbitrage functions to use the manager methods, significantly simplifying their internal logic.
+    - Initialize the manager classes within the `main` function after initializing the `FutarchyBot`.
+    - Replace direct calls to underlying handlers (e.g., `BalancerSwapHandler`, `PassthroughRouter`, `bot.add_collateral`) with calls to the methods of the new manager classes.
+    - Pass the manager instances to the complex arbitrage functions (`execute_arbitrage_sell_synthetic_gno`, `execute_arbitrage_buy_synthetic_gno`).
+    - Refactor the arbitrage functions to use the manager methods, significantly simplifying their internal logic.
 4.  **Directory Structure:** Create a new directory `futarchy/experimental/managers/` to house the new manager classes.
 
 ---
@@ -1103,17 +1103,17 @@ if __name__ == "__main__":
 
 1.  **Managers:** Three new classes (`SwapManager`, `ConditionalTokenManager`, `GnoWrapper`) are created in the `futarchy/experimental/managers/` directory.
 2.  **Logic Migration:**
-    * Swap logic (Balancer, Passthrough, sDAI-YES/sDAI) is moved into `SwapManager`. It uses the existing `BalancerSwapHandler` and `PassthroughRouter` internally.
-    * Splitting (`add_collateral`) and merging (`remove_collateral`) logic is wrapped by `ConditionalTokenManager`.
-    * Wrapping/unwrapping logic is wrapped by `GnoWrapper`, using the existing `AaveBalancerHandler`.
+    - Swap logic (Balancer, Passthrough, sDAI-YES/sDAI) is moved into `SwapManager`. It uses the existing `BalancerSwapHandler` and `PassthroughRouter` internally.
+    - Splitting (`add_collateral`) and merging (`remove_collateral`) logic is wrapped by `ConditionalTokenManager`.
+    - Wrapping/unwrapping logic is wrapped by `GnoWrapper`, using the existing `AaveBalancerHandler`.
 3.  **`main.py` Refactoring:**
-    * Imports are updated to bring in the managers.
-    * Managers are initialized after the `FutarchyBot`.
-    * Individual command handlers (like `buy_wrapped_gno`, `split_gno`, `swap_gno_yes_to_sdai_yes`, etc.) now call the appropriate manager methods instead of directly interacting with lower-level handlers or bot methods. This makes the command handling section cleaner.
-    * The `execute_arbitrage_*` functions now accept the manager instances as arguments.
-    * Inside the arbitrage functions, each step is replaced by a call to a manager method (e.g., `swap_manager.swap_balancer(...)`, `token_manager.split(...)`, `gno_wrapper.unwrap(...)`). This dramatically simplifies the structure of these complex functions, making the arbitrage *strategy* much clearer.
-    * Error handling (checking return values of manager methods) is maintained within the arbitrage flows.
-    * Redundant imports within `main.py` are commented out or removed.
+    - Imports are updated to bring in the managers.
+    - Managers are initialized after the `FutarchyBot`.
+    - Individual command handlers (like `buy_wrapped_gno`, `split_gno`, `swap_gno_yes_to_sdai_yes`, etc.) now call the appropriate manager methods instead of directly interacting with lower-level handlers or bot methods. This makes the command handling section cleaner.
+    - The `execute_arbitrage_*` functions now accept the manager instances as arguments.
+    - Inside the arbitrage functions, each step is replaced by a call to a manager method (e.g., `swap_manager.swap_balancer(...)`, `token_manager.split(...)`, `gno_wrapper.unwrap(...)`). This dramatically simplifies the structure of these complex functions, making the arbitrage _strategy_ much clearer.
+    - Error handling (checking return values of manager methods) is maintained within the arbitrage flows.
+    - Redundant imports within `main.py` are commented out or removed.
 
 **To Use This Refactoring:**
 

@@ -2,7 +2,7 @@ import os
 import time
 import logging
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any
 from web3 import Web3
 # NOTE: Assuming the ABI location is correct relative to the new structure
 from src.config.abis.swapr import SWAPR_ROUTER_ABI 
@@ -67,7 +67,7 @@ def build_exact_in_tx(
     sender: str,
     *,
     sqrt_price_limit: int = 0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Return Tenderly-ready tx dict for exactInputSingle."""
 
     params = (
@@ -91,7 +91,7 @@ def build_exact_out_tx(
     sender: str,
     *,
     sqrt_price_limit: int = 0,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Return Tenderly-ready tx dict for exactOutputSingle."""
 
     params = (
@@ -114,7 +114,7 @@ def build_exact_out_tx(
 # Internal helpers                                                            #
 # --------------------------------------------------------------------------- #
 
-def _search_call_trace(node: Dict[str, Any], target: str) -> Optional[Dict[str, Any]]:
+def _search_call_trace(node: dict[str, Any], target: str) -> dict[str, Any] | None:
     """Recursively walk Tenderly's call-trace until the first call to *target*."""
     if node.get("to", "").lower() == target.lower():
         return node
@@ -147,18 +147,18 @@ def _wei_to_eth(value: int) -> Decimal:
 
 
 def parse_simulated_swap_results(
-    results: List[Dict[str, Any]],
-    w3_inst: Optional[Web3] = None,
-    label: Optional[str] = None,
+    results: list[dict[str, Any]],
+    w3_inst: Web3 | None = None,
+    label: str | None = None,
     fixed: str = "in",
-) -> Optional[Dict[str, Decimal]]:
+) -> dict[str, Decimal] | None:
     """Pretty-print simulation results.
 
     For both ``exactInputSingle`` **and** ``exactOutputSingle`` swaps return
     ``{'input_amount': Decimal, 'output_amount': Decimal}``.
     """
     w3_local = w3_inst or w3
-    result_dict: Optional[Dict[str, Decimal]] = None
+    result_dict: dict[str, Decimal] | None = None
     for idx, sim in enumerate(results):
         if label:
             header = label
@@ -184,7 +184,7 @@ def parse_simulated_swap_results(
         # Attempt to decode returned amount based on swap kind
         call_trace = tx_resp.get("transaction_info", {}).get("call_trace", {})
         out_hex = call_trace.get("output")
-        ret_wei: Optional[int] = None
+        ret_wei: int | None = None
         if out_hex and out_hex != "0x":
             try:
                 ret_wei = int(out_hex[2:66], 16)
@@ -261,7 +261,7 @@ def parse_broadcasted_swap_results(
     tx_hash: str,
     *,
     fixed: str = "in",
-) -> Optional[Dict[str, Decimal]]:
+) -> dict[str, Decimal] | None:
     """Parse an already **broadcasted** SwapR `exactInputSingle` swap.
 
     Given a transaction hash, this function will:
@@ -334,7 +334,7 @@ def parse_broadcasted_swap_results(
                 transferred = int(log.data.hex(), 16) if hasattr(log.data, "hex") else int(log.data, 16)
                 output_wei += transferred
 
-        result: Dict[str, Decimal] = {
+        result: dict[str, Decimal] = {
             "input_amount":  _wei_to_eth(amount_in_wei),
             "output_amount": _wei_to_eth(output_wei),
         }

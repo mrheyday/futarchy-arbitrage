@@ -24,7 +24,9 @@ Notes:
 import argparse
 import os
 import re
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any
+
+from collections.abc import Iterable
 
 from web3 import Web3
 # Web3 PoA middleware (support v5/v6/v7 import paths)
@@ -166,11 +168,11 @@ TICKLENS_MIN_ABI = [
 ]
 
 
-def load_env_file(path: str) -> Dict[str, str]:
-    env: Dict[str, str] = {}
+def load_env_file(path: str) -> dict[str, str]:
+    env: dict[str, str] = {}
     if not os.path.exists(path):
         return env
-    with open(path, "r") as f:
+    with open(path) as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#"):
@@ -188,8 +190,8 @@ def load_env_file(path: str) -> Dict[str, str]:
     return env
 
 
-def decode_tick_entry(data) -> Dict[str, int]:
-    out: Dict[str, int] = {}
+def decode_tick_entry(data) -> dict[str, int]:
+    out: dict[str, int] = {}
     if isinstance(data, (list, tuple)):
         L = len(data)
         if L >= 1:
@@ -212,12 +214,12 @@ def direct_bitmap_scan(
     tick_spacing: int,
     words_each_side: int,
     min_liq: int,
-) -> List[Dict[str, int]]:
+) -> list[dict[str, int]]:
     base_word = current_tick // 256
     min_word = MIN_TICK // 256
     max_word = MAX_TICK // 256
     seen: set[int] = set()
-    out: List[Dict[str, int]] = []
+    out: list[dict[str, int]] = []
 
     def scan_word(word_index: int) -> None:
         nonlocal out
@@ -321,7 +323,7 @@ def main():
         print(f"min_word: {min_word}  max_word: {max_word}")
 
     # TickLens block (optional)
-    lens_results: Dict[str, object] = {}
+    lens_results: dict[str, object] = {}
     if args.ticklens:
         lens = w3.eth.contract(address=Web3.to_checksum_address(args.ticklens), abi=TICKLENS_MIN_ABI)
         try:

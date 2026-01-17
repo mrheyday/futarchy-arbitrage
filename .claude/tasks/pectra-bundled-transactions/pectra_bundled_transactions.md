@@ -1,10 +1,13 @@
 # Pectra Bundled Transactions Task
 
 ## Overview
+
 Transform the futarchy arbitrage bot to use EIP-7702 bundled transactions instead of sequential transactions. This leverages Pectra's EIP-7702 feature to execute all arbitrage operations atomically in a single transaction.
 
 ## Background
+
 Currently, the arbitrage bot (`complex_bot.py`) executes multiple transactions sequentially:
+
 - Approvals for tokens
 - Splitting sDAI into conditional tokens
 - Swapping on Swapr pools
@@ -12,23 +15,28 @@ Currently, the arbitrage bot (`complex_bot.py`) executes multiple transactions s
 - Final arbitrage swap
 
 This approach has several limitations:
+
 - MEV risk between transactions
 - Higher gas costs due to multiple transaction overheads
 - Risk of partial execution if one transaction fails
 - Slower execution time
 
 ## Objective
+
 Modify `pectra_bot.py` to bundle all operations into a single EIP-7702 transaction using the `FutarchyBatchExecutor` contract.
 
 ## Technical Approach
 
 ### 1. EIP-7702 Integration
+
 - Use `EIP7702TransactionBuilder` from `src/helpers/eip7702_builder.py`
 - Deploy or use existing `FutarchyBatchExecutor` implementation contract
 - Create authorization for EOA to act as smart contract temporarily
 
 ### 2. Buy Conditional Flow
+
 Bundle these operations:
+
 1. Approve FutarchyRouter for sDAI
 2. Split sDAI → YES/NO conditional sDAI
 3. Approve Swapr for YES conditional sDAI
@@ -41,7 +49,9 @@ Bundle these operations:
 10. Swap Company → sDAI on Balancer
 
 ### 3. Sell Conditional Flow
+
 Bundle these operations:
+
 1. Approve Balancer for sDAI
 2. Swap sDAI → Company on Balancer
 3. Approve FutarchyRouter for Company token
@@ -56,32 +66,36 @@ Bundle these operations:
 ### 4. Implementation Details
 
 #### Key Functions to Add:
+
 ```python
 def build_buy_bundle(builder, addresses, amount):
     """Build bundled transaction for buy conditional flow"""
-    
+
 def build_sell_bundle(builder, addresses, amount):
     """Build bundled transaction for sell conditional flow"""
-    
+
 def simulate_bundle(w3, account, tx):
     """Simulate EIP-7702 transaction and return expected results"""
-    
+
 def execute_bundle(w3, account, tx):
     """Sign and send EIP-7702 transaction"""
 ```
 
 #### Environment Variables Required:
+
 - `IMPLEMENTATION_ADDRESS` - FutarchyBatchExecutor contract address
 - All existing addresses (tokens, pools, routers)
 - `PRIVATE_KEY` - For signing EIP-7702 transactions
 
 ### 5. Benefits
+
 - **Atomicity**: All operations succeed or fail together
 - **Gas Savings**: ~15% reduction from avoiding transaction overheads
 - **MEV Protection**: No intermediate states exploitable by MEV bots
 - **Speed**: Single transaction vs multiple sequential ones
 
 ### 6. Testing Strategy
+
 1. Test with small amounts on testnet first
 2. Verify gas estimation accuracy
 3. Compare profitability vs sequential approach
@@ -128,12 +142,14 @@ def execute_bundle(w3, account, tx):
    - Gas estimation issues
 
 ## Success Criteria
+
 - Successfully execute arbitrage in single transaction
 - Achieve gas savings vs sequential approach
 - Maintain or improve profitability
 - No loss of functionality from original bot
 
 ## References
+
 - EIP-7702: https://eips.ethereum.org/EIPS/eip-7702
 - FutarchyBatchExecutor: contracts/FutarchyBatchExecutor.sol
 - EIP7702TransactionBuilder: src/helpers/eip7702_builder.py

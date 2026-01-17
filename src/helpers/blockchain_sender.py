@@ -2,7 +2,6 @@ import os
 import sys
 from web3 import Web3
 from eth_account import Account
-from typing import Optional
 
 # Use the same env vars that the rest of the code base already relies on.
 RPC_URL = os.getenv("RPC_URL")
@@ -14,7 +13,7 @@ acct = Account.from_key(PRIVATE_KEY)
 __all__ = ["w3", "acct", "send_tenderly_tx_onchain"]
 
 
-def send_tenderly_tx_onchain(tenderly_tx: dict, value: int = 0, nonce: Optional[int] = None) -> str:
+def send_tenderly_tx_onchain(tenderly_tx: dict, value: int = 0, nonce: int | None = None) -> str:
     """
     Sign and broadcast a transaction that was built for Tenderly simulation.
 

@@ -38,7 +38,7 @@ print(f"Balance: {w3.from_wei(w3.eth.get_balance(account.address), 'ether')} xDA
 
 # Read contract source
 contract_path = Path(__file__).parent.parent / "contracts" / "FutarchyArbExecutorV4.sol"
-with open(contract_path, "r") as f:
+with open(contract_path) as f:
     source_code = f.read()
 
 # Compile with viaIR to handle stack depth

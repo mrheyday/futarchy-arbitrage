@@ -1,10 +1,13 @@
 # Subtask 4: Bot Integration with EIP-7702 Flows
 
 ## Overview
+
 Integrate the proven EIP-7702 buy and sell conditional flows into a monitoring bot that watches for arbitrage opportunities and executes bundled transactions atomically.
 
 ## Reference Implementation
+
 Based on `src/arbitrage_commands/light_bot.py` which:
+
 - Monitors Swapr and Balancer pool prices continuously
 - Calculates ideal price from prediction markets
 - Executes trades when profitable opportunities arise
@@ -17,10 +20,11 @@ Based on `src/arbitrage_commands/light_bot.py` which:
 #### Core Components
 
 ##### Price Monitoring (from light_bot.py)
+
 ```python
 # Fetch prices from Swapr pools
 yes_price = fetch_swapr(SWAPR_POOL_YES_ADDRESS)
-pred_yes_price = fetch_swapr(SWAPR_POOL_PRED_YES_ADDRESS) 
+pred_yes_price = fetch_swapr(SWAPR_POOL_PRED_YES_ADDRESS)
 no_price = fetch_swapr(SWAPR_POOL_NO_ADDRESS)
 
 # Calculate ideal price
@@ -31,21 +35,22 @@ balancer_price = fetch_balancer(BALANCER_POOL_ADDRESS)
 ```
 
 ##### Decision Logic
+
 ```python
 def determine_action(balancer_price, ideal_price, tolerance):
     """
     Determine whether to buy or sell based on price discrepancy.
-    
+
     Returns:
         'buy': If Balancer price > ideal price (buy conditional)
         'sell': If Balancer price < ideal price (sell conditional)
         None: If within tolerance
     """
     diff = abs(balancer_price - ideal_price) / ideal_price
-    
+
     if diff < tolerance:
         return None  # No profitable opportunity
-    
+
     if balancer_price > ideal_price:
         return 'buy'  # Company expensive on Balancer, buy conditional
     else:
@@ -53,6 +58,7 @@ def determine_action(balancer_price, ideal_price, tolerance):
 ```
 
 ##### Integration with EIP-7702 Flows
+
 ```python
 from src.arbitrage_commands.buy_cond_eip7702 import buy_conditional_simple
 from src.arbitrage_commands.sell_cond_eip7702 import sell_conditional_simple
@@ -60,12 +66,12 @@ from src.arbitrage_commands.sell_cond_eip7702 import sell_conditional_simple
 def execute_arbitrage(action, amount, dry_run=False):
     """
     Execute arbitrage using EIP-7702 bundled transactions.
-    
+
     Args:
         action: 'buy' or 'sell'
         amount: Amount in sDAI
         dry_run: If True, simulate only
-    
+
     Returns:
         Transaction result dictionary
     """
@@ -83,18 +89,19 @@ def execute_arbitrage(action, amount, dry_run=False):
         )
     else:
         raise ValueError(f"Unknown action: {action}")
-    
+
     return result
 ```
 
 ### 2. Bot Architecture
 
 #### Main Loop Structure
+
 ```python
 def run_bot(amount, interval, tolerance, max_iterations=None):
     """
     Main bot loop that monitors and executes arbitrage.
-    
+
     Args:
         amount: Trade amount in sDAI
         interval: Seconds between checks
@@ -102,26 +109,26 @@ def run_bot(amount, interval, tolerance, max_iterations=None):
         max_iterations: Stop after N iterations (None = infinite)
     """
     iteration = 0
-    
+
     while max_iterations is None or iteration < max_iterations:
         try:
             # Fetch current prices
             prices = fetch_all_prices()
-            
+
             # Calculate opportunity
             action = determine_action(
                 prices['balancer'],
                 prices['ideal'],
                 tolerance
             )
-            
+
             if action:
                 print(f"Opportunity detected: {action}")
                 print(f"Balancer: {prices['balancer']}, Ideal: {prices['ideal']}")
-                
+
                 # Execute arbitrage
                 result = execute_arbitrage(action, amount)
-                
+
                 if result['status'] == 'success':
                     print(f"✅ Arbitrage successful: {result['tx_hash']}")
                     print(f"Gas used: {result['gas_used']}")
@@ -129,11 +136,11 @@ def run_bot(amount, interval, tolerance, max_iterations=None):
                     print(f"❌ Arbitrage failed: {result.get('error')}")
             else:
                 print(f"No opportunity (diff < {tolerance}%)")
-            
+
             iteration += 1
             if max_iterations is None or iteration < max_iterations:
                 time.sleep(interval)
-                
+
         except KeyboardInterrupt:
             print("\nBot stopped by user")
             break
@@ -145,18 +152,19 @@ def run_bot(amount, interval, tolerance, max_iterations=None):
 ### 3. Safety Features
 
 #### Balance Checks
+
 ```python
 def check_balances():
     """
     Verify sufficient balances before trading.
-    
+
     Returns:
         Dict with balance status
     """
     sdai_balance = get_token_balance(SDAI_TOKEN, account.address)
     company_balance = get_token_balance(COMPANY_TOKEN, account.address)
     eth_balance = w3.eth.get_balance(account.address)
-    
+
     return {
         'sdai': w3.from_wei(sdai_balance, 'ether'),
         'company': w3.from_wei(company_balance, 'ether'),
@@ -166,11 +174,12 @@ def check_balances():
 ```
 
 #### Profit Validation
+
 ```python
 def estimate_profit(action, amount, prices):
     """
     Estimate expected profit before execution.
-    
+
     Returns:
         Expected profit in sDAI (negative = loss)
     """
@@ -194,20 +203,20 @@ def main():
         description='EIP-7702 Arbitrage Bot for Futarchy Markets'
     )
     parser.add_argument(
-        '--amount', 
-        type=float, 
+        '--amount',
+        type=float,
         required=True,
         help='Trade amount in sDAI'
     )
     parser.add_argument(
-        '--interval', 
-        type=int, 
+        '--interval',
+        type=int,
         default=120,
         help='Check interval in seconds (default: 120)'
     )
     parser.add_argument(
-        '--tolerance', 
-        type=float, 
+        '--tolerance',
+        type=float,
         default=0.02,
         help='Minimum profit threshold (default: 0.02 = 2%)'
     )
@@ -221,23 +230,23 @@ def main():
         type=int,
         help='Stop after N iterations'
     )
-    
+
     args = parser.parse_args()
-    
+
     # Verify environment
     verify_environment()
-    
+
     # Check initial balances
     balances = check_balances()
     print(f"Initial balances:")
     print(f"  sDAI: {balances['sdai']}")
     print(f"  Company: {balances['company']}")
     print(f"  ETH: {balances['eth']}")
-    
+
     if not balances['sufficient']:
         print("❌ Insufficient balances to start bot")
         return
-    
+
     # Start bot
     print(f"\nStarting EIP-7702 arbitrage bot...")
     print(f"Amount: {args.amount} sDAI")
@@ -245,7 +254,7 @@ def main():
     print(f"Tolerance: {args.tolerance * 100}%")
     print(f"Mode: {'DRY RUN' if args.dry_run else 'LIVE'}")
     print()
-    
+
     run_bot(
         amount=args.amount,
         interval=args.interval,
@@ -257,16 +266,19 @@ def main():
 ### 5. Testing Strategy
 
 #### Unit Tests
+
 - Price fetching functions
 - Decision logic with various price scenarios
 - Profit estimation accuracy
 
 #### Integration Tests
+
 - Full cycle with test amounts (0.001 sDAI)
 - Verify atomic execution of bundles
 - Test failure recovery
 
 #### Monitoring Tests
+
 ```bash
 # Test with small amount and high frequency
 python -m src.arbitrage_commands.eip7702_bot \

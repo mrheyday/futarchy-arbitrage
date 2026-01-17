@@ -6,7 +6,7 @@ This module provides utilities for building EIP-7702 transactions that allow
 EOAs to temporarily act as smart contracts and execute batched operations.
 """
 
-from typing import List, Dict, Any, Optional, Union
+from typing import Any
 from decimal import Decimal
 from web3 import Web3
 from eth_account import Account
@@ -30,9 +30,9 @@ class EIP7702TransactionBuilder:
         """
         self.w3 = w3
         self.implementation_address = Web3.to_checksum_address(implementation_address)
-        self.calls: List[Dict[str, Any]] = []
+        self.calls: list[dict[str, Any]] = []
         
-    def add_call(self, target: str, value: int, data: Union[str, bytes]) -> "EIP7702TransactionBuilder":
+    def add_call(self, target: str, value: int, data: str | bytes) -> "EIP7702TransactionBuilder":
         """
         Add a call to the batch.
         
@@ -145,7 +145,7 @@ class EIP7702TransactionBuilder:
         
         return self.add_call(router, 0, data)
     
-    def build_authorization(self, account: Account, nonce: Optional[int] = None) -> Dict[str, Any]:
+    def build_authorization(self, account: Account, nonce: int | None = None) -> dict[str, Any]:
         """
         Build and sign the EIP-7702 authorization.
         
@@ -221,7 +221,7 @@ class EIP7702TransactionBuilder:
         
         return function_selector + encoded_params
     
-    def build_transaction(self, account: Account, gas_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def build_transaction(self, account: Account, gas_params: dict[str, Any] | None = None) -> dict[str, Any]:
         """
         Build the complete EIP-7702 transaction.
         
@@ -299,7 +299,7 @@ class EIP7702TransactionBuilder:
             return 2000000  # Default fallback
 
 
-def create_test_transaction(w3: Web3, implementation_address: str, account: Account) -> Dict[str, Any]:
+def create_test_transaction(w3: Web3, implementation_address: str, account: Account) -> dict[str, Any]:
     """
     Create a simple test transaction for EIP-7702.
     

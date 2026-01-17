@@ -1,4 +1,10 @@
 import os, time, json
+
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Initialize logger
+logger = setup_logger("buy_cond", level=10)  # DEBUG level
 from decimal import Decimal
 from eth_account import Account
 from src.helpers.swapr_swap import (

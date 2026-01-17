@@ -25,7 +25,6 @@ from __future__ import annotations
 import os
 import sys
 import time
-from typing import Tuple
 
 from web3 import Web3
 
@@ -47,13 +46,13 @@ def make_web3() -> Web3:
     return Web3(Web3.HTTPProvider(rpc_url))
 
 
-def fetch_swapr(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_swapr(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for an Algebra pool."""
     price, base, quote = swapr_price(w3, pool)
     return base, quote, str(price)
 
 
-def fetch_balancer(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_balancer(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for a Balancer V3 pool."""
     price, base, quote = bal_price(w3, pool)
     return base, quote, str(price)

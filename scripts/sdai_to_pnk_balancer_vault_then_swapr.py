@@ -20,7 +20,6 @@ from __future__ import annotations
 import os
 import argparse
 from decimal import Decimal
-from typing import List, Tuple
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -46,7 +45,7 @@ ASSET_3 = WETH
 ASSET_4 = Web3.to_checksum_address("0xE0eD85F76D9C552478929fab44693E03F0899F23")
 ASSET_5 = Web3.to_checksum_address("0x9C58BAcC331c9aa871AFD802DB6379a98e80CEdb")  # GNO (intermediate only)
 
-ASSETS_ORDER: List[str] = [ASSET_1, ASSET_2, ASSET_3, ASSET_4, ASSET_5]
+ASSETS_ORDER: list[str] = [ASSET_1, ASSET_2, ASSET_3, ASSET_4, ASSET_5]
 
 
 # ------------------- Minimal ABIs ------------------- #
@@ -180,7 +179,7 @@ def main():
     # 1) Balancer Vault batchSwap: split amount across two branches, converge to WETH
     half = int(amount_in_wei // 2)
     other = int(amount_in_wei - half)
-    swaps: List[Tuple] = [
+    swaps: list[tuple] = [
         # Branch A: sDAI -> ASSET_2 -> WETH
         (POOL_1, 0, 1, half, b""),  # sDAI -> ASSET_2 (amount=half)
         (POOL_2, 1, 2, 0,   b""),   # ASSET_2 -> WETH (amount=0 for GIVEN_IN)

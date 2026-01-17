@@ -36,7 +36,7 @@ result = simulate_merge(
 import os
 import logging
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any
 from web3 import Web3
 
 from src.config.abis.futarchy import FUTARCHY_ROUTER_ABI
@@ -64,7 +64,7 @@ def build_merge_tx(
     collateral_addr: str,
     amount_wei: int,
     sender: str,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Encode mergePositions calldata and wrap into a Tenderly tx dict."""
     router = _get_router(w3, router_addr)
     data = router.encodeABI(
@@ -86,7 +86,7 @@ def simulate_merge(
     collateral_addr: str,
     amount_wei: int,
     sender: str,
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """Convenience function: build tx → simulate → return result dict."""
     tx = build_merge_tx(
         w3,
@@ -105,7 +105,7 @@ def simulate_merge(
     return result
 
 
-def parse_merge_results(results: List[Dict[str, Any]], w3: Web3) -> None:
+def parse_merge_results(results: list[dict[str, Any]], w3: Web3) -> None:
     """Pretty-print each simulation result from mergePositions bundle."""
     for idx, sim in enumerate(results):
         logger.debug("--- Merge Simulation Result #%s ---", idx + 1)
@@ -145,7 +145,7 @@ def _build_w3_from_env() -> Web3:
     """Return a Web3 instance using RPC_URL (fallback to GNOSIS_RPC_URL)."""
     rpc_url = os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
     if rpc_url is None:
-        raise EnvironmentError("Set RPC_URL or GNOSIS_RPC_URL in environment.")
+        raise OSError("Set RPC_URL or GNOSIS_RPC_URL in environment.")
     w3 = Web3(Web3.HTTPProvider(rpc_url))
     from web3.middleware import geth_poa_middleware
 

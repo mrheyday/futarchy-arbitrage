@@ -1,4 +1,4 @@
-Below is a **complete migration plan** that replaces the current *return‑data* inspection with **`debug_traceCall` + `stateDiff:true`**.
+Below is a **complete migration plan** that replaces the current _return‑data_ inspection with **`debug_traceCall` + `stateDiff:true`**.
 The format follows our internal “implementation report” standard: imperative sentences, code‑diff snippets only, no boilerplate.
 
 ---
@@ -14,6 +14,7 @@ The format follows our internal “implementation report” standard: imperative
      --http.vhosts=* --http.addr 0.0.0.0 \
      --syncmode=full --gcmode=archive --cache=4096
    ```
+
 2. RPC URL must point to that node (export `RPC_URL=<node>`).
 
 No other infra changes are needed.
@@ -54,8 +55,8 @@ No other infra changes are needed.
 
 Notes
 
-* Works on both Geth (“stateDiff”) and Nethermind (“stateDiff”) shapes—field names are identical.
-* We only need slot 0 because all involved ERC‑20s are OpenZeppelin‑standard.
+- Works on both Geth (“stateDiff”) and Nethermind (“stateDiff”) shapes—field names are identical.
+- We only need slot 0 because all involved ERC‑20s are OpenZeppelin‑standard.
 
 ---
 
@@ -123,7 +124,7 @@ Notes
 
 ### 3.4 Read values from `stateDiff`
 
-*Discovery step* (example):
+_Discovery step_ (example):
 
 ```diff
 -raw   = self._simulate(calls)
@@ -210,8 +211,8 @@ Mock `trace_call` via `monkeypatch` so `simulate_three_steps(..., use_trace=True
 
 ## 7 · Performance tips
 
-* Cache `keccak(address,0)` per token to avoid recomputing in tight loops.
-* Optional: parallelise the three `debug_traceCall` invocations with `asyncio` to mitigate the 5‑10× slowdown.
+- Cache `keccak(address,0)` per token to avoid recomputing in tight loops.
+- Optional: parallelise the three `debug_traceCall` invocations with `asyncio` to mitigate the 5‑10× slowdown.
 
 ---
 
@@ -227,5 +228,5 @@ Mock `trace_call` via `monkeypatch` so `simulate_three_steps(..., use_trace=True
 
 ### TL;DR
 
-*Add `trace_utils.py`, thread a `use_trace` flag through the workflow, compute deltas from `stateDiff`, and expose `--trace` to the CLI.*
+_Add `trace_utils.py`, thread a `use_trace` flag through the workflow, compute deltas from `stateDiff`, and expose `--trace` to the CLI._
 This enables full **Tenderly‑free, executeWithResults‑free** simulations on any debug‑enabled archive node, at the cost of higher latency.

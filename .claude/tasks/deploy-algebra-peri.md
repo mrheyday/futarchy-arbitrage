@@ -4,8 +4,8 @@ Below is a practical, end‑to‑end plan to deploy a **working TickLens** contr
 
 ## What TickLens is (and why you deploy it)
 
-* Algebra’s periphery includes a **TickLens** contract (ported from Uniswap v3 periphery) that exposes `getPopulatedTicksInWord(pool, tickBitmapIndex)` for reading populated ticks in a CLAMM pool. Algebra credits Uniswap and keeps the same semantics, so your UI/tools can reuse existing tick logic. ([Algebra Finance][1], [Medium][2])
-* Algebra’s **Step-by-step deployment** guide lists **TickLens** among periphery contracts that integrators deploy and then reuse across their frontends/backends. ([Algebra Finance][3])
+- Algebra’s periphery includes a **TickLens** contract (ported from Uniswap v3 periphery) that exposes `getPopulatedTicksInWord(pool, tickBitmapIndex)` for reading populated ticks in a CLAMM pool. Algebra credits Uniswap and keeps the same semantics, so your UI/tools can reuse existing tick logic. ([Algebra Finance][1], [Medium][2])
+- Algebra’s **Step-by-step deployment** guide lists **TickLens** among periphery contracts that integrators deploy and then reuse across their frontends/backends. ([Algebra Finance][3])
 
 ---
 
@@ -28,9 +28,9 @@ Sources: official Gnosis docs for MetaMask setup (RPC, chainId, explorer) and Gn
 
 ## Prerequisites
 
-* Node 18+ and npm.
-* A deployer EOA funded with a little **xDAI** on Gnosis.
-* A **Gnosisscan API key** (free) for contract verification. ([Gnosis Chain][6])
+- Node 18+ and npm.
+- A deployer EOA funded with a little **xDAI** on Gnosis.
+- A **Gnosisscan API key** (free) for contract verification. ([Gnosis Chain][6])
 
 ---
 
@@ -75,15 +75,15 @@ module.exports = {
   solidity: {
     version: "0.8.20",
     settings: {
-      optimizer: { enabled: true, runs: 1_000_000 } // typical for Algebra/Uniswap periphery builds
-    }
+      optimizer: { enabled: true, runs: 1_000_000 }, // typical for Algebra/Uniswap periphery builds
+    },
   },
   networks: {
     gnosis: {
       url: GNOSIS_RPC_URL,
       chainId: 100,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : []
-    }
+      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+    },
   },
   etherscan: {
     // Gnosisscan is Etherscan-compatible; note the '/api' in apiURL
@@ -94,11 +94,11 @@ module.exports = {
         chainId: 100,
         urls: {
           apiURL: "https://api.gnosisscan.io/api",
-          browserURL: "https://gnosisscan.io"
-        }
-      }
-    ]
-  }
+          browserURL: "https://gnosisscan.io",
+        },
+      },
+    ],
+  },
 };
 ```
 
@@ -146,7 +146,10 @@ async function main() {
   // Or run `npx hardhat verify --network gnosis <addr>` separately
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
 ```
 
 Deploy:
@@ -188,18 +191,18 @@ TickLens API (same semantics as Uniswap v3): returns an array of populated ticks
 
 If you prefer a dry‑run:
 
-* Chain ID: **10200**
-* RPC: **[https://rpc.chiadochain.net](https://rpc.chiadochain.net)**
-* Configure `networks.chiado` similarly and deploy/verify there first. ([Gnosis Chain][4], [docs.chainstack.com][13])
+- Chain ID: **10200**
+- RPC: **[https://rpc.chiadochain.net](https://rpc.chiadochain.net)**
+- Configure `networks.chiado` similarly and deploy/verify there first. ([Gnosis Chain][4], [docs.chainstack.com][13])
 
 ---
 
 ## Operational notes & gotchas
 
-* **License**: TickLens is GPL‑2.0‑or‑later (via Algebra periphery / Uniswap periphery). Keep headers intact when importing. ([Algebra Finance][1], [npm][7])
-* **Why not use Uniswap’s TickLens on Gnosis?** It exists (address listed in the Uniswap v3 Gnosis deployment) but is meant for **Uniswap pools**, not Algebra pools. Use the Algebra periphery TickLens for Algebra pools, as per Algebra’s docs and deployment flow. ([Algebra Finance][3])
-* **Verification fails with “Unexpected token < … not valid JSON”**: double‑check your **apiURL includes `/api`** in `customChains` and that your compiler settings match (0.8.20 + optimizer). ([GitHub][9])
-* **RPC issues**: If the public RPC is flaky, switch to another provider from the Gnosis RPC providers list. ([Gnosis Chain][14])
+- **License**: TickLens is GPL‑2.0‑or‑later (via Algebra periphery / Uniswap periphery). Keep headers intact when importing. ([Algebra Finance][1], [npm][7])
+- **Why not use Uniswap’s TickLens on Gnosis?** It exists (address listed in the Uniswap v3 Gnosis deployment) but is meant for **Uniswap pools**, not Algebra pools. Use the Algebra periphery TickLens for Algebra pools, as per Algebra’s docs and deployment flow. ([Algebra Finance][3])
+- **Verification fails with “Unexpected token < … not valid JSON”**: double‑check your **apiURL includes `/api`** in `customChains` and that your compiler settings match (0.8.20 + optimizer). ([GitHub][9])
+- **RPC issues**: If the public RPC is flaky, switch to another provider from the Gnosis RPC providers list. ([Gnosis Chain][14])
 
 ---
 
@@ -227,16 +230,16 @@ forge create --rpc-url https://rpc.gnosischain.com \
 
 ## Deliverables checklist (what you’ll produce)
 
-* **Deployed address** for TickLens on Gnosis.
-* **Verified source** on Gnosisscan (publicly readable ABI).
-* A one‑liner **smoke test** result proving `getPopulatedTicksInWord()` returns data on a known **Algebra pool** on Gnosis (your own pool if you’re the first to deploy Algebra pools there).
+- **Deployed address** for TickLens on Gnosis.
+- **Verified source** on Gnosisscan (publicly readable ABI).
+- A one‑liner **smoke test** result proving `getPopulatedTicksInWord()` returns data on a known **Algebra pool** on Gnosis (your own pool if you’re the first to deploy Algebra pools there).
 
 ---
 
 ## Why this plan works
 
-* Algebra’s own documentation defines TickLens and lists it among the periphery contracts integrators deploy. ([Algebra Finance][1])
-* Gnosis mainnet parameters and explorer/verification path are official and stable. ([Gnosis Chain][4])
+- Algebra’s own documentation defines TickLens and lists it among the periphery contracts integrators deploy. ([Algebra Finance][1])
+- Gnosis mainnet parameters and explorer/verification path are official and stable. ([Gnosis Chain][4])
 
 If you want, I can adapt these steps to your preferred stack (e.g., pure Foundry with CI, or a multisig‑controlled deployment) and include a minimal script to query one of your pools right after deployment.
 
@@ -248,6 +251,7 @@ If you want, I can adapt these steps to your preferred stack (e.g., pure Foundry
 [6]: https://docs.gnosischain.com/developers/Verify%20Smart%20Contracts/gnosisscan?utm_source=chatgpt.com "Using Gnosisscan - Gnosis Chain"
 [7]: https://www.npmjs.com/package/%40cryptoalgebra/integral-periphery?utm_source=chatgpt.com "cryptoalgebra/integral-periphery"
 [8]: https://www.npmjs.com/package/%40layerzerolabs/verify-contract?utm_source=chatgpt.com "layerzerolabs/verify-contract"
+
 [9]: https://github.com/NomicFoundation/hardhat/issues/3957?utm_source=chatgpt.com "Contract verification is failing with \"Unexpected token < in ..."
 [10]: https://explorer-testnet.incentiv.io/address/0x3bCd0D9F1111dc1300dbc03951Ab7307b8a54f49?tab=contract&utm_source=chatgpt.com "Contract details"
 [11]: https://gnosisscan.io/verifyContract?utm_source=chatgpt.com "Verify & Publish Contract Source Code | GnosisScan"

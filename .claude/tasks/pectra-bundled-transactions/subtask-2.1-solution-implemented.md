@@ -23,7 +23,7 @@ contract FutarchyBatchExecutorMinimal {
     ) external payable {
         require(msg.sender == address(this), "Only self");
         require(count <= 10, "Too many calls");
-        
+
         for (uint256 i = 0; i < count; i++) {
             if (targets[i] != address(0)) {
                 (bool success,) = targets[i].call(calldatas[i]);
@@ -31,7 +31,7 @@ contract FutarchyBatchExecutorMinimal {
             }
         }
     }
-    
+
     function executeOne(
         address target,
         bytes calldata data
@@ -41,7 +41,7 @@ contract FutarchyBatchExecutorMinimal {
         require(success, "Failed");
         return result;
     }
-    
+
     receive() external payable {}
 }
 ```
@@ -65,6 +65,7 @@ contract FutarchyBatchExecutorMinimal {
 ## Next Steps
 
 1. **Deploy Contract**:
+
    ```bash
    source .env && python -m src.setup.deploy_batch_executor
    ```

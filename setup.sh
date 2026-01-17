@@ -18,10 +18,10 @@ echo "📦 Checking for Python ${REQUIRED_PYTHON}..."
 # Try to find the best Python version
 PYTHON_CMD=""
 for cmd in python${REQUIRED_PYTHON} python3.9 python3; do
-    if command -v $cmd &> /dev/null; then
-        VERSION=$($cmd --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
+    if command -v "$cmd" &> /dev/null; then
+        VERSION=$("$cmd" --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
         if [[ "$VERSION" == "$REQUIRED_PYTHON"* ]]; then
-            PYTHON_CMD=$cmd
+            PYTHON_CMD="$cmd"
             break
         fi
     fi
@@ -67,6 +67,7 @@ fi
 
 # Activate virtual environment
 echo "🔌 Activating virtual environment..."
+# shellcheck source=/dev/null
 source "$VENV_DIR/bin/activate"
 
 # Upgrade pip
@@ -113,7 +114,7 @@ fi
 echo ""
 echo "✅ Environment setup complete!"
 echo ""
-echo "📝 Next steps:"
+echo " Next steps:"
 echo "  1. Activate the environment: source $VENV_DIR/bin/activate"
 echo "  2. Copy and configure an environment file:"
 echo "     cp .env.template .env.0x<YOUR_PROPOSAL_ADDRESS>"

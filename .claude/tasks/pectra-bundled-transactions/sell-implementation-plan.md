@@ -1,18 +1,21 @@
 # Sell Conditional Bundle Implementation Plan (Subtask 3)
 
 ## Overview
+
 Implement `sell_cond_eip7702.py` to execute the sell conditional flow using EIP-7702 bundled transactions. This reverses the buy flow: starting with sDAI, acquiring Company tokens via Balancer, splitting them, swapping to conditional sDAI on Swapr, and merging back to regular sDAI.
 
 ## Current Sell Flow Analysis (from sell_cond_onchain.py)
 
 ### Operation Sequence:
+
 1. **Buy Company with sDAI** via Balancer (sDAI → Company)
-2. **Split Company** into YES/NO conditional Company tokens  
+2. **Split Company** into YES/NO conditional Company tokens
 3. **Swap YES Company → YES sDAI** on Swapr
 4. **Swap NO Company → NO sDAI** on Swapr
 5. **Merge YES/NO sDAI** back to regular sDAI
 
 ### Key Differences from Buy Flow:
+
 - **Direction**: Sell starts with Balancer, buy ends with Balancer
 - **Tokens**: Sell merges sDAI (not Company tokens)
 - **Purpose**: Converting Company exposure back to stable sDAI
@@ -21,11 +24,12 @@ Implement `sell_cond_eip7702.py` to execute the sell conditional flow using EIP-
 ## Implementation Strategy
 
 ### 1. Operation Count Challenge
+
 **Problem**: Full flow requires 11 operations (exceeds 10-call limit)
 
 ```
 1. Approve sDAI for Balancer
-2. Swap sDAI → Company on Balancer  
+2. Swap sDAI → Company on Balancer
 3. Approve Company for FutarchyRouter
 4. Split Company into YES/NO
 5. Approve YES Company for Swapr
@@ -40,16 +44,18 @@ Implement `sell_cond_eip7702.py` to execute the sell conditional flow using EIP-
 ### 2. Optimization Strategies
 
 #### Option A: Pre-set Infinite Approvals (Recommended)
+
 - Pre-approve tokens with MAX_UINT256 in separate transaction
 - Reduces bundle to 5 core operations:
   1. Swap on Balancer
   2. Split Company
   3. Swap YES on Swapr
-  4. Swap NO on Swapr  
+  4. Swap NO on Swapr
   5. Merge sDAI
 - Similar to how buy_cond handles Company token approvals
 
 #### Option B: Skip Approval Redundancy
+
 - Combine YES/NO sDAI approvals into single MAX approval
 - Use conservative merge amount to fit within 10 ops
 - Bundle becomes:
@@ -65,6 +71,7 @@ Implement `sell_cond_eip7702.py` to execute the sell conditional flow using EIP-
   10. Merge sDAI
 
 #### Option C: Skip Final Merge
+
 - Execute swaps but don't merge conditional sDAI
 - User can merge manually later
 - Reduces to 8 operations (fits easily)
@@ -83,7 +90,7 @@ def build_balancer_buy_company_call(
     Build Balancer swap call for buying Company with sDAI.
     Uses swapExactIn with two-hop path through buffer pool.
     """
-    
+
 def build_sell_conditional_bundle(
     amount_sdai: Decimal,
     skip_merge: bool = False,
@@ -91,14 +98,14 @@ def build_sell_conditional_bundle(
 ) -> List[Dict[str, Any]]:
     """
     Build bundled transaction for sell conditional flow.
-    
+
     Operations:
     1. Buy Company with sDAI on Balancer
     2. Split Company into conditional tokens
     3. Swap conditional Company to conditional sDAI
     4. (Optional) Merge conditional sDAI
     """
-    
+
 def sell_conditional_simple(
     amount_sdai: Decimal,
     skip_merge: bool = False
@@ -107,7 +114,7 @@ def sell_conditional_simple(
     Execute sell conditional flow using proven EIP-7702.
     Simple mode without complex simulation.
     """
-    
+
 def check_and_set_approvals() -> Dict[str, bool]:
     """
     Check current approvals and return status.
@@ -116,13 +123,16 @@ def check_and_set_approvals() -> Dict[str, bool]:
 ```
 
 #### Encoding Compatibility:
+
 - Reuse `build_working_swapr_call()` from buy_cond_eip7702
 - Import `swapr_router` for encode_abi() calls
 - Use proven patterns from successful buy implementation
 - Copy successful encoding patterns
 
 #### Balancer Integration:
+
 Based on sell_cond_onchain.py, the Balancer swap uses:
+
 - Two-hop path: sDAI → buffer pool → Company
 - swapExactIn function
 - Buffer pool at 0x7c16f0185a26db0ae7a9377f23bc18ea7ce5d644
@@ -161,16 +171,16 @@ MAX_DEADLINE = 9007199254740991
 
 def build_working_swapr_call(...):
     # Copy from buy_cond_eip7702.py
-    
+
 def build_balancer_buy_company_call(...):
     # New implementation for Balancer swap
-    
+
 def build_sell_conditional_bundle(...):
     # Main bundle builder
-    
+
 def sell_conditional_simple(...):
     # Simple execution function
-    
+
 def main():
     # CLI interface
 ```
@@ -178,6 +188,7 @@ def main():
 ### 5. Testing Strategy
 
 #### Phase 1: Component Testing
+
 ```bash
 # Test Balancer buy swap
 python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --test-balancer
@@ -193,6 +204,7 @@ python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --test-merge
 ```
 
 #### Phase 2: Bundle Testing
+
 ```bash
 # Test without merge (8 operations)
 python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --skip-merge
@@ -218,24 +230,31 @@ python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --use-approvals
 ### 7. Expected Challenges & Solutions
 
 #### Challenge: 11 operations exceed limit
-**Solution**: 
+
+**Solution**:
+
 - Combine conditional sDAI approvals
 - Offer --skip-merge option
 - Implement pre-approval system
 
 #### Challenge: Balancer encoding complexity
+
 **Solution**:
+
 - Use exact encoding from sell_cond_onchain.py
 - Test Balancer swap separately first
 - Verify with eth_call simulation
 
 #### Challenge: Amount calculations
+
 **Solution**:
+
 - Use conservative estimates (95% efficiency)
 - Let Swapr swaps use exact-in mode
 - Merge uses minimum of YES/NO outputs
 
 ### 8. Success Criteria
+
 - [x] Compatible with existing infrastructure
 - [x] Uses proven encoding methods
 - [ ] Executes 10 operations atomically
@@ -245,6 +264,7 @@ python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --use-approvals
 - [ ] Successful on-chain execution
 
 ### 9. Timeline
+
 - Base implementation: 1-2 hours
 - Balancer integration: 1 hour
 - Testing & debugging: 1-2 hours
@@ -268,6 +288,7 @@ python -m src.arbitrage_commands.sell_cond_eip7702 0.001 --test-balancer
 ```
 
 ## Next Steps After Implementation
+
 1. Test with various amounts
 2. Optimize gas usage
 3. Add to pectra_bot.py

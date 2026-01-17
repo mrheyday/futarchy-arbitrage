@@ -8,22 +8,24 @@ After extensive testing with multiple Solidity versions (0.8.19, 0.8.17) and con
 
 ### Test Results Summary
 
-| Contract | Solidity Version | Array Usage | 0xEF Present | Positions |
-|----------|-----------------|-------------|--------------|-----------|
-| FutarchyBatchExecutor | 0.8.19 | Dynamic arrays (Call[]) | ❌ YES | 870, 1448 (deploy), 838, 1416 (runtime) |
-| FutarchyBatchExecutor | 0.8.17 | Dynamic arrays (Call[]) | ❌ YES | 870, 1448 (deploy), 838, 1416 (runtime) |
-| FutarchyBatchExecutorSimple | 0.8.17 | Dynamic arrays (separate) | ❌ YES | 778, 1303 (deploy), 746, 1271 (runtime) |
-| FutarchyBatchExecutorV2 | 0.8.17 | Fixed arrays [20] | ❌ YES | 769, 1486, 2266 (deploy), 737, 1454, 2234 (runtime) |
-| FutarchyBatchExecutorMinimal | 0.8.17 | Fixed arrays [10] | ✅ NO | Clean |
-| FutarchyBatchExecutorUltra | 0.8.17 | No arrays (individual params) | ✅ NO* | Clean (but stack too deep) |
-| SimpleEIP7702Test | 0.8.17 | No arrays | ✅ NO | Clean |
+| Contract                     | Solidity Version | Array Usage                   | 0xEF Present | Positions                                           |
+| ---------------------------- | ---------------- | ----------------------------- | ------------ | --------------------------------------------------- |
+| FutarchyBatchExecutor        | 0.8.19           | Dynamic arrays (Call[])       | ❌ YES       | 870, 1448 (deploy), 838, 1416 (runtime)             |
+| FutarchyBatchExecutor        | 0.8.17           | Dynamic arrays (Call[])       | ❌ YES       | 870, 1448 (deploy), 838, 1416 (runtime)             |
+| FutarchyBatchExecutorSimple  | 0.8.17           | Dynamic arrays (separate)     | ❌ YES       | 778, 1303 (deploy), 746, 1271 (runtime)             |
+| FutarchyBatchExecutorV2      | 0.8.17           | Fixed arrays [20]             | ❌ YES       | 769, 1486, 2266 (deploy), 737, 1454, 2234 (runtime) |
+| FutarchyBatchExecutorMinimal | 0.8.17           | Fixed arrays [10]             | ✅ NO        | Clean                                               |
+| FutarchyBatchExecutorUltra   | 0.8.17           | No arrays (individual params) | ✅ NO\*      | Clean (but stack too deep)                          |
+| SimpleEIP7702Test            | 0.8.17           | No arrays                     | ✅ NO        | Clean                                               |
 
-*Note: FutarchyBatchExecutorUltra failed compilation due to "stack too deep" with 11 function parameters.
+\*Note: FutarchyBatchExecutorUltra failed compilation due to "stack too deep" with 11 function parameters.
 
 ### Key Findings
 
 #### 1. Dynamic Arrays Are The Primary Trigger
+
 Any use of dynamic arrays in function parameters generates 0xEF opcodes:
+
 ```solidity
 // This generates 0xEF
 function execute(Call[] calldata calls) external { ... }
@@ -37,7 +39,9 @@ function execute(
 ```
 
 #### 2. Large Fixed-Size Arrays Also Trigger 0xEF
+
 Fixed arrays larger than [10] seem to trigger 0xEF generation:
+
 ```solidity
 // This generates 0xEF
 function execute20(
@@ -55,7 +59,9 @@ function execute10(
 ```
 
 #### 3. Complex Data Structures Contribute
+
 The combination of:
+
 - Struct definitions
 - Arrays of structs
 - Multiple arrays in parameters
@@ -64,7 +70,9 @@ The combination of:
 All contribute to 0xEF generation.
 
 #### 4. Simple Contracts Remain Clean
+
 Contracts with:
+
 - No array parameters
 - Simple function signatures
 - Basic operations
@@ -80,6 +88,7 @@ The 0xEF byte appears in the bytecode as part of:
 3. **Loop Constructs**: For loops over arrays often result in jump patterns containing 0xEF
 
 Example bytecode analysis shows 0xEF appearing in contexts like:
+
 ```
 Position 870: ...60ef60... (part of PUSH operations)
 Position 1448: ...80ef80... (part of DUP/PUSH sequences)
@@ -96,6 +105,7 @@ Testing with 0.8.17 (and even considering 0.8.15) shows the same 0xEF generation
 ### Workarounds That Work
 
 #### 1. Minimal Contract Approach
+
 ```solidity
 contract FutarchyBatchExecutorMinimal {
     function execute10(
@@ -109,6 +119,7 @@ contract FutarchyBatchExecutorMinimal {
 ```
 
 #### 2. No-Array Approach
+
 ```solidity
 contract SimpleEIP7702Test {
     function execute(address target, uint256 value, bytes calldata data) external {
@@ -118,6 +129,7 @@ contract SimpleEIP7702Test {
 ```
 
 #### 3. Sequential Calls Approach
+
 ```solidity
 function execute3(
     address target1, bytes calldata data1,
@@ -148,10 +160,12 @@ Given these findings, the best approach is:
 ### Impact on Arbitrage Bot
 
 The arbitrage operations typically need:
+
 - Buy flow: ~11 operations
 - Sell flow: ~10 operations
 
 The `execute10` function can handle most cases, with the option to:
+
 - Split into two transactions for >10 operations
 - Combine some operations (e.g., batch approvals)
 

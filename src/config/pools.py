@@ -5,18 +5,18 @@ This module is currently in EXPERIMENTAL status.
 Contains pool configurations, settings, and constants.
 """
 
-from typing import Dict, Any
+from typing import Any
 from .contracts import CONTRACT_ADDRESSES
 
 # Pool configurations with token slot information
-POOL_CONFIG_YES: Dict[str, Any] = {
+POOL_CONFIG_YES: dict[str, Any] = {
     "address": "0x9a14d28909f42823ee29847f87a15fb3b6e8aed3",
     "tokenCompanySlot": 0,  # Company YES is token0
     "fee": 3000,  # 0.3% fee tier
     "description": "Company YES / sDAI YES pool"
 }
 
-POOL_CONFIG_NO: Dict[str, Any] = {
+POOL_CONFIG_NO: dict[str, Any] = {
     "address": "0x6E33153115Ab58dab0e0F1E3a2ccda6e67FA5cD7",
     "tokenCompanySlot": 1,  # Company NO is token1
     "fee": 3000,  # 0.3% fee tier
@@ -24,7 +24,7 @@ POOL_CONFIG_NO: Dict[str, Any] = {
 }
 
 # Balancer pool configuration
-BALANCER_CONFIG: Dict[str, Any] = {
+BALANCER_CONFIG: dict[str, Any] = {
     "vault_address": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
     "pool_address": "0xd1d7fa8871d84d0e77020fc28b7cd5718c446522",
     "pool_id": "0xd1d7fa8871d84d0e77020fc28b7cd5718c4465220000000000000000000001d7",
@@ -37,7 +37,7 @@ MIN_SQRT_RATIO: int = 4295128739
 MAX_SQRT_RATIO: int = 1461446703485210103287273052203988822378723970342
 
 # Pool price impact thresholds
-PRICE_IMPACT_THRESHOLDS: Dict[str, float] = {
+PRICE_IMPACT_THRESHOLDS: dict[str, float] = {
     "warning": 0.01,    # 1% price impact triggers warning
     "critical": 0.05,   # 5% price impact triggers critical warning
     "max": 0.10        # 10% maximum allowed price impact
@@ -50,7 +50,7 @@ UNISWAP_V3_CONFIG = {
     "recipient_address": "0x33A0b5d7DA5314594D2C163D448030b9F1cADcb2"  # Default recipient
 }
 
-def get_pool_config(pool_address: str) -> Dict[str, Any]:
+def get_pool_config(pool_address: str) -> dict[str, Any]:
     """
     Get configuration for a specific pool address.
     
@@ -81,4 +81,4 @@ def is_valid_sqrt_price(sqrt_price: int) -> bool:
     Returns:
         bool: True if price is valid, False otherwise
     """
-    return MIN_SQRT_RATIO <= sqrt_price <= MAX_SQRT_RATIO 
+    return MIN_SQRT_RATIO <= sqrt_price <= MAX_SQRT_RATIO

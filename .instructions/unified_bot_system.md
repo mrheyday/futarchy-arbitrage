@@ -1,27 +1,31 @@
 # Unified Bot System - Implementation Status
 
 ## Overview
+
 The unified bot system replaces individual `.env` files with a centralized Supabase configuration system, enabling scalable multi-bot management with secure key derivation.
 
 ## Architecture Components
 
 ### 1. Database Schema (Deployed)
+
 ```sql
 -- bot_configurations: Core bot registry
 - id, bot_name, wallet_address, key_derivation_path
 - bot_type, status, config (JSONB), timestamps
 
--- bot_market_assignments: Bot-to-market mappings  
+-- bot_market_assignments: Bot-to-market mappings
 - bot_id, market_event_id, pool_id, is_active
 ```
 
 ### 2. Key Management (`src/config/key_manager.py`)
+
 - HD wallet derivation from single master key
 - Deterministic address generation per bot
 - BIP44-style paths: `m/44'/60'/0'/0/{index}`
 - No private keys stored in database
 
 ### 3. Configuration Manager (`src/config/config_manager.py`)
+
 - Supabase integration for bot configs
 - Bot lifecycle: register → configure → assign → activate
 - JSONB config structure:
@@ -35,6 +39,7 @@ The unified bot system replaces individual `.env` files with a centralized Supab
   ```
 
 ### 4. Unified Bot (`src/arbitrage_commands/unified_bot.py`)
+
 - Loads config from Supabase at runtime
 - Derives private key from master + path
 - Integrates existing arbitrage logic
@@ -42,6 +47,7 @@ The unified bot system replaces individual `.env` files with a centralized Supab
 - Supports dry-run mode
 
 ### 5. CLI Tool (`src/config/cli.py`)
+
 ```bash
 # Bot management commands
 register    # Create new bot
@@ -59,6 +65,7 @@ address     # Generate deterministic address
 ## Migration Path
 
 ### Environment Setup
+
 ```bash
 # Old: Multiple .env files
 .env.0x9590dAF4...  # Market 1 config + keys
@@ -71,6 +78,7 @@ SUPABASE_ANON_KEY=eyJ...
 ```
 
 ### Bot Registration Flow
+
 ```bash
 # 1. Install dependencies
 pip install supabase tabulate
@@ -103,19 +111,22 @@ python -m src.arbitrage_commands.unified_bot \
 ```
 
 ## Security Model
+
 - **Master key**: Only in local .env, never in Supabase
 - **Derived keys**: Generated at runtime, never stored
 - **Access control**: Supabase RLS policies (to be configured)
 - **Wallet isolation**: Each bot has unique deterministic address
 
 ## Benefits
+
 1. **Scalability**: Unlimited bots from single master key
-2. **Flexibility**: JSONB allows schema-free config evolution  
+2. **Flexibility**: JSONB allows schema-free config evolution
 3. **Auditability**: All config changes tracked in database
 4. **Simplicity**: 2 tables vs complex normalized schema
 5. **Security**: Reduced key exposure, centralized management
 
 ## Current Status
+
 ✅ Database tables deployed
 ✅ KeyManager implemented  
 ✅ ConfigManager implemented
@@ -124,6 +135,7 @@ python -m src.arbitrage_commands.unified_bot \
 ✅ Dependencies updated
 
 ## Next Steps
+
 1. Configure Supabase RLS policies
 2. Migrate existing bot configs
 3. Set up monitoring/alerts
@@ -131,6 +143,7 @@ python -m src.arbitrage_commands.unified_bot \
 5. Implement strategy templates
 
 ## Usage Example
+
 ```bash
 # List active bots
 python -m src.config.cli list

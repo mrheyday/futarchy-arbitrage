@@ -8,7 +8,7 @@ via EIP-7702 and the minimal executor contract that supports up to 10 calls.
 import os
 import sys
 import time
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Any
 from decimal import Decimal, InvalidOperation
 
 from web3 import Web3
@@ -56,7 +56,7 @@ FUTARCHY_PROPOSAL = os.environ["FUTARCHY_PROPOSAL_ADDRESS"]
 BALANCER_POOL = os.environ["BALANCER_POOL_ADDRESS"]
 
 
-def check_approvals() -> Dict[str, bool]:
+def check_approvals() -> dict[str, bool]:
     """
     Check if required approvals are already set to max.
     
@@ -106,9 +106,9 @@ def get_allowance(w3: Web3, token: str, owner: str, spender: str) -> int:
 
 def build_buy_conditional_bundle_minimal(
     amount_sdai: Decimal,
-    simulation_results: Optional[Dict[str, Any]] = None,
-    skip_approvals: Optional[Dict[str, bool]] = None
-) -> List[Dict[str, Any]]:
+    simulation_results: dict[str, Any] | None = None,
+    skip_approvals: dict[str, bool] | None = None
+) -> list[dict[str, Any]]:
     """
     Build bundled transaction for buy conditional flow (max 10 calls).
     
@@ -243,7 +243,7 @@ def build_buy_conditional_bundle_minimal(
     return calls
 
 
-def simulate_buy_conditional_minimal(amount: Decimal) -> Dict[str, Any]:
+def simulate_buy_conditional_minimal(amount: Decimal) -> dict[str, Any]:
     """
     Perform simulation for buy conditional flow using state tracking.
     
@@ -361,7 +361,7 @@ def simulate_buy_conditional_minimal(amount: Decimal) -> Dict[str, Any]:
 def buy_conditional_bundled_minimal(
     amount: Decimal,
     broadcast: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute buy conditional flow using EIP-7702 bundled transactions.
     

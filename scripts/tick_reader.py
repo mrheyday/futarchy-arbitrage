@@ -44,7 +44,6 @@ Notes on Algebra bitmap indexing (Integral):
 import argparse
 import json
 import sys
-from typing import Optional, List
 import math
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -245,7 +244,7 @@ def main():
         from_block = args.from_block if args.from_block is not None else 0
         to_block = args.to_block if args.to_block is not None else w3.eth.block_number
         chunk = max(1000, int(args.chunk_blocks))
-        include = set([s.strip().lower() for s in args.event_types.split(',') if s.strip()])
+        include = {s.strip().lower() for s in args.event_types.split(',') if s.strip()}
 
         # Prepare event interfaces (may be None if not present)
         events = {}
@@ -402,8 +401,8 @@ def main():
                 sys.stderr.write("\n")
                 sys.stderr.flush()
 
-        def _read_ticks_parallel(ticks: List[int], threads: int, label: Optional[str] = None) -> List[dict]:
-            results: List[dict] = []
+        def _read_ticks_parallel(ticks: list[int], threads: int, label: str | None = None) -> list[dict]:
+            results: list[dict] = []
             total = len(ticks)
             label = label or "ticks"
             done = 0
@@ -430,7 +429,7 @@ def main():
             _progress_finish()
             return results
 
-        def _build_tick_list(start_tick: int, step: int, multiples: int) -> List[int]:
+        def _build_tick_list(start_tick: int, step: int, multiples: int) -> list[int]:
             return [start_tick + i * step * tick_spacing for i in range(1, multiples + 1)]
 
         # Sequential/parallel scan stepping by tickSpacing
@@ -442,7 +441,7 @@ def main():
                 infos.sort(key=lambda x: x["tick"])  # ascending
             else:
                 infos.sort(key=lambda x: x["tick"], reverse=True)  # descending (nearest first)
-            found: List[dict] = []
+            found: list[dict] = []
             for info in infos:
                 if info.get("initialized") and info.get("liquidityTotal", 0) >= min_liq:
                     found.append(info)
@@ -457,7 +456,7 @@ def main():
             # Algebra pool tickTable(int16) packs raw ticks: word = tick // 256
             return int(contract.functions.tickTable(int(word_pos)).call())
 
-        def _fetch_words_parallel(positions: List[int], threads: int, label: str) -> dict:
+        def _fetch_words_parallel(positions: list[int], threads: int, label: str) -> dict:
             out = {}
             total = len(positions)
             done = 0
@@ -498,10 +497,10 @@ def main():
             lower = (1 << low) - 1
             return word & (upper ^ lower)
 
-        def scan_bitmap_up(base_word: int, start_bit: int, max_words: int, min_liq: int, limit: int) -> (List[dict], dict):
+        def scan_bitmap_up(base_word: int, start_bit: int, max_words: int, min_liq: int, limit: int) -> (list[dict], dict):
             """Find initialized ticks >= current (upwards) using raw tick words. Returns (results, stats)."""
             stats = {"words_scanned": 0, "nonzero_words": 0, "bits_seen": 0}
-            results: List[dict] = []
+            results: list[dict] = []
             min_word = MIN_TICK // 256
             max_word = MAX_TICK // 256
             end_wp = min(base_word + max_words, max_word)
@@ -540,10 +539,10 @@ def main():
                         break
             return results, stats
 
-        def scan_bitmap_down(base_word: int, start_bit: int, max_words: int, min_liq: int, limit: int) -> (List[dict], dict):
+        def scan_bitmap_down(base_word: int, start_bit: int, max_words: int, min_liq: int, limit: int) -> (list[dict], dict):
             """Find initialized ticks <= current (downwards) using raw tick words. Returns (results, stats)."""
             stats = {"words_scanned": 0, "nonzero_words": 0, "bits_seen": 0}
-            results: List[dict] = []
+            results: list[dict] = []
             min_word = MIN_TICK // 256
             start_wp = max(base_word - max_words, min_word)
             positions = [wp for wp in range(base_word, start_wp - 1, -1)]
@@ -631,7 +630,7 @@ def main():
 
         if args.scan:
             print("Scanning around current tick for initialized ticks…")
-            ticks_out: List[dict] = []
+            ticks_out: list[dict] = []
             seen = set()
 
             if args.use_bitmap:

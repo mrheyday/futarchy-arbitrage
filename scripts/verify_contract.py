@@ -46,7 +46,7 @@ def generate_verification_data():
     print("\n=== Contract Source ===")
     source_path = os.path.join(os.path.dirname(__file__), '..', 'contracts', 'FutarchyBatchExecutorMinimal.sol')
     try:
-        with open(source_path, 'r') as f:
+        with open(source_path) as f:
             print(f.read())
     except:
         print("Could not read source file")

@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass
-from typing import Tuple, List
 
 from web3 import Web3
 from eth_abi import encode as abi_encode
@@ -117,7 +116,7 @@ def encode_router_swap_exact_in(
     amount_in: int,
     min_out: int,
     deadline_secs: int = 1800,
-) -> Tuple[str, bytes]:
+) -> tuple[str, bytes]:
     """Encode BatchRouter.swapExactIn(paths, deadline, wethIsEth=false, userData='')."""
     router = _router_entrypoint(w3, cfg)  # <<< entrypoint, matches working trace
     deadline = int(time.time()) + int(deadline_secs)
@@ -175,7 +174,7 @@ def quote_aave_gno_out(
     amount_in: int,
     slippage_bps: int,
     executor_address: str,
-) -> Tuple[int, int]:
+) -> tuple[int, int]:
     """
     Quote based on actual pool spot price with slippage.
     Returns (quote_out, min_out) in wei.

@@ -1,5 +1,4 @@
 import os, time
-from typing import List, Tuple
 from eth_account import Account
 from web3 import Web3
 
@@ -43,7 +42,7 @@ ERC20_ABI = [
 MAX_UINT256 = (1 << 256) - 1         # 2**256 − 1
 
 # Build allowances list dynamically, skipping missing env vars
-ALLOWANCES: List[Tuple[str, str, int]] = []
+ALLOWANCES: list[tuple[str, str, int]] = []
 
 # Helper function to safely add allowance
 def add_allowance(token_env: str, spender_env: str, amount: int, comment: str = "") -> None:

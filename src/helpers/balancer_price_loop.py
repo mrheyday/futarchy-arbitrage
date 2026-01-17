@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from decimal import Decimal
 import json
-from typing import Tuple
 import os
 import time
 from datetime import datetime, timezone
@@ -46,7 +45,7 @@ def get_pool_price(
     *,
     base_token_index: int = 0,
     vault_addr: str | None = None,
-) -> Tuple[Decimal, str, str]:
+) -> tuple[Decimal, str, str]:
     vault = _get_vault(w3, vault_addr)
     tokens, _, balances_raw, _ = vault.functions.getPoolTokenInfo(
         w3.to_checksum_address(pool_address)

@@ -1,7 +1,7 @@
 """
 Multicall V2 command builder for the simplified FutarchyArbitrageExecutorV2 contract.
 """
-from typing import List, Tuple, Dict, Any, Optional
+from typing import Any
 from web3 import Web3
 from eth_abi import encode
 from decimal import Decimal
@@ -17,7 +17,7 @@ class MulticallV2Builder:
     def __init__(self, executor_address: str, w3: Web3):
         self.executor_address = Web3.to_checksum_address(executor_address)
         self.w3 = w3
-        self.calls: List[Tuple[str, bytes]] = []
+        self.calls: list[tuple[str, bytes]] = []
     
     def add_call(self, target: str, calldata: bytes) -> "MulticallV2Builder":
         """Add a raw call to the multicall."""
@@ -74,7 +74,7 @@ class MulticallV2Builder:
         )
         return self.add_call(router, data)
     
-    def add_balancer_swap(self, vault: str, swap_params: Dict[str, Any]) -> "MulticallV2Builder":
+    def add_balancer_swap(self, vault: str, swap_params: dict[str, Any]) -> "MulticallV2Builder":
         """
         Add Balancer swap call.
         
@@ -97,7 +97,7 @@ class MulticallV2Builder:
         print("Note: Balancer swap encoding requires full ABI - use contract interface instead")
         return self
     
-    def add_swapr_swap(self, router: str, swap_params: Dict[str, Any]) -> "MulticallV2Builder":
+    def add_swapr_swap(self, router: str, swap_params: dict[str, Any]) -> "MulticallV2Builder":
         """
         Add Swapr exactInputSingle call.
         
@@ -135,7 +135,7 @@ class MulticallV2Builder:
         data = sig + encode(['bytes'], [struct_data])
         return self.add_call(router, data)
     
-    def build(self) -> List[Tuple[str, bytes]]:
+    def build(self) -> list[tuple[str, bytes]]:
         """Build and return the calls array."""
         return self.calls.copy()
     
@@ -166,8 +166,8 @@ def build_buy_conditional_arbitrage_v2(
     executor_address: str,
     w3: Web3,
     amount_sdai: int,
-    addresses: Dict[str, str]
-) -> List[Tuple[str, bytes]]:
+    addresses: dict[str, str]
+) -> list[tuple[str, bytes]]:
     """
     Build multicall for buy conditional arbitrage using V2 pattern.
     
@@ -263,8 +263,8 @@ def build_sell_conditional_arbitrage_v2(
     executor_address: str,
     w3: Web3,
     amount_company: int,
-    addresses: Dict[str, str]
-) -> List[Tuple[str, bytes]]:
+    addresses: dict[str, str]
+) -> list[tuple[str, bytes]]:
     """
     Build multicall for sell conditional arbitrage using V2 pattern.
     

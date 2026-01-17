@@ -1,4 +1,5 @@
 # Failure Doctrine & Recovery Plan
+
 # Institutional Solver Intelligence System
 
 ## Overview
@@ -37,22 +38,26 @@ This document outlines the failure handling philosophy, recovery procedures, and
 #### Failure Mode: Intent Execution Reverts
 
 **Detection:**
+
 ```solidity
 error ExecutionFailed();
 ```
 
 **Causes:**
+
 - Invalid execution data
 - Insufficient gas
 - Solver logic error
 - External dependency failure
 
 **Automatic Response:**
+
 1. Transaction reverts atomically
 2. No state changes persisted
 3. Gas refunded to user (minus execution cost)
 
 **Recovery Procedure:**
+
 ```python
 # 1. Analyze failure
 tx_hash = "0x..."
@@ -67,6 +72,7 @@ client.resolve_intent(intent_id, solver, corrected_data)
 ```
 
 **Reputation Impact:**
+
 - Solver reputation **NOT** penalized (automatic failure)
 - Manual review may reveal solver fault
 - Owner can slash reputation if needed
@@ -74,20 +80,24 @@ client.resolve_intent(intent_id, solver, corrected_data)
 #### Failure Mode: Reputation Gate Failure
 
 **Detection:**
+
 ```solidity
 error ReputationSlash();
 ```
 
 **Causes:**
+
 - Solver reputation < 100 (minimum threshold)
 - Previous slashing events
 - Insufficient positive reputation accumulation
 
 **Automatic Response:**
+
 1. Transaction reverts immediately (pre-execution check)
 2. No gas wasted on execution attempt
 
 **Recovery Procedure:**
+
 ```python
 # Option 1: Use different solver
 client.resolve_intent(intent_id, alternate_solver, exec_data)
@@ -98,6 +108,7 @@ client.resolve_intent(intent_id, solver, exec_data)
 ```
 
 **Prevention:**
+
 - Monitor solver reputations regularly
 - Maintain whitelist of high-reputation solvers
 - Set alerts for reputation < 150
@@ -107,21 +118,25 @@ client.resolve_intent(intent_id, solver, exec_data)
 #### Failure Mode: No Bids Revealed
 
 **Detection:**
+
 ```solidity
 error InvalidBid();  // Thrown in settleAuction if tieCount == 0
 ```
 
 **Causes:**
+
 - No solvers committed bids
 - All solvers failed to reveal
 - Reveal values don't match commitments
 
 **Automatic Response:**
+
 1. Settlement transaction reverts
 2. Auction remains in closed state
 3. Bids can still be revealed if commit phase issue
 
 **Recovery Procedure:**
+
 ```python
 # 1. Check auction state
 auction_stats = monitor.get_auction_stats(auction_id)
@@ -134,7 +149,7 @@ for solver in expected_solvers:
     # Check if bid was committed
     # Verify reveal attempt
     # Contact solver for manual reveal
-    
+
 # 4. Settle when bids available
 client.settle_auction(auction_id, revealed_solvers)
 
@@ -143,6 +158,7 @@ client.contract.functions.openAuction(auction_id + 1).transact()
 ```
 
 **Post-Incident:**
+
 - Review why solvers didn't reveal
 - Check for network issues during reveal period
 - Consider extending reveal periods
@@ -150,9 +166,11 @@ client.contract.functions.openAuction(auction_id + 1).transact()
 #### Failure Mode: CLZ Overflow in Bid Calculation
 
 **Detection:**
+
 - This is prevented by design; CLZ always returns 0-255
 
 **Mitigation:**
+
 ```solidity
 uint256 leadingZeros;
 assembly { leadingZeros := clz(bid.revealValue) }
@@ -160,6 +178,7 @@ uint256 logApprox = 255 - leadingZeros;  // Always valid
 ```
 
 **Recovery:**
+
 - Not applicable (prevented by design)
 
 ### Flashloan Failures
@@ -167,22 +186,26 @@ uint256 logApprox = 255 - leadingZeros;  // Always valid
 #### Failure Mode: All Providers Fail
 
 **Detection:**
+
 ```solidity
 error FlashloanFailed();
 ```
 
 **Causes:**
+
 - All providers out of liquidity
 - Amount too small (CLZ check fails)
 - Network connectivity issues
 - Provider contracts paused
 
 **Automatic Response:**
+
 1. Transaction reverts after trying all providers
 2. Loop through: Aave → Balancer → Morpho
 3. Each failure logged in transaction trace
 
 **Recovery Procedure:**
+
 ```python
 # 1. Check provider status
 aave_liquidity = check_aave_liquidity(token)
@@ -206,6 +229,7 @@ client.contract.functions.addFlashloanProvider(new_provider).transact()
 ```
 
 **Prevention:**
+
 - Monitor provider liquidity daily
 - Maintain diverse provider list
 - Set amount minimums well above 2^10
@@ -215,20 +239,24 @@ client.contract.functions.addFlashloanProvider(new_provider).transact()
 #### Failure Mode: Insufficient Entropy
 
 **Detection:**
+
 ```solidity
 error MEVDetected();
 ```
 
 **Causes:**
+
 - Predictable transaction patterns
 - Block timestamp manipulation
 - Hash collision (extremely rare)
 
 **Automatic Response:**
+
 1. Transaction reverts before execution
 2. Protects against MEV extraction
 
 **Recovery Procedure:**
+
 ```python
 # 1. Wait for next block
 time.sleep(5)
@@ -243,6 +271,7 @@ client.resolve_intent(intent_id, solver, exec_data)
 ```
 
 **Escalation:**
+
 - If repeated failures: security incident
 - Review transaction patterns
 - Consider adjusting entropy threshold
@@ -252,21 +281,25 @@ client.resolve_intent(intent_id, solver, exec_data)
 #### Failure Mode: Compliance Violation
 
 **Detection:**
+
 ```solidity
 error ComplianceViolation();
 ```
 
 **Causes:**
+
 - Missing KYC flag
 - Missing Accredited flag
 - Missing Sanctions Clear flag
 - Flags not set for new solver
 
 **Automatic Response:**
+
 1. Transaction reverts
 2. No unauthorized solver can execute
 
 **Recovery Procedure:**
+
 ```python
 # 1. Verify solver should be authorized
 verify_solver_compliance(solver)
@@ -280,6 +313,7 @@ client.resolve_intent(intent_id, solver, exec_data)
 ```
 
 **Audit Trail:**
+
 - Log all compliance flag changes
 - Maintain off-chain verification records
 - Review quarterly
@@ -291,6 +325,7 @@ client.resolve_intent(intent_id, solver, exec_data)
 **Purpose:** Reproduce failed transactions in controlled environment
 
 **Setup:**
+
 ```python
 from eth_tester import EthereumTester
 from web3 import Web3, EthereumTesterProvider
@@ -314,6 +349,7 @@ analyze_failure(trace)
 ```
 
 **Use Cases:**
+
 - Understanding complex failure modes
 - Testing fixes before deployment
 - Training new operators
@@ -322,6 +358,7 @@ analyze_failure(trace)
 ### Forensic Analysis
 
 **Event Log Analysis:**
+
 ```python
 # Extract all events for failed transaction
 events = []
@@ -332,7 +369,7 @@ for log in tx_receipt['logs']:
 # Analyze event sequence
 for event in events:
     print(f"{event['event']}: {event['args']}")
-    
+
 # Look for patterns:
 # - Last successful state change
 # - First failed validation
@@ -341,12 +378,13 @@ for event in events:
 ```
 
 **CLZ Value Verification:**
+
 ```python
 # Verify CLZ calculations match on-chain
 def verify_clz(value):
     # Python calculation
     py_clz = 255 - (value.bit_length() if value > 0 else 256)
-    
+
     # Query contract (if possible)
     # Compare results
     return py_clz
@@ -362,13 +400,16 @@ for metric, value in failed_metrics.items():
 ### Scenario: Contract Compromise
 
 **Warning Signs:**
+
 - Unauthorized owner changes
 - Unexpected reputation changes
 - Mass compliance flag removal
 - Suspicious auction settlements
 
 **Immediate Actions:**
+
 1. **Pause Operations** (if pause function exists)
+
    ```python
    # NOT IMPLEMENTED - Would need to add
    # contract.functions.pause().transact()
@@ -385,15 +426,18 @@ for metric, value in failed_metrics.items():
    - Block malicious solvers
 
 **Recovery Steps:**
+
 1. Deploy new contract version with fixes
 2. Migrate state:
+
    ```python
    # Export state from old contract
    old_state = export_state(old_contract)
-   
+
    # Import to new contract
    import_state(new_contract, old_state)
    ```
+
 3. Update all client integrations
 4. Communicate with users
 5. Post-incident review
@@ -401,11 +445,13 @@ for metric, value in failed_metrics.items():
 ### Scenario: Data Loss
 
 **Backup Strategy:**
+
 - Daily SQLite database backups
 - Event logs in blockchain (permanent)
 - Deployment info in git repository
 
 **Recovery:**
+
 ```bash
 # 1. Restore from backup
 cp backups/state_YYYYMMDD.db institutional_solver_state.db
@@ -423,11 +469,13 @@ python scripts/verify_state.py
 ### Scenario: Network Partition
 
 **Detection:**
+
 - RPC connection failures
 - Block production stops
 - Conflicting chain tips
 
 **Response:**
+
 ```python
 # Switch to backup RPC
 backup_rpcs = [
@@ -444,6 +492,7 @@ for rpc in backup_rpcs:
 ```
 
 **Prevention:**
+
 - Maintain multiple RPC providers
 - Monitor network status
 - Use WebSocket for real-time updates
@@ -453,6 +502,7 @@ for rpc in backup_rpcs:
 ### Monthly Recovery Drills
 
 **Test 1: Database Restore**
+
 ```bash
 # Simulate data loss
 mv institutional_solver_state.db institutional_solver_state.db.bak
@@ -465,6 +515,7 @@ python -c "from src.helpers.institutional_solver_client import InstitutionalSolv
 ```
 
 **Test 2: Shadow Simulation**
+
 ```python
 # Pick a recent successful transaction
 test_tx = "0x..."
@@ -477,6 +528,7 @@ assert shadow_result == actual_result
 ```
 
 **Test 3: Failover**
+
 ```python
 # Disable primary flashloan provider
 # Verify automatic failover to secondary
@@ -486,6 +538,7 @@ assert shadow_result == actual_result
 ### Quarterly Disaster Recovery
 
 **Full DR Drill:**
+
 1. Simulate catastrophic failure
 2. Deploy new contract
 3. Restore all state
@@ -529,6 +582,7 @@ Track these to improve recovery processes:
 - **Recovery Success Rate:** % of recoveries completed successfully
 
 **Targets:**
+
 - MTTD: < 5 minutes
 - MTTR (respond): < 15 minutes
 - MTTR (recover): < 1 hour
@@ -539,6 +593,7 @@ Track these to improve recovery processes:
 The Institutional Solver Intelligence System is designed with multiple layers of failure protection. By following this recovery plan and conducting regular drills, operators can ensure maximum uptime and rapid recovery from any incident.
 
 **Remember:**
+
 - Failures are opportunities to improve
 - All failures should be logged and analyzed
 - Recovery procedures should be tested regularly

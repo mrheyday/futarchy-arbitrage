@@ -17,20 +17,20 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 
-def load_json_config(json_path: str) -> Dict[str, Any]:
+def load_json_config(json_path: str) -> dict[str, Any]:
     """Load and parse the JSON configuration file."""
-    with open(json_path, 'r') as f:
+    with open(json_path) as f:
         return json.load(f)
 
 
-def load_template_env(template_path: str) -> Dict[str, str]:
+def load_template_env(template_path: str) -> dict[str, str]:
     """Load a template .env file and parse it into a dictionary."""
     env_vars = {}
     
-    with open(template_path, 'r') as f:
+    with open(template_path) as f:
         for line in f:
             line = line.strip()
             # Skip comments and empty lines
@@ -47,7 +47,7 @@ def load_template_env(template_path: str) -> Dict[str, str]:
     return env_vars
 
 
-def extract_values_from_json(config: Dict[str, Any]) -> Dict[str, str]:
+def extract_values_from_json(config: dict[str, Any]) -> dict[str, str]:
     """Extract the required environment variable values from JSON config."""
     values = {}
     
@@ -78,7 +78,7 @@ def extract_values_from_json(config: Dict[str, Any]) -> Dict[str, str]:
     return values
 
 
-def generate_env_file(template_vars: Dict[str, str], json_values: Dict[str, str], output_path: str):
+def generate_env_file(template_vars: dict[str, str], json_values: dict[str, str], output_path: str):
     """Generate a new .env file by updating template with JSON values."""
     # Update template with new values
     updated_vars = template_vars.copy()

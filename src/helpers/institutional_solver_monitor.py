@@ -12,7 +12,6 @@ import os
 import json
 import time
 import sqlite3
-from typing import Dict, List, Optional
 from web3 import Web3
 from decimal import Decimal
 import logging
@@ -34,7 +33,7 @@ class SolverMonitor:
         self,
         web3: Web3,
         contract_address: str,
-        contract_abi: List[Dict],
+        contract_abi: list[dict],
         db_path: str = "monitoring.db"
     ):
         self.web3 = web3
@@ -87,7 +86,7 @@ class SolverMonitor:
         conn.commit()
         conn.close()
 
-    def monitor_events(self, from_block: int, to_block: Optional[int] = None):
+    def monitor_events(self, from_block: int, to_block: int | None = None):
         """
         Monitor contract events.
         
@@ -173,7 +172,7 @@ class SolverMonitor:
         event_name: str,
         block_number: int,
         tx_hash: str,
-        data: Dict
+        data: dict
     ):
         """Store event in database."""
         conn = sqlite3.connect(self.db_path)
@@ -248,7 +247,7 @@ class SolverMonitor:
         leading_zeros = 256 - bit_length
         return 255 - leading_zeros
 
-    def health_check(self) -> Dict[str, bool]:
+    def health_check(self) -> dict[str, bool]:
         """
         Perform system health checks.
         
@@ -307,7 +306,7 @@ class SolverMonitor:
         conn.commit()
         conn.close()
 
-    def get_auction_stats(self, auction_id: int) -> Dict:
+    def get_auction_stats(self, auction_id: int) -> dict:
         """Get statistics for a specific auction."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
@@ -346,7 +345,7 @@ class SolverMonitor:
             'winning_bid': winning_bid
         }
 
-    def get_solver_stats(self, solver_address: str) -> Dict:
+    def get_solver_stats(self, solver_address: str) -> dict:
         """Get statistics for a specific solver."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()

@@ -1,11 +1,13 @@
 # EIP-7702 Integration Design for Complex Bot
 
 ## Overview
+
 This document outlines the design for integrating EIP-7702 (Pectra bundled transactions) into the futarchy arbitrage complex bot. Instead of sending multiple sequential transactions, all operations will be bundled into a single atomic EIP-7702 transaction.
 
 ## Architecture
 
 ### 1. Implementation Contract
+
 We need an implementation contract that the EOA will delegate to. This contract will contain the batching logic.
 
 ```solidity
@@ -16,10 +18,10 @@ contract FutarchyBatchExecutor {
         uint256 value;
         bytes data;
     }
-    
+
     function execute(Call[] calldata calls) external payable {
         require(msg.sender == address(this), "Only self-execution allowed");
-        
+
         for (uint256 i = 0; i < calls.length; i++) {
             (bool success, bytes memory result) = calls[i].target.call{value: calls[i].value}(calls[i].data);
             require(success, string(result));
@@ -31,6 +33,7 @@ contract FutarchyBatchExecutor {
 ### 2. Python Implementation Structure
 
 #### a. EIP-7702 Transaction Builder (`src/helpers/eip7702_builder.py`)
+
 ```python
 from typing import List, Dict, Any
 from web3 import Web3
@@ -42,7 +45,7 @@ class EIP7702TransactionBuilder:
         self.w3 = w3
         self.implementation_address = implementation_address
         self.calls = []
-    
+
     def add_call(self, target: str, value: int, data: bytes):
         """Add a call to the batch."""
         self.calls.append({
@@ -50,7 +53,7 @@ class EIP7702TransactionBuilder:
             'value': value,
             'data': data
         })
-    
+
     def build_authorization(self, account: Account, nonce: int) -> Dict[str, Any]:
         """Build and sign the EIP-7702 authorization."""
         auth = {
@@ -59,18 +62,18 @@ class EIP7702TransactionBuilder:
             "nonce": nonce
         }
         return account.sign_authorization(auth)
-    
+
     def build_transaction(self, account: Account, gas_price_params: Dict) -> Dict[str, Any]:
         """Build the complete EIP-7702 transaction."""
         # Encode the batch execution call
         calls_data = self._encode_batch_call()
-        
+
         # Get current nonce
         nonce = self.w3.eth.get_transaction_count(account.address)
-        
+
         # Sign authorization
         signed_auth = self.build_authorization(account, nonce)
-        
+
         # Build transaction
         tx = {
             "type": 4,  # EIP-7702 transaction type
@@ -82,9 +85,9 @@ class EIP7702TransactionBuilder:
             "authorizationList": [signed_auth],
             **gas_price_params
         }
-        
+
         return tx
-    
+
     def _encode_batch_call(self) -> bytes:
         """Encode the execute(Call[]) function call."""
         # This would encode the function selector and parameters
@@ -93,6 +96,7 @@ class EIP7702TransactionBuilder:
 ```
 
 #### b. Modified Buy Conditional Function (`src/arbitrage_commands/buy_cond_eip7702.py`)
+
 ```python
 def build_buy_bundle_eip7702(
     amount: float,
@@ -100,10 +104,10 @@ def build_buy_bundle_eip7702(
     liquidate_conditional_sdai_amount: float = None
 ) -> List[Dict[str, Any]]:
     """Build all calls for buy operation to be bundled in EIP-7702 transaction."""
-    
+
     split_amount_in_wei = w3.to_wei(Decimal(amount), "ether")
     calls = []
-    
+
     # 1. Split sDAI → YES/NO conditional sDAI
     split_data = encode_function_call(
         "splitPosition",
@@ -115,7 +119,7 @@ def build_buy_bundle_eip7702(
         'value': 0,
         'data': split_data
     })
-    
+
     # 2. Swap conditional sDAI → conditional Company tokens (YES)
     yes_swap_data = encode_swapr_exact_in(
         token_yes_in, token_yes_out, split_amount_in_wei, 0
@@ -125,7 +129,7 @@ def build_buy_bundle_eip7702(
         'value': 0,
         'data': yes_swap_data
     })
-    
+
     # 3. Swap conditional sDAI → conditional Company tokens (NO)
     no_swap_data = encode_swapr_exact_in(
         token_no_in, token_no_out, split_amount_in_wei, 0
@@ -135,7 +139,7 @@ def build_buy_bundle_eip7702(
         'value': 0,
         'data': no_swap_data
     })
-    
+
     # 4. Merge conditional Company → regular Company token
     if gno_amount:
         merge_data = encode_function_call(
@@ -148,12 +152,12 @@ def build_buy_bundle_eip7702(
             'value': 0,
             'data': merge_data
         })
-    
+
     # 5. Liquidate excess conditional sDAI if needed
     if liquidate_conditional_sdai_amount:
         # Add liquidation calls
         pass
-    
+
     # 6. Sell Company token → sDAI on Balancer
     balancer_swap_data = encode_balancer_swap(
         gno_amount_in_wei, min_sdai_out
@@ -163,41 +167,42 @@ def build_buy_bundle_eip7702(
         'value': 0,
         'data': balancer_swap_data
     })
-    
+
     return calls
 ```
 
 #### c. Modified Complex Bot (`src/arbitrage_commands/complex_bot_eip7702.py`)
+
 ```python
 def execute_buy_with_eip7702(amount: float, tolerance: float):
     """Execute buy operation using EIP-7702 bundled transaction."""
-    
+
     # 1. Build the bundle of calls
     calls = build_buy_bundle_eip7702(amount)
-    
+
     # 2. Create EIP-7702 transaction builder
     builder = EIP7702TransactionBuilder(w3, IMPLEMENTATION_CONTRACT_ADDRESS)
-    
+
     # 3. Add all calls to builder
     for call in calls:
         builder.add_call(call['target'], call['value'], call['data'])
-    
+
     # 4. Build transaction with gas parameters
     gas_params = {
         'gas': 1000000,  # Estimate properly
         'maxFeePerGas': w3.to_wei('30', 'gwei'),
         'maxPriorityFeePerGas': w3.to_wei('2', 'gwei')
     }
-    
+
     tx = builder.build_transaction(acct, gas_params)
-    
+
     # 5. Sign and send
     signed_tx = acct.sign_transaction(tx)
     tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-    
+
     # 6. Wait for receipt
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-    
+
     return {
         'tx_hash': tx_hash.hex(),
         'status': receipt.status,
@@ -208,10 +213,11 @@ def execute_buy_with_eip7702(amount: float, tolerance: float):
 ### 3. Integration Points
 
 #### Modified `complex_bot.py`
+
 ```python
 def run_once(amount: float, tolerance: float, broadcast: bool, use_eip7702: bool = False) -> None:
     # ... existing price discovery code ...
-    
+
     if amount > 0:
         if bal_price_val > ideal_bal_price:
             print("→ Buying conditional GNO")
@@ -235,6 +241,7 @@ def run_once(amount: float, tolerance: float, broadcast: bool, use_eip7702: bool
    - Ensure web3.py supports type 4 transactions
 
 3. **Add Configuration**
+
    ```python
    # src/config/eip7702.py
    EIP7702_CONFIG = {
@@ -259,12 +266,12 @@ def run_once(amount: float, tolerance: float, broadcast: bool, use_eip7702: bool
 
 ### 6. Challenges & Solutions
 
-| Challenge | Solution |
-|-----------|----------|
+| Challenge                            | Solution                                          |
+| ------------------------------------ | ------------------------------------------------- |
 | Dynamic amounts (e.g., swap outputs) | Use minimum amounts or implement callback pattern |
-| Gas estimation | Add buffer for complex bundled operations |
-| Debugging failures | Add detailed logging for each operation |
-| Backward compatibility | Keep flag to use sequential transactions |
+| Gas estimation                       | Add buffer for complex bundled operations         |
+| Debugging failures                   | Add detailed logging for each operation           |
+| Backward compatibility               | Keep flag to use sequential transactions          |
 
 ### 7. Future Enhancements
 

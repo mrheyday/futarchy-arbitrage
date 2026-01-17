@@ -31,7 +31,7 @@ def main():
     if ef_byte in code:
         print(f"❌ Found {code.count(ef_byte)} 0xEF bytes in bytecode")
     else:
-        print("✅ NO 0xEF opcodes in bytecode - deployment successful\!")
+        print(r"✅ NO 0xEF opcodes in bytecode - deployment successful\!")
     
     # Also check transaction details
     tx_hash = "0xe2c3e433288dcecf79aded148544b9dad0f0f9d834c801f8e542aa1c14b270f3"

@@ -5,6 +5,7 @@
 Successfully implemented and tested EIP-7702 bundled transactions for the futarchy arbitrage bot!
 
 ### Test Environment
+
 - Created separate virtual environment with `eth-account>=0.13.6`
 - All dependencies installed successfully
 - Tests run in isolated environment to avoid conflicts
@@ -12,12 +13,14 @@ Successfully implemented and tested EIP-7702 bundled transactions for the futarc
 ### Test Results
 
 #### 1. Core EIP-7702 Functionality ✅
+
 - **Authorization Signing**: Successfully signs EIP-7702 authorizations
 - **Call Encoding**: Properly encodes all operation types (approve, split, swap, merge)
 - **Transaction Building**: Creates valid type 4 transactions with authorization lists
 - **Simple Transactions**: Basic test transactions work correctly
 
 #### 2. Arbitrage Bundle Test ✅
+
 - Successfully built a complete buy conditional arbitrage bundle
 - 8 operations bundled into a single transaction:
   1. Approve FutarchyRouter for sDAI
@@ -30,6 +33,7 @@ Successfully implemented and tested EIP-7702 bundled transactions for the futarc
   8. Approve FutarchyRouter for NO Company token
 
 #### 3. Gas Savings Analysis ✅
+
 - Sequential transactions: 1,457,000 gas
 - EIP-7702 bundled: 1,297,000 gas
 - **Savings: 160,000 gas (11.0%)**
@@ -44,6 +48,7 @@ Successfully implemented and tested EIP-7702 bundled transactions for the futarc
 ### Technical Details
 
 #### Authorization Structure
+
 ```python
 SignedSetCodeAuthorization(
     chain_id=100,
@@ -56,6 +61,7 @@ SignedSetCodeAuthorization(
 ```
 
 #### Transaction Type
+
 - Type: 4 (EIP-7702)
 - Sent to: EOA's own address
 - Authorization List: Contains signed delegation to implementation contract

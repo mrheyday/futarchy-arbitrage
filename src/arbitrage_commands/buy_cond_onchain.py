@@ -9,7 +9,6 @@ import os
 from decimal import Decimal
 from eth_account import Account
 from web3 import Web3, HTTPProvider
-from typing import List, Dict
 
 from helpers.swapr_swap      import w3 as _w3
 from config.abis.futarchy import FUTARCHY_ROUTER_ABI
@@ -42,7 +41,7 @@ def build_exact_in_tx_onchain(
     amount_in_wei: int,
     amount_out_min_wei: int,
     sender: str,
-) -> Dict:
+) -> dict:
     """Build exactInputSingle transaction without Tenderly client."""
     router_addr = os.environ["SWAPR_ROUTER_ADDRESS"]
     router = w3.eth.contract(address=w3.to_checksum_address(router_addr), abi=SWAPR_ROUTER_ABI)
@@ -72,7 +71,7 @@ def build_split_tx_onchain(
     collateral_addr: str,
     amount_wei: int,
     sender: str,
-) -> Dict:
+) -> dict:
     """Build splitPosition transaction without Tenderly client."""
     router = w3.eth.contract(address=w3.to_checksum_address(router_addr), abi=FUTARCHY_ROUTER_ABI)
     data = router.encodeABI(
@@ -98,7 +97,7 @@ def build_merge_tx_onchain(
     collateral_addr: str,
     amount_wei: int,
     sender: str,
-) -> Dict:
+) -> dict:
     """Build mergePositions transaction without Tenderly client."""
     router = w3.eth.contract(address=w3.to_checksum_address(router_addr), abi=FUTARCHY_ROUTER_ABI)
     data = router.encodeABI(
@@ -121,11 +120,11 @@ def build_merge_tx_onchain(
 # --------------------------------------------------------------------------- #
 # Core helper – sign & send                                                   #
 # --------------------------------------------------------------------------- #
-def _send_bundle(bundle: List[Dict]) -> List[str]:
+def _send_bundle(bundle: list[dict]) -> list[str]:
     """Sign and send every tx in *bundle* using sequential nonces."""
     start_nonce = w3.eth.get_transaction_count(acct.address)
     gas_price   = w3.eth.gas_price
-    hashes: List[str] = []
+    hashes: list[str] = []
 
     for i, tx in enumerate(bundle):
         tx_for_signing = {
@@ -144,7 +143,7 @@ def _send_bundle(bundle: List[Dict]) -> List[str]:
 # --------------------------------------------------------------------------- #
 # Public entry‑point                                                          #
 # --------------------------------------------------------------------------- #
-def buy_gno_yes_and_no_amounts_with_sdai(sdai_amount: float) -> List[str]:
+def buy_gno_yes_and_no_amounts_with_sdai(sdai_amount: float) -> list[str]:
     """
     Execute the 3‑step trade sequence **without** simulation:
         1. split sDAI ➜ sDAI‑YES + sDAI‑NO
@@ -173,4 +172,4 @@ def buy_gno_yes_and_no_amounts_with_sdai(sdai_amount: float) -> List[str]:
     )
 
     bundle = [split_tx, yes_swap, no_swap, merge_tx]
-    return _send_bundle(bundle) 
+    return _send_bundle(bundle)

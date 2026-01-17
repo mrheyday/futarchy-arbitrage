@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.33;
 
 /**
  * @title FutarchyBatchExecutor
  * @notice Implementation contract for EIP-7702 batched futarchy arbitrage operations
  * @dev This contract is designed to be used with EIP-7702 where an EOA delegates to this implementation
  *      to execute multiple operations atomically in a single transaction.
- * 
+ *
  * The contract supports:
  * - Batch execution of arbitrary calls
  * - Token approvals management
@@ -14,6 +14,7 @@ pragma solidity 0.8.17;
  * - Integration with Swapr and Balancer protocols
  */
 contract FutarchyBatchExecutor {
+
     // Events
     event CallExecuted(address indexed target, uint256 value, bytes data, bool success);
     event BatchExecuted(uint256 callsExecuted);
@@ -23,6 +24,9 @@ contract FutarchyBatchExecutor {
     error CallFailed(uint256 index, bytes returnData);
     error InvalidAuthority();
     error InsufficientBalance();
+    error LengthMismatch();
+    error ApprovalFailed();
+    error ApprovalReturnedFalse();
 
     // Struct for a single call
     struct Call {
@@ -39,7 +43,7 @@ contract FutarchyBatchExecutor {
     function execute(Call[] calldata calls) external payable {
         // Ensure the caller is the contract itself (EIP-7702 self-execution)
         if (msg.sender != address(this)) revert InvalidAuthority();
-        
+
         _executeBatch(calls);
     }
 
@@ -51,17 +55,18 @@ contract FutarchyBatchExecutor {
      */
     function executeWithResults(Call[] calldata calls) external payable returns (bytes[] memory results) {
         if (msg.sender != address(this)) revert InvalidAuthority();
-        
+
         results = new bytes[](calls.length);
-        
-        for (uint256 i = 0; i < calls.length; i++) {
+
+        for (uint256 i = 0; i < calls.length;) {
             (bool success, bytes memory returnData) = _executeCall(calls[i]);
-            if (!success) {
-                revert CallFailed(i, returnData);
-            }
+            if (!success) revert CallFailed(i, returnData);
             results[i] = returnData;
+            unchecked {
+                ++i;
+            }
         }
-        
+
         emit BatchExecuted(calls.length);
     }
 
@@ -72,27 +77,30 @@ contract FutarchyBatchExecutor {
      * @param spenders Array of spender addresses (must match tokens length)
      * @param amounts Array of amounts to approve (must match tokens length)
      */
-    function setApprovals(
-        address[] calldata tokens,
-        address[] calldata spenders,
-        uint256[] calldata amounts
-    ) external {
+    function setApprovals(address[] calldata tokens, address[] calldata spenders, uint256[] calldata amounts) external {
         if (msg.sender != address(this)) revert InvalidAuthority();
-        require(tokens.length == spenders.length && tokens.length == amounts.length, "Length mismatch");
-        
-        for (uint256 i = 0; i < tokens.length; i++) {
+        if (tokens.length != spenders.length || tokens.length != amounts.length) revert LengthMismatch();
+
+        for (uint256 i = 0; i < tokens.length;) {
             _approve(tokens[i], spenders[i], amounts[i]);
+            unchecked {
+                ++i;
+            }
         }
     }
 
     /**
      * @notice Execute arbitrage: Buy conditional tokens
      * @dev Specialized function for the buy conditional flow
-     * @param params Encoded parameters for the arbitrage operation
      */
-    function executeBuyConditional(bytes calldata params) external payable {
+    function executeBuyConditional(
+        bytes calldata /* params */
+    )
+        external
+        payable
+    {
         if (msg.sender != address(this)) revert InvalidAuthority();
-        
+
         // This would decode params and execute the specific buy conditional flow
         // For now, it's a placeholder - actual implementation would decode and execute
         // the specific sequence of operations for buying conditional tokens
@@ -101,11 +109,15 @@ contract FutarchyBatchExecutor {
     /**
      * @notice Execute arbitrage: Sell conditional tokens
      * @dev Specialized function for the sell conditional flow
-     * @param params Encoded parameters for the arbitrage operation
      */
-    function executeSellConditional(bytes calldata params) external payable {
+    function executeSellConditional(
+        bytes calldata /* params */
+    )
+        external
+        payable
+    {
         if (msg.sender != address(this)) revert InvalidAuthority();
-        
+
         // This would decode params and execute the specific sell conditional flow
         // For now, it's a placeholder - actual implementation would decode and execute
         // the specific sequence of operations for selling conditional tokens
@@ -116,13 +128,14 @@ contract FutarchyBatchExecutor {
      * @param calls Array of calls to execute
      */
     function _executeBatch(Call[] calldata calls) internal {
-        for (uint256 i = 0; i < calls.length; i++) {
+        for (uint256 i = 0; i < calls.length;) {
             (bool success, bytes memory returnData) = _executeCall(calls[i]);
-            if (!success) {
-                revert CallFailed(i, returnData);
+            if (!success) revert CallFailed(i, returnData);
+            unchecked {
+                ++i;
             }
         }
-        
+
         emit BatchExecuted(calls.length);
     }
 
@@ -134,12 +147,10 @@ contract FutarchyBatchExecutor {
      */
     function _executeCall(Call memory call) internal returns (bool success, bytes memory returnData) {
         // Check if contract has sufficient balance for value transfer
-        if (call.value > 0 && address(this).balance < call.value) {
-            revert InsufficientBalance();
-        }
-        
+        if (call.value > 0 && address(this).balance < call.value) revert InsufficientBalance();
+
         (success, returnData) = call.target.call{value: call.value}(call.data);
-        
+
         emit CallExecuted(call.target, call.value, call.data, success);
     }
 
@@ -152,15 +163,13 @@ contract FutarchyBatchExecutor {
     function _approve(address token, address spender, uint256 amount) internal {
         // Encode the approve function call
         bytes memory data = abi.encodeWithSignature("approve(address,uint256)", spender, amount);
-        
+
         (bool success, bytes memory returnData) = token.call(data);
-        require(success, "Approval failed");
-        
+        if (!success) revert ApprovalFailed();
+
         // Decode the return value (bool)
-        if (returnData.length > 0) {
-            require(abi.decode(returnData, (bool)), "Approval returned false");
-        }
-        
+        if (returnData.length > 0) if (!abi.decode(returnData, (bool))) revert ApprovalReturnedFalse();
+
         emit ApprovalSet(token, spender, amount);
     }
 
@@ -173,4 +182,5 @@ contract FutarchyBatchExecutor {
      * @notice Fallback function for unknown function calls
      */
     fallback() external payable {}
+
 }

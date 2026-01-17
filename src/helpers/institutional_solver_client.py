@@ -10,7 +10,6 @@ January 2026 post-Fusaka activation.
 
 import json
 import sqlite3
-from typing import List, Dict, Optional, Tuple
 from web3 import Web3
 from eth_account import Account
 from decimal import Decimal
@@ -29,7 +28,7 @@ class InstitutionalSolverClient:
         self,
         web3: Web3,
         contract_address: str,
-        contract_abi: List[Dict],
+        contract_abi: list[dict],
         private_key: str,
         db_path: str = "institutional_solver_state.db"
     ):
@@ -230,7 +229,7 @@ class InstitutionalSolverClient:
         
         return tx_hash.hex()
 
-    def settle_auction(self, auction_id: int, solvers: List[str]) -> Tuple[str, str]:
+    def settle_auction(self, auction_id: int, solvers: list[str]) -> tuple[str, str]:
         """
         Settle an auction and determine winner using CLZ log-scaling.
         
@@ -370,7 +369,7 @@ class InstitutionalSolverClient:
         conn.commit()
         conn.close()
 
-    def _update_intent_status(self, intent_id: int, status: str, resolver: Optional[str] = None):
+    def _update_intent_status(self, intent_id: int, status: str, resolver: str | None = None):
         """Update intent status in database."""
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
