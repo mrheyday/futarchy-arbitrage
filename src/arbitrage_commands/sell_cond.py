@@ -367,7 +367,7 @@ def sell_gno_yes_and_no_amounts_to_sdai(amount, *, broadcast=False):
     """Calculates the best split based on multiple simulations"""
     # First simulation: No GNO swap limit
     print("STEP 1 ----------------")
-    print("Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({}, None, None)\n".format(amount))
+    print(f"Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({amount}, None, None)\n")
     result = sell_gno_yes_and_no_amounts_to_sdai_single(
         amount, None, None
     )
@@ -383,7 +383,7 @@ def sell_gno_yes_and_no_amounts_to_sdai(amount, *, broadcast=False):
     amount_out_limited = result['gno_out']
     print("amount_out_limited:", amount_out_limited)
 
-    print("Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({}, {}, None)\n".format(amount, amount_out_limited))
+    print(f"Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({amount}, {amount_out_limited}, None)\n")
     result = sell_gno_yes_and_no_amounts_to_sdai_single(
         amount, amount_out_limited, None
     )
@@ -407,7 +407,7 @@ def sell_gno_yes_and_no_amounts_to_sdai(amount, *, broadcast=False):
     else:
         liquidate_conditional_sdai_amount = -w3.from_wei(-liquidate_conditional_sdai_amount_wei, "ether")
 
-    print("Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({}, {}, {})\n".format(amount, amount_out_limited, liquidate_conditional_sdai_amount))
+    print(f"Running:\nsell_gno_yes_and_no_amounts_to_sdai_single({amount}, {amount_out_limited}, {liquidate_conditional_sdai_amount})\n")
     result = sell_gno_yes_and_no_amounts_to_sdai_single(
         amount,
         amount_out_limited,

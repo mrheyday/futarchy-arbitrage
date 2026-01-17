@@ -1,7 +1,6 @@
 import os
 import requests
 import logging
-from typing import List
 from web3 import Web3
 
 BASE = "https://api.tenderly.co/api/v1"
@@ -40,7 +39,7 @@ class TenderlyClient:
 
     # ---------- core ----------
 
-    def simulate(self, txs: List[dict]):
+    def simulate(self, txs: list[dict]):
         """Simulate a bundle of transactions on Tenderly.
 
         Each transaction is enriched with flags that instruct Tenderly to persist

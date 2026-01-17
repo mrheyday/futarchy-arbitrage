@@ -3,10 +3,13 @@
 ## Status: ✅ COMPLETED
 
 ## Overview
+
 Successfully implemented a three-stage simulation flow using `executeWithResults` to extract actual return data from EIP-7702 bundled operations, replacing hardcoded estimates with real values.
 
 ## Problem Solved
+
 Previous implementations used conservative hardcoded ratios for estimating token amounts, leading to:
+
 - Inaccurate profit calculations
 - Missed arbitrage opportunities
 - Transactions failing due to incorrect amount estimates
@@ -33,6 +36,7 @@ Previous implementations used conservative hardcoded ratios for estimating token
 ### Implementation Files
 
 #### `src/arbitrage_commands/sell_cond_eip7702_simulated_v2.py`
+
 The main implementation with executeWithResults:
 
 ```python
@@ -55,7 +59,7 @@ def _eth_call_7702(calls: List[Dict[str, Any]]) -> bytes:
         'gas': 12_000_000,
         'value': 0
     }
-    
+
     result = w3.eth.call(params, 'latest', state_overrides)
     return result
 ```
@@ -77,11 +81,13 @@ def _eth_call_7702(calls: List[Dict[str, Any]]) -> bytes:
 ## Results
 
 ### Before (Conservative Estimates)
+
 - Estimated: 0.000004 Company → 0.000003 YES + 0.000003 NO sDAI
 - Expected loss: -0.000993 sDAI
 - Often missed profitable opportunities
 
 ### After (Actual Amounts)
+
 - Discovered: 0.000041 Company → 0.004774 YES + 0.003636 NO sDAI
 - Expected profit: +0.007409 sDAI
 - Accurate profit calculations enable better trading decisions
@@ -89,11 +95,13 @@ def _eth_call_7702(calls: List[Dict[str, Any]]) -> bytes:
 ## Testing Results
 
 Successfully tested with:
+
 ```bash
 python -m src.arbitrage_commands.sell_cond_eip7702_simulated_v2 0.001 --skip-merge
 ```
 
 Output:
+
 ```
 === Sell Conditional with 3-Step Simulation ===
   Step 1: Discovering Company amount from Balancer...
@@ -127,11 +135,13 @@ Results:
 ## Commands
 
 ### Simulate Only
+
 ```bash
 python -m src.arbitrage_commands.sell_cond_eip7702_simulated_v2 0.001 --skip-merge
 ```
 
 ### Execute On-Chain
+
 ```bash
 python -m src.arbitrage_commands.sell_cond_eip7702_simulated_v2 0.001 --skip-merge --broadcast
 ```

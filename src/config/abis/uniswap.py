@@ -43,4 +43,4 @@ UNISWAP_V3_PASSTHROUGH_ROUTER_ABI = [
         "stateMutability": "nonpayable",
         "type": "function"
     }
-] 
+]

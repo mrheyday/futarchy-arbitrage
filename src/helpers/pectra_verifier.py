@@ -12,7 +12,7 @@ Usage:
 import os
 import sys
 import json
-from typing import Dict, Any, List, Tuple
+from typing import Any
 from pathlib import Path
 from decimal import Decimal
 from web3 import Web3
@@ -32,9 +32,9 @@ class PectraVerifier:
     
     def __init__(self, w3: Web3):
         self.w3 = w3
-        self.errors: List[str] = []
-        self.warnings: List[str] = []
-        self.info: List[str] = []
+        self.errors: list[str] = []
+        self.warnings: list[str] = []
+        self.info: list[str] = []
         
     def add_error(self, msg: str) -> None:
         """Add an error message."""
@@ -160,7 +160,7 @@ class PectraVerifier:
                 self.add_warning("FutarchyBatchExecutor ABI not found")
                 return True  # Not critical
                 
-            with open(abi_path, 'r') as f:
+            with open(abi_path) as f:
                 abi = json.load(f)
                 
             # Create contract instance

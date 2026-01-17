@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation, ROUND_DOWN
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
@@ -22,7 +22,7 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _load_env(path: Optional[str]) -> None:
+def _load_env(path: str | None) -> None:
     if not path:
         return
     try:
@@ -31,7 +31,7 @@ def _load_env(path: Optional[str]) -> None:
         _ld(path)
     except Exception:
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 for line in f:
                     line = line.strip()
                     if not line or line.startswith("#"):
@@ -46,10 +46,10 @@ def _load_env(path: Optional[str]) -> None:
             pass
 
 
-def _build_w3(rpc_url: Optional[str] = None) -> Web3:
+def _build_w3(rpc_url: str | None = None) -> Web3:
     url = rpc_url or os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
     if not url:
-        raise EnvironmentError("Set --rpc-url or RPC_URL/GNOSIS_RPC_URL in env")
+        raise OSError("Set --rpc-url or RPC_URL/GNOSIS_RPC_URL in env")
     w3 = Web3(Web3.HTTPProvider(url))
     try:
         from web3.middleware import geth_poa_middleware
@@ -132,7 +132,7 @@ def _default_log_path(base_dir: Path) -> Path:
     return base_dir / f"funding_{ts}.json"
 
 
-def _filter_addresses(records: List[Dict[str, Any]], only: Optional[str]) -> List[str]:
+def _filter_addresses(records: list[dict[str, Any]], only: str | None) -> list[str]:
     addrs = [to_checksum_address(r.get("address")) for r in records if r.get("address")]
     if not only:
         return addrs
@@ -142,7 +142,7 @@ def _filter_addresses(records: List[Dict[str, Any]], only: Optional[str]) -> Lis
     patterns = [p.strip() for p in only.split(",") if p.strip()]
     import fnmatch
     if any("*" in p or "?" in p for p in patterns):
-        selected: List[str] = []
+        selected: list[str] = []
         for a in addrs:
             if any(fnmatch.fnmatch(a, p) for p in patterns):
                 selected.append(a)
@@ -151,7 +151,7 @@ def _filter_addresses(records: List[Dict[str, Any]], only: Optional[str]) -> Lis
     return [a for a in addrs if a in wanted]
 
 
-def _filter_records_by_path(records: List[Dict[str, Any]], only_path: Optional[str]) -> List[Dict[str, Any]]:
+def _filter_records_by_path(records: list[dict[str, Any]], only_path: str | None) -> list[dict[str, Any]]:
     if not only_path:
         return records
     pat = only_path.strip()
@@ -159,7 +159,7 @@ def _filter_records_by_path(records: List[Dict[str, Any]], only_path: Optional[s
         return records
     import fnmatch
     patterns = [p.strip() for p in pat.split(",") if p.strip()]
-    selected: List[Dict[str, Any]] = []
+    selected: list[dict[str, Any]] = []
     for r in records:
         path = r.get("path")
         if not path:
@@ -181,11 +181,11 @@ def _is_eip1559_supported(w3: Web3) -> bool:
 class GasConfig:
     type: str  # "eip1559" or "legacy"
     gas_limit: int
-    max_fee_gwei: Optional[Decimal] = None
-    prio_fee_gwei: Optional[Decimal] = None
-    gas_price_gwei: Optional[Decimal] = None
+    max_fee_gwei: Decimal | None = None
+    prio_fee_gwei: Decimal | None = None
+    gas_price_gwei: Decimal | None = None
 
-    def as_tx_fields(self, w3: Web3) -> Dict[str, int]:
+    def as_tx_fields(self, w3: Web3) -> dict[str, int]:
         if self.type == "eip1559":
             assert self.max_fee_gwei is not None and self.prio_fee_gwei is not None
             return {
@@ -211,7 +211,7 @@ class GasConfig:
             return _to_wei(w3, str(self.gas_price_gwei), "gwei") * int(self.gas_limit) * tx_count
 
 
-def _load_recipients(out_dir: Path, index_path: Optional[Path]) -> List[Dict[str, Any]]:
+def _load_recipients(out_dir: Path, index_path: Path | None) -> list[dict[str, Any]]:
     if index_path and index_path.exists():
         return load_index(index_path)
     return scan_keystores(out_dir)
@@ -221,24 +221,24 @@ def fund_erc20(
     *,
     token: str,
     out_dir: Path,
-    index_path: Optional[Path],
+    index_path: Path | None,
     amount_token: str,
     from_env: str,
-    env_file: Optional[str] = None,
-    rpc_url: Optional[str] = None,
+    env_file: str | None = None,
+    rpc_url: str | None = None,
     chain_id: int = 100,
-    only: Optional[str] = None,
-    only_path: Optional[str] = None,
-    ensure_paths: Optional[str] = None,
-    ensure_mnemonic: Optional[str] = None,
-    ensure_mnemonic_env: Optional[str] = None,
-    keystore_pass: Optional[str] = None,
-    keystore_pass_env: Optional[str] = None,
+    only: str | None = None,
+    only_path: str | None = None,
+    ensure_paths: str | None = None,
+    ensure_mnemonic: str | None = None,
+    ensure_mnemonic_env: str | None = None,
+    keystore_pass: str | None = None,
+    keystore_pass_env: str | None = None,
     always_send: bool = False,
-    gas: Optional[GasConfig] = None,
+    gas: GasConfig | None = None,
     timeout: int = 120,
     dry_run: bool = False,
-    log_path: Optional[Path] = None,
+    log_path: Path | None = None,
     require_confirm: bool = False,
 ) -> int:
     _load_env(env_file)
@@ -250,7 +250,7 @@ def fund_erc20(
     # Resolve funder
     pk = os.getenv(from_env) or os.getenv("PRIVATE_KEY")
     if not pk:
-        raise EnvironmentError(f"Set {from_env} or PRIVATE_KEY in env (use --env-file if needed)")
+        raise OSError(f"Set {from_env} or PRIVATE_KEY in env (use --env-file if needed)")
     if not pk.startswith("0x"):
         pk = "0x" + pk
     acct: LocalAccount = Account.from_key(pk)
@@ -261,7 +261,7 @@ def fund_erc20(
     try:
         if hasattr(w3, "is_connected") and callable(getattr(w3, "is_connected")):
             if not w3.is_connected():
-                raise EnvironmentError("Web3 provider not connected (check RPC URL)")
+                raise OSError("Web3 provider not connected (check RPC URL)")
     except Exception:
         pass
     actual_chain_id = w3.eth.chain_id
@@ -275,7 +275,7 @@ def fund_erc20(
         raise SystemExit("RPC appears to not support EIP-1559 (no baseFeePerGas). Use --legacy or different RPC.")
 
     # Ensure paths if requested
-    ensured_records: List[Dict[str, Any]] = []
+    ensured_records: list[dict[str, Any]] = []
     if ensure_paths:
         if index_path is None:
             index_path = out_dir / "index.json"
@@ -321,9 +321,9 @@ def fund_erc20(
     target_tokens = _parse_amount_units(amount_token)
     target_units = _to_base_units(target_tokens, decimals)
 
-    before_units: Dict[str, int] = {}
-    deltas: Dict[str, int] = {}
-    needs: List[str] = []
+    before_units: dict[str, int] = {}
+    deltas: dict[str, int] = {}
+    needs: list[str] = []
     for addr in recipients:
         bal = int(contract.functions.balanceOf(addr).call())
         before_units[addr] = bal
@@ -340,7 +340,7 @@ def fund_erc20(
     sufficient_token = funder_token >= total_units
     sufficient_gas = funder_xdai >= gas_budget_wei
 
-    summary: Dict[str, Any] = {
+    summary: dict[str, Any] = {
         "chain_id": actual_chain_id,
         "rpc_url": rpc_url or os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL"),
         "funder": funder,
@@ -366,7 +366,7 @@ def fund_erc20(
         },
     }
 
-    results: List[Dict[str, Any]] = []
+    results: list[dict[str, Any]] = []
     for addr in recipients:
         results.append(
             {

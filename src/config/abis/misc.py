@@ -128,4 +128,4 @@ PERMIT2_ABI = [
         "stateMutability": "nonpayable",
         "type": "function"
     }
-] 
+]

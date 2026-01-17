@@ -8,7 +8,7 @@ import argparse
 import time
 import sys
 from decimal import Decimal
-from typing import Dict, Any, Optional
+from typing import Any
 from web3 import Web3
 from eth_account import Account
 

@@ -34,11 +34,13 @@ Successfully implemented PNK token price monitoring support for the light bot us
 ## Technical Implementation
 
 ### Price Calculation Flow
+
 ```
 PNK → WETH → WXDAI (USD) → sDAI
 ```
 
 ### Key Pools Used
+
 - PNK/WETH: `0x2613Cb099C12CECb1bd290Fd0eF6833949374165`
 - WETH/WXDAI: `0x1865d5445010e0baf8be2eb410d3eae4a68683c2`
 - sDAI Contract: `0x89C80A4540A00b5270347E02e2E144c71da2EceD`

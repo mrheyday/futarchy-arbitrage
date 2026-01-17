@@ -44,7 +44,7 @@ import os
 import logging
 import time
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from eth_typing import ChecksumAddress
 from web3 import Web3
@@ -81,7 +81,7 @@ MAX_DEADLINE = 9007199254740991
 # ABI loading
 # -----------------------------------------------------------------------------
 
-BALANCER_ROUTER_ABI: List[Dict[str, Any]] = [
+BALANCER_ROUTER_ABI: list[dict[str, Any]] = [
     {
         "type": "function",
         "name": "swapExactIn",
@@ -128,9 +128,25 @@ __all__ = [
     "parse_simulated_swap_results",
     "parse_broadcasted_swap_results",
     "_search_call_trace",
+    "get_balancer_pool_id",
 ]
 
-def _search_call_trace(node: Dict[str, Any], target: str) -> Optional[Dict[str, Any]]:
+def get_balancer_pool_id(w3: Web3, pool_address: str) -> str:
+    """Fetch the Pool ID from a Balancer pool contract."""
+    pool = w3.eth.contract(
+        address=w3.to_checksum_address(pool_address),
+        abi=[{
+            "inputs": [],
+            "name": "getPoolId",
+            "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
+            "stateMutability": "view",
+            "type": "function"
+        }]
+    )
+    pool_id = pool.functions.getPoolId().call()
+    return "0x" + pool_id.hex()
+
+def _search_call_trace(node: dict[str, Any], target: str) -> dict[str, Any] | None:
     """Depth-first search for the first call to *target* in Tenderly call-trace."""
     if node.get("to", "").lower() == target.lower():
         return node
@@ -150,7 +166,7 @@ def _get_router(w3: Web3, router_addr: str | None = None):
     """
     address = router_addr or os.getenv("BALANCER_ROUTER_ADDRESS")
     if address is None:
-        raise EnvironmentError("Set BALANCER_ROUTER_ADDRESS env var or pass router_addr.")
+        raise OSError("Set BALANCER_ROUTER_ADDRESS env var or pass router_addr.")
     return w3.eth.contract(address=w3.to_checksum_address(address), abi=BALANCER_ROUTER_ABI)
 
 
@@ -169,7 +185,7 @@ def build_sell_gno_to_sdai_swap_tx(
     deadline: int = MAX_DEADLINE,
     weth_is_eth: bool = False,
     user_data: bytes = b"",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Encode swapExactIn calldata for Company token → sDAI and wrap in a Tenderly tx dict."""
 
     router = _get_router(w3, router_addr)
@@ -217,7 +233,7 @@ def build_buy_gno_to_sdai_swap_tx(
     deadline: int = MAX_DEADLINE,
     weth_is_eth: bool = False,
     user_data: bytes = b"",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Encode swapExactIn calldata for **buying Company token with sDAI**."""
 
     # Log all function arguments
@@ -303,7 +319,7 @@ def sell_gno_to_sdai(
     sender: str,
     *,
     router_addr: str | None = None,
-) -> Optional[Dict[str, Any]]:
+) -> dict[str, Any] | None:
     """Convenience wrapper: build tx → simulate via Tenderly → pretty-print result."""
 
     tx = build_sell_gno_to_sdai_swap_tx(
@@ -333,7 +349,7 @@ def _wei_to_eth(value: int) -> Decimal:
 # --------------------------------------------------------------------------- #
 # On-chain result parser (broadcasted swaps)                                  #
 # --------------------------------------------------------------------------- #
-def parse_broadcasted_swap_results(tx_hash: str) -> Optional[Dict[str, Decimal]]:
+def parse_broadcasted_swap_results(tx_hash: str) -> dict[str, Decimal] | None:
     """
     Given a *broadcasted* Balancer ``swapExactIn`` tx hash, return
     ``{"input_amount": Decimal, "output_amount": Decimal}``
@@ -389,9 +405,9 @@ def parse_broadcasted_swap_results(tx_hash: str) -> Optional[Dict[str, Decimal]]
     }
 
 
-def parse_simulated_swap_results(results: List[Dict[str, Any]], w3: Web3) -> Optional[Dict[str, Decimal]]:
+def parse_simulated_swap_results(results: list[dict[str, Any]], w3: Web3) -> dict[str, Decimal] | None:
     """Pretty-print and return {'input_amount', 'output_amount'} for each result."""
-    result_dict: Optional[Dict[str, Decimal]] = None
+    result_dict: dict[str, Decimal] | None = None
     for idx, sim in enumerate(results):
         header = (
             "Balancer Simulation Result"
@@ -469,7 +485,7 @@ def _build_w3_from_env() -> Web3:
     """Return Web3 instance connected to the RPC endpoint in the GNOSIS_RPC_URL env var."""
     rpc_url = os.getenv("GNOSIS_RPC_URL") or os.getenv("RPC_URL")
     if rpc_url is None:
-        raise EnvironmentError("Set GNOSIS_RPC_URL or RPC_URL in environment.")
+        raise OSError("Set GNOSIS_RPC_URL or RPC_URL in environment.")
     w3 = Web3(Web3.HTTPProvider(rpc_url))
     from web3.middleware import geth_poa_middleware
 
@@ -495,7 +511,7 @@ def main():  # pragma: no cover
 
     sender = os.getenv("WALLET_ADDRESS") or os.getenv("SENDER_ADDRESS")
     if sender is None:
-        raise EnvironmentError("Set WALLET_ADDRESS or SENDER_ADDRESS env var.")
+        raise OSError("Set WALLET_ADDRESS or SENDER_ADDRESS env var.")
 
     w3 = _build_w3_from_env()
     if not w3.is_connected():

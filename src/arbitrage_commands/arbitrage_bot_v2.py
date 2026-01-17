@@ -20,6 +20,12 @@ Usage with .env (backward compatible):
 
 from __future__ import annotations
 
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Initialize logger
+logger = setup_logger("arbitrage_bot_v2", level=10)  # DEBUG level
+
 import argparse
 import json
 import os
@@ -29,7 +35,7 @@ import subprocess
 import re
 from decimal import Decimal
 from pathlib import Path
-from typing import Tuple, Optional, Dict, Any
+from typing import Any
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -49,7 +55,7 @@ from config.network import DEFAULT_RPC_URLS
 class ConfigManager:
     """Manages configuration from both JSON and environment sources."""
     
-    def __init__(self, config_path: Optional[str] = None, env_file: Optional[str] = None):
+    def __init__(self, config_path: str | None = None, env_file: str | None = None):
         """Initialize configuration from JSON or environment file."""
         self.config = {}
         self.env_file = env_file
@@ -66,7 +72,7 @@ class ConfigManager:
     
     def load_json_config(self, config_path: str) -> None:
         """Load configuration from JSON file."""
-        with open(config_path, 'r') as f:
+        with open(config_path) as f:
             self.config = json.load(f)
         # After loading explicit config, apply env overrides (PRIVATE_KEY, FUTARCHY address)
         self._apply_process_env_overrides()
@@ -104,7 +110,7 @@ class ConfigManager:
         self.config = self._map_env_to_config()
         self._apply_process_env_overrides()
     
-    def _map_env_to_config(self) -> Dict[str, Any]:
+    def _map_env_to_config(self) -> dict[str, Any]:
         """Map environment variables to JSON config structure."""
         return {
             "bot": {
@@ -215,10 +221,10 @@ class ConfigManager:
                 return default
         return value
     
-    def set_runtime_params(self, amount: Optional[float] = None, 
-                          interval: Optional[int] = None,
-                          tolerance: Optional[float] = None,
-                          min_profit: Optional[float] = None) -> None:
+    def set_runtime_params(self, amount: float | None = None, 
+                          interval: int | None = None,
+                          tolerance: float | None = None,
+                          min_profit: float | None = None) -> None:
         """Override runtime parameters from command line."""
         if "bot" not in self.config:
             self.config["bot"] = {"run_options": {}}
@@ -234,7 +240,7 @@ class ConfigManager:
         if min_profit is not None:
             self.config["bot"]["run_options"]["min_profit"] = min_profit
     
-    def to_env_dict(self) -> Dict[str, str]:
+    def to_env_dict(self) -> dict[str, str]:
         """Convert config back to environment variable format for subprocess."""
         env_dict = {}
         
@@ -356,7 +362,7 @@ class ArbitrageBot:
             deployment_files = sorted(glob.glob("deployments/deployment_prediction_arb_v1_*.json"))
             if deployment_files:
                 try:
-                    with open(deployment_files[-1], "r") as f:
+                    with open(deployment_files[-1]) as f:
                         data = json.load(f)
                         if data.get("address"):
                             return self.w3.to_checksum_address(data["address"])
@@ -371,7 +377,7 @@ class ArbitrageBot:
         deployment_files = sorted(glob.glob("deployments/deployment_executor_v5_*.json"))
         if deployment_files:
             try:
-                with open(deployment_files[-1], "r") as f:
+                with open(deployment_files[-1]) as f:
                     data = json.load(f)
                     if data.get("address"):
                         return self.w3.to_checksum_address(data["address"])
@@ -503,7 +509,7 @@ class ArbitrageBot:
         """Calculate the ideal price based on prediction market (same formula for both modes)."""
         return prices["pred_yes_price"] * prices["yes_price"] + (1.0 - prices["pred_yes_price"]) * prices["no_price"]
         
-    def determine_opportunity(self, prices: dict, tolerance: float) -> Tuple[Optional[str], Optional[str]]:
+    def determine_opportunity(self, prices: dict, tolerance: float) -> tuple[str | None, str | None]:
         """
         Determine if an arbitrage opportunity exists.
         
@@ -545,7 +551,7 @@ class ArbitrageBot:
             
         return flow, cheaper
         
-    def get_balances(self, address: Optional[str] = None) -> dict:
+    def get_balances(self, address: str | None = None) -> dict:
         """Get current token balances for the specified address (defaults to executor contract)."""
         target_address = address or self.executor_address
         balances = {}
@@ -556,7 +562,7 @@ class ArbitrageBot:
                     balance_ether = self.w3.from_wei(balance_wei, 'ether')
                     balances[name] = float(balance_ether)
                 except Exception as e:
-                    print(f"Warning: Could not fetch {name} balance: {e}")
+                    logger.warning(f" Could not fetch {name} balance: {e}")
                     balances[name] = 0.0
         return balances
     
@@ -581,7 +587,7 @@ class ArbitrageBot:
         if warnings:
             print("\n" + "\n".join(warnings))
     
-    def parse_tx_hash(self, output: str) -> Optional[str]:
+    def parse_tx_hash(self, output: str) -> str | None:
         """Parse transaction hash from executor output."""
         patterns = [
             r"Tx sent:\s*(?:0x)?([a-fA-F0-9]{64})",
@@ -598,8 +604,8 @@ class ArbitrageBot:
                 return tx_hash
         return None
     
-    def execute_arbitrage(self, flow: Optional[str], cheaper: Optional[str], amount: float, 
-                         min_profit: float, dry_run: bool, prefund: bool) -> Tuple[bool, Optional[str]]:
+    def execute_arbitrage(self, flow: str | None, cheaper: str | None, amount: float, 
+                         min_profit: float, dry_run: bool, prefund: bool) -> tuple[bool, str | None]:
         """
         Execute arbitrage trade via the arbitrage_executor module.
         
@@ -643,7 +649,7 @@ class ArbitrageBot:
         # Build a merged .env file for the executor with explicit precedence:
         #   process env > config-derived env > file .envs.
         # Then pass that merged file via --env to avoid accidental overrides.
-        merged_env: Dict[str, str] = self.config.to_env_dict()
+        merged_env: dict[str, str] = self.config.to_env_dict()
         # Overlay with any same-name keys from the current process env
         for k in list(merged_env.keys()):
             v = os.environ.get(k)
@@ -736,7 +742,7 @@ class ArbitrageBot:
             else:
                 # Check if it's a "min profit not met" error which is expected
                 if "min profit not met" in result.stderr:
-                    print("⚠️  Trade skipped: Min profit threshold not met")
+                    logger.warning("  Trade skipped: Min profit threshold not met")
                     return False, None
                 else:
                     print(f"✗ Trade failed with exit code {result.returncode}")

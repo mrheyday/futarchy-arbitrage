@@ -10,7 +10,9 @@ import json
 import os
 import sys
 from decimal import Decimal
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Any
+
+from collections.abc import Iterable
 
 from dotenv import load_dotenv
 
@@ -138,7 +140,7 @@ ERC20_MIN_ABI = [
 ]
 
 # Potential token sources to probe (searched in order).
-TOKEN_SOURCES: Dict[str, List[Tuple[str, ...]]] = {
+TOKEN_SOURCES: dict[str, list[tuple[str, ...]]] = {
     "sDAI": [
         ("config", "parameters", "sdai_token_address"),
         ("config", "proposal", "tokens", "currency", "address"),
@@ -165,7 +167,7 @@ TOKEN_SOURCES: Dict[str, List[Tuple[str, ...]]] = {
     ],
 }
 
-ENV_TOKEN_FALLBACKS: Dict[str, Tuple[str, ...]] = {
+ENV_TOKEN_FALLBACKS: dict[str, tuple[str, ...]] = {
     "sDAI": ("SDAI_TOKEN_ADDRESS",),
     "GNO": ("COMPANY_TOKEN_ADDRESS",),
     "YES_sDAI": ("SWAPR_SDAI_YES_ADDRESS",),
@@ -174,19 +176,19 @@ ENV_TOKEN_FALLBACKS: Dict[str, Tuple[str, ...]] = {
     "NO_GNO": ("SWAPR_GNO_NO_ADDRESS",),
 }
 
-EXECUTOR_ENV_KEYS: Tuple[str, ...] = (
+EXECUTOR_ENV_KEYS: tuple[str, ...] = (
     "FUTARCHY_ARB_EXECUTOR_V5",
     "EXECUTOR_V5_ADDRESS",
     "ARBITRAGE_EXECUTOR_ADDRESS",
     "PREDICTION_ARB_EXECUTOR_V1",
 )
 
-EXECUTOR_DEPLOYMENT_GLOBS: Tuple[str, ...] = (
+EXECUTOR_DEPLOYMENT_GLOBS: tuple[str, ...] = (
     "deployments/deployment_executor_v5_*.json",
     "deployments/deployment_prediction_arb_v1_*.json",
 )
 
-EXECUTOR_KEYWORDS: Tuple[str, ...] = ("executor", "arb_executor")
+EXECUTOR_KEYWORDS: tuple[str, ...] = ("executor", "arb_executor")
 
 
 def _inject_poa_if_needed(w3: Web3) -> None:
@@ -209,7 +211,7 @@ def _build_web3(rpc_url: str) -> Web3:
     return w3
 
 
-def _resolve_path(obj: Dict, path: Tuple[str, ...]) -> Optional[str]:
+def _resolve_path(obj: dict, path: tuple[str, ...]) -> str | None:
     """Traverse nested dictionaries using a tuple path."""
     current = obj
     for segment in path:
@@ -219,10 +221,10 @@ def _resolve_path(obj: Dict, path: Tuple[str, ...]) -> Optional[str]:
     return current if isinstance(current, str) else None
 
 
-def _resolve_token_addresses(bot: Dict) -> Dict[str, str]:
+def _resolve_token_addresses(bot: dict) -> dict[str, str]:
     """Derive token label -> address map from a bot configuration."""
     config_blob = bot.get("config", {}) or {}
-    addresses: Dict[str, str] = {}
+    addresses: dict[str, str] = {}
     for label, paths in TOKEN_SOURCES.items():
         for path in paths:
             addr = _resolve_path({"config": config_blob}, path)
@@ -248,10 +250,10 @@ def _shorten_address(addr: str) -> str:
     return f"{addr[:6]}...{addr[-4:]}"
 
 
-def _dedupe_preserve(addresses: Iterable[str]) -> List[str]:
+def _dedupe_preserve(addresses: Iterable[str]) -> list[str]:
     """Deduplicate addresses while preserving order."""
     seen = set()
-    deduped: List[str] = []
+    deduped: list[str] = []
     for addr in addresses:
         if not isinstance(addr, str):
             continue
@@ -267,9 +269,9 @@ def _dedupe_preserve(addresses: Iterable[str]) -> List[str]:
     return deduped
 
 
-def _harvest_executor_addresses(obj: object) -> List[str]:
+def _harvest_executor_addresses(obj: object) -> list[str]:
     """Recursively gather executor/deployment contract addresses from config blobs."""
-    results: List[str] = []
+    results: list[str] = []
     if isinstance(obj, dict):
         for key, value in obj.items():
             key_lower = str(key).lower()
@@ -292,12 +294,12 @@ def _harvest_executor_addresses(obj: object) -> List[str]:
     return results
 
 
-def _latest_deployment_address(pattern: str) -> Optional[str]:
+def _latest_deployment_address(pattern: str) -> str | None:
     """Grab the latest deployment address from local deployment artifacts."""
     files = sorted(glob.glob(pattern))
     for path in reversed(files):
         try:
-            with open(path, "r", encoding="utf-8") as handle:
+            with open(path, encoding="utf-8") as handle:
                 data = json.load(handle)
         except (OSError, json.JSONDecodeError):
             continue
@@ -311,13 +313,13 @@ def _latest_deployment_address(pattern: str) -> Optional[str]:
 
 
 def _resolve_deployment_addresses(
-    bot: Dict,
-    links_by_path: Optional[Dict[str, List[str]]] = None,
-    links_by_wallet: Optional[Dict[str, List[str]]] = None,
-) -> List[str]:
+    bot: dict,
+    links_by_path: dict[str, list[str]] | None = None,
+    links_by_wallet: dict[str, list[str]] | None = None,
+) -> list[str]:
     """Resolve deployment contract addresses associated with a bot."""
     config_blob = bot.get("config", {}) or {}
-    harvested: List[str] = []
+    harvested: list[str] = []
 
     path = bot.get("key_derivation_path") or config_blob.get("key_derivation_path")
     if links_by_path and path:
@@ -375,9 +377,9 @@ def report_bots(args):
         print(f"No {scope} found")
         return
 
-    deployment_logs: List = []
-    links_by_path: Dict[str, List[str]] = {}
-    links_by_wallet: Dict[str, List[str]] = {}
+    deployment_logs: list = []
+    links_by_path: dict[str, list[str]] = {}
+    links_by_wallet: dict[str, list[str]] = {}
     if scan_deploy_logs is not None and latest_links_by_path is not None:
         try:
             deployment_logs = scan_deploy_logs()
@@ -401,7 +403,7 @@ def report_bots(args):
     if links_by_wallet:
         links_by_wallet = {k: _dedupe_preserve(v) for k, v in links_by_wallet.items()}
 
-    detailed: List[Dict] = []
+    detailed: list[dict] = []
     for item in base_list:
         name = item.get("bot_name")
         try:
@@ -413,9 +415,9 @@ def report_bots(args):
         print("No bot configurations available for reporting")
         return
 
-    rpc_cache: Dict[str, Web3] = {}
-    rows: List[Dict[str, str]] = []
-    dynamic_labels: List[str] = []
+    rpc_cache: dict[str, Web3] = {}
+    rows: list[dict[str, str]] = []
+    dynamic_labels: list[str] = []
 
     for bot in detailed:
         name = bot.get("bot_name", "unknown")
@@ -455,8 +457,8 @@ def report_bots(args):
             native_balance = 0
 
         token_addresses = _resolve_token_addresses(bot)
-        token_balances: Dict[str, str] = {}
-        holders_for_tokens: List[str] = deployment_addresses or [wallet]
+        token_balances: dict[str, str] = {}
+        holders_for_tokens: list[str] = deployment_addresses or [wallet]
         if not deployment_addresses and token_addresses:
             print(f"Warning: no deployment contracts found for '{name}'; using wallet balances for tokens")
 

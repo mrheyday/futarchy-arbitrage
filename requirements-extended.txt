@@ -1,0 +1,14 @@
+# Additional requirements for new features
+
+# Monitoring and Alerting
+aiohttp>=3.9.0
+prometheus-client>=0.19.0
+
+# Hardware Wallet Integration
+ledgerblue>=0.1.48
+trezor[ethereum]>=0.13.8
+rlp>=4.0.0
+
+# Polymarket Integration
+python-dotenv>=1.0.0
+requests>=2.31.0

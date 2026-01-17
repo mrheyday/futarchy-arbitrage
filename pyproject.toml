@@ -9,24 +9,18 @@ description = "Futarchy arbitrage bot for Gnosis Chain"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-    "web3==6.11.1",
-    "eth-account==0.11.3",
-    "eth-utils",
-    "eth-keys",
-    "requests",
-    "python-dotenv",
-    "supabase",
-    "tabulate",
+  "web3==6.11.1",
+  "eth-account==0.11.3",
+  "eth-utils",
+  "eth-keys",
+  "requests",
+  "python-dotenv",
+  "supabase",
+  "tabulate",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest",
-    "black",
-    "isort",
-    "mypy",
-    "flake8",
-]
+dev = ["pytest", "black", "isort", "mypy", "flake8"]
 
 [tool.black]
 line-length = 120

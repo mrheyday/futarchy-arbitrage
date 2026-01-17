@@ -11,7 +11,6 @@ import os
 from web3 import Web3
 from eth_account import Account
 import time
-from typing import Optional, List
 
 # Configuration
 RPC_URL = os.getenv("RPC_URL", "https://rpc.gnosischain.com")
@@ -39,7 +38,7 @@ def load_contract_artifacts(contract_name: str) -> dict:
         print("Please compile contracts first with: forge build --profile institutional")
         return None
     
-    with open(artifact_path, 'r') as f:
+    with open(artifact_path) as f:
         artifact = json.load(f)
     
     return {
@@ -53,7 +52,7 @@ def deploy_institutional_solver_system(
     deployer_account: Account,
     zk_verifier: str,
     paymaster: str,
-    flashloan_providers: List[str]
+    flashloan_providers: list[str]
 ) -> str:
     """
     Deploy InstitutionalSolverSystem contract.

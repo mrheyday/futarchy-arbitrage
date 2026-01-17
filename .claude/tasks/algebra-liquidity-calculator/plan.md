@@ -9,13 +9,12 @@ Great idea—let’s switch the “find initialized ticks & liquidity” workflo
 1. **Get pool base**: `pool(id: $pool)` → `liquidity`, `sqrtPrice`, `tick`, `token0/1 { symbol, decimals }`. This anchors the current tick and active liquidity. ([docs.algebra.finance][1])
 2. **Enumerate initialized ticks**: `ticks(where: { poolAddress: $pool, liquidityGross_not: "0" })` ordered by `tickIdx`. These are your boundaries. ([docs.algebra.finance][1])
 3. **Nearest boundaries** (no bitmap math): two small queries—
+   - below: `tickIdx_lte: currentTick`, `orderDirection: desc`, `first: 1`
+   - above: `tickIdx_gt: currentTick`, `orderDirection: asc`, `first: 1` ([docs.algebra.finance][1])
 
-   * below: `tickIdx_lte: currentTick`, `orderDirection: desc`, `first: 1`
-   * above: `tickIdx_gt: currentTick`, `orderDirection: asc`, `first: 1`  ([docs.algebra.finance][1])
 4. **Optional active‑liquidity ladder**: starting from `pool.liquidity` at the current tick, walk outward:
-
-   * Upward (ascending ticks): after each boundary `i`, `L := L + liquidityNet[i]`.
-   * Downward (descending ticks): crossing in reverse, `L := L - liquidityNet[i]`.
+   - Upward (ascending ticks): after each boundary `i`, `L := L + liquidityNet[i]`.
+   - Downward (descending ticks): crossing in reverse, `L := L - liquidityNet[i]`.
      (This is the standard subgraph‑based reconstruction used in V3/Algebra analytics.) ([atiselsts.github.io][2])
 
 ---
@@ -31,8 +30,16 @@ query PoolBase($id: ID!) {
     liquidity
     sqrtPrice
     tick
-    token0 { id symbol decimals }
-    token1 { id symbol decimals }
+    token0 {
+      id
+      symbol
+      decimals
+    }
+    token1 {
+      id
+      symbol
+      decimals
+    }
   }
 }
 ```
@@ -45,8 +52,10 @@ Fields and example appear in Algebra’s “Query Examples.” ([docs.algebra.fi
 query AllTicks($pool: String!, $skip: Int = 0, $first: Int = 1000) {
   ticks(
     where: { poolAddress: $pool, liquidityGross_not: "0" }
-    orderBy: tickIdx, orderDirection: asc
-    first: $first, skip: $skip
+    orderBy: tickIdx
+    orderDirection: asc
+    first: $first
+    skip: $skip
   ) {
     tickIdx
     liquidityGross
@@ -63,14 +72,26 @@ query AllTicks($pool: String!, $skip: Int = 0, $first: Int = 1000) {
 query NearestBelow($pool: String!, $t: BigInt!) {
   ticks(
     where: { poolAddress: $pool, liquidityGross_not: "0", tickIdx_lte: $t }
-    orderBy: tickIdx, orderDirection: desc, first: 1
-  ) { tickIdx liquidityGross liquidityNet }
+    orderBy: tickIdx
+    orderDirection: desc
+    first: 1
+  ) {
+    tickIdx
+    liquidityGross
+    liquidityNet
+  }
 }
 query NearestAbove($pool: String!, $t: BigInt!) {
   ticks(
     where: { poolAddress: $pool, liquidityGross_not: "0", tickIdx_gt: $t }
-    orderBy: tickIdx, orderDirection: asc, first: 1
-  ) { tickIdx liquidityGross liquidityNet }
+    orderBy: tickIdx
+    orderDirection: asc
+    first: 1
+  ) {
+    tickIdx
+    liquidityGross
+    liquidityNet
+  }
 }
 ```
 
@@ -82,9 +103,9 @@ Filtering/ordering by `tickIdx` with `_gt/_lte` is the standard way to find neig
 
 Below is a targeted addition that keeps your existing subgraph plumbing and **adds three new CLI features**:
 
-* `--list-initialized` — print all initialized ticks (`liquidityGross > 0`).
-* `--nearest N` — show N nearest initialized ticks above/below the current tick.
-* `--ladder WINDOW` — reconstruct active liquidity across a ±`WINDOW` tick range (no RPC).
+- `--list-initialized` — print all initialized ticks (`liquidityGross > 0`).
+- `--nearest N` — show N nearest initialized ticks above/below the current tick.
+- `--ladder WINDOW` — reconstruct active liquidity across a ±`WINDOW` tick range (no RPC).
 
 > Paste the **new pieces** in the indicated places; no changes to your subgraph URL defaults or existing JSON output are required.
 
@@ -272,9 +293,9 @@ python scripts/fetch_algebra_liquidity.py \
 
 ## Notes & caveats
 
-* **Schema**: The fields above match Algebra’s public subgraph docs (Pool & Tick). If you point to a different Algebra deployment (or a custom subgraph like Seer’s), the entity names/fields are typically the same; if they differ, adjust the selection set/filters accordingly. ([docs.algebra.finance][1])
-* **Initialized vs. active**: “Initialized” is best detected by `liquidityGross > 0`. “Active” liquidity between ticks changes by `liquidityNet` when crossing each boundary; the ladder logic reflects this. ([docs.algebra.finance][1], [atiselsts.github.io][2])
-* **Freshness**: Subgraphs can lag the chain a bit. For trading decisions at second‑level latency, treat subgraph data as advisory. Algebra’s docs position subgraphs specifically for analytics. ([docs.algebra.finance][3])
+- **Schema**: The fields above match Algebra’s public subgraph docs (Pool & Tick). If you point to a different Algebra deployment (or a custom subgraph like Seer’s), the entity names/fields are typically the same; if they differ, adjust the selection set/filters accordingly. ([docs.algebra.finance][1])
+- **Initialized vs. active**: “Initialized” is best detected by `liquidityGross > 0`. “Active” liquidity between ticks changes by `liquidityNet` when crossing each boundary; the ladder logic reflects this. ([docs.algebra.finance][1], [atiselsts.github.io][2])
+- **Freshness**: Subgraphs can lag the chain a bit. For trading decisions at second‑level latency, treat subgraph data as advisory. Algebra’s docs position subgraphs specifically for analytics. ([docs.algebra.finance][3])
 
 ---
 

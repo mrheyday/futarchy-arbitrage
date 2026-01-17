@@ -12,7 +12,7 @@ import json
 import os
 import re
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any
 try:
     from dotenv import dotenv_values  # type: ignore
 except Exception:
@@ -20,7 +20,7 @@ except Exception:
     def dotenv_values(path):  # type: ignore
         values = {}
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 for line in f:
                     line = line.strip()
                     if not line or line.startswith("#"):
@@ -41,7 +41,7 @@ except Exception:
         return values
 
 
-def find_env_files() -> List[Path]:
+def find_env_files() -> list[Path]:
     """Find all .env.0x* files in the project root."""
     root = Path(".")
     pattern = r"\.env\.0x[a-fA-F0-9]+"
@@ -54,7 +54,7 @@ def find_env_files() -> List[Path]:
     return sorted(env_files)
 
 
-def load_env_file(env_path: Path) -> Dict[str, str]:
+def load_env_file(env_path: Path) -> dict[str, str]:
     """Load environment variables from file."""
     # Load base .env if exists
     base_env = Path(".env")
@@ -69,7 +69,7 @@ def load_env_file(env_path: Path) -> Dict[str, str]:
     return env_vars
 
 
-def extract_proposal_address(env_path: Path) -> Optional[str]:
+def extract_proposal_address(env_path: Path) -> str | None:
     """Extract proposal address from filename or env vars."""
     # Try to extract from filename
     filename = env_path.name
@@ -82,9 +82,9 @@ def extract_proposal_address(env_path: Path) -> Optional[str]:
     return env_vars.get("FUTARCHY_PROPOSAL_ADDRESS")
 
 
-def env_to_json_config(env_vars: Dict[str, str], 
-                       proposal_address: Optional[str] = None,
-                       bot_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def env_to_json_config(env_vars: dict[str, str], 
+                       proposal_address: str | None = None,
+                       bot_params: dict[str, Any] | None = None) -> dict[str, Any]:
     """Convert environment variables to JSON configuration structure."""
     
     # Default bot parameters if not provided
@@ -191,7 +191,7 @@ def env_to_json_config(env_vars: Dict[str, str],
     return clean_empty_values(config)
 
 
-def clean_empty_values(d: Dict[str, Any]) -> Dict[str, Any]:
+def clean_empty_values(d: dict[str, Any]) -> dict[str, Any]:
     """Remove empty strings from nested dictionary."""
     if not isinstance(d, dict):
         return d
@@ -208,7 +208,7 @@ def clean_empty_values(d: Dict[str, Any]) -> Dict[str, Any]:
     return cleaned
 
 
-def save_json_config(config: Dict[str, Any], output_path: Path) -> None:
+def save_json_config(config: dict[str, Any], output_path: Path) -> None:
     """Save configuration to JSON file."""
     # Create config directory if it doesn't exist
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -219,7 +219,7 @@ def save_json_config(config: Dict[str, Any], output_path: Path) -> None:
     print(f"✅ Saved configuration to {output_path}")
 
 
-def get_bot_params_from_user() -> Dict[str, Any]:
+def get_bot_params_from_user() -> dict[str, Any]:
     """Interactively get bot parameters from user."""
     print("\nDefault bot parameters (press Enter to use defaults):")
     
@@ -238,7 +238,7 @@ def get_bot_params_from_user() -> Dict[str, Any]:
     return params
 
 
-def validate_config(config: Dict[str, Any]) -> List[str]:
+def validate_config(config: dict[str, Any]) -> list[str]:
     """Validate configuration and return list of warnings."""
     warnings = []
     

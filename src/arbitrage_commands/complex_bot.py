@@ -21,10 +21,15 @@ Usage
 
 from __future__ import annotations
 
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Initialize logger
+logger = setup_logger("complex_bot", level=10)  # DEBUG level
+
 import os
 import sys
 import time
-from typing import Tuple
 
 from web3 import Web3
 
@@ -45,13 +50,13 @@ def make_web3() -> Web3:
     return Web3(Web3.HTTPProvider(rpc_url))
 
 
-def fetch_swapr(pool: str, w3: Web3, *, base_token_index: int = 0) -> Tuple[str, str, str]:
+def fetch_swapr(pool: str, w3: Web3, *, base_token_index: int = 0) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for an Algebra pool."""
     price, base, quote = swapr_price(w3, pool, base_token_index=base_token_index)
     return base, quote, str(price)
 
 
-def fetch_balancer(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_balancer(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for a Balancer V3 pool."""
     price, base, quote = bal_price(w3, pool)
     return base, quote, str(price)
@@ -83,10 +88,10 @@ def run_once(amount: float, tolerance: float, broadcast: bool) -> None:
     no_base, no_quote, no_price = fetch_swapr(addr_no, w3, base_token_index=1)
     bal_base, bal_quote, bal_price_str = fetch_balancer(addr_bal, w3)
 
-    print(f"YES  pool: 1 {yes_base} = {yes_price} {yes_quote}")
-    print(f"PRED pool: 1 {yes_base} = {pred_yes_price} {yes_quote}")
-    print(f"NO   pool: 1 {no_base}  = {no_price}  {no_quote}")
-    print(f"BAL  pool: 1 {bal_base} = {bal_price_str} {bal_quote}")
+    logger.debug(f"YES  pool: 1 {yes_base} = {yes_price} {yes_quote}")
+    logger.debug(f"PRED pool: 1 {yes_base} = {pred_yes_price} {yes_quote}")
+    logger.debug(f"NO   pool: 1 {no_base}  = {no_price}  {no_quote}")
+    logger.debug(f"BAL  pool: 1 {bal_base} = {bal_price_str} {bal_quote}")
 
     ideal_bal_price = float(pred_yes_price) * float(yes_price) + (
         1.0 - float(pred_yes_price)
@@ -138,11 +143,11 @@ def run_once(amount: float, tolerance: float, broadcast: bool) -> None:
     bal_base, bal_quote, bal_price_str = fetch_balancer(addr_bal, w3)
 
     print("--- after tx ---")
-    print(f"YES  pool: 1 {yes_base} = {yes_price} {yes_quote}")
-    print(f"PRED pool: 1 {yes_base} = {pred_yes_price} {yes_quote}")
-    print(f"NO   pool: 1 {no_base}  = {no_price}  {no_quote}")
-    print(f"BAL  pool: 1 {bal_base} = {bal_price_str} {bal_quote}")
-    print()
+    logger.debug(f"YES  pool: 1 {yes_base} = {yes_price} {yes_quote}")
+    logger.debug(f"PRED pool: 1 {yes_base} = {pred_yes_price} {yes_quote}")
+    logger.debug(f"NO   pool: 1 {no_base}  = {no_price}  {no_quote}")
+    logger.debug(f"BAL  pool: 1 {bal_base} = {bal_price_str} {bal_quote}")
+    logger.debug("")
 
 
 # --------------------------------------------------------------------------- #
@@ -168,7 +173,7 @@ def main() -> None:
     broadcast = args.send
 
     # ---- main loop --------------------------------------------------------- #
-    print(f"Starting discover_side monitor – interval: {interval} seconds\n")
+    logger.info(f"Starting discover_side monitor – interval: {interval} seconds\n")
     while True:
         try:
             run_once(amount, tolerance, broadcast)
@@ -176,7 +181,7 @@ def main() -> None:
             print("\nInterrupted – exiting.")
             break
         except Exception as exc:  # noqa: BLE001
-            print(f"⚠️  {type(exc).__name__}: {exc}", file=sys.stderr)
+            logger.warning(f"  {type(exc).__name__}: {exc}", file=sys.stderr)
 
         time.sleep(interval)  # 10 minutes
 

@@ -1464,4 +1464,4 @@ BALANCER_BATCH_ROUTER_ABI = [
         "stateMutability": "nonpayable",
         "type": "function"
     }
-] 
+]

@@ -5,7 +5,7 @@ This module is currently in EXPERIMENTAL status.
 Contains token configurations, settings, and metadata.
 """
 
-from typing import Dict, Any
+from typing import Any
 from decimal import Decimal
 from .contracts import CONTRACT_ADDRESSES
 
@@ -121,4 +121,4 @@ def get_base_token(conditional_token_address: str) -> str:
             return info["address"]
         if "no_address" in info and info["no_address"].lower() == conditional_token_address.lower():
             return info["address"]
-    return None 
+    return None

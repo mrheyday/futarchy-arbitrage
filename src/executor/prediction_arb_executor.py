@@ -25,7 +25,6 @@ import json
 import os
 from decimal import Decimal
 from pathlib import Path
-from typing import Optional, Tuple
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -37,7 +36,7 @@ from src.helpers.swapr_price import get_pool_price as swapr_price
 DEPLOYMENTS_GLOB = "deployments/deployment_prediction_arb_v1_*.json"
 
 
-def load_env(env_file: Optional[str]) -> None:
+def load_env(env_file: str | None) -> None:
     base_env = Path(".env")
     if base_env.exists():
         load_dotenv(base_env)
@@ -45,7 +44,7 @@ def load_env(env_file: Optional[str]) -> None:
         load_dotenv(env_file)
 
 
-def discover_v1_address() -> Tuple[Optional[str], str]:
+def discover_v1_address() -> tuple[str | None, str]:
     # Prefer env first
     for key in ["PREDICTION_ARB_EXECUTOR_V1", "PREDICTION_EXECUTOR_V1_ADDRESS"]:
         v = os.getenv(key)
@@ -56,7 +55,7 @@ def discover_v1_address() -> Tuple[Optional[str], str]:
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             addr = data.get("address")
             if addr:
@@ -101,7 +100,7 @@ def _load_v1_abi() -> list:
     if files:
         latest = files[-1]
         try:
-            with open(latest, "r") as f:
+            with open(latest) as f:
                 data = json.load(f)
             abi = data.get("abi")
             if abi:

@@ -6,19 +6,18 @@ import json
 import os
 import sys
 from pathlib import Path
-from typing import Optional
 
 from eth_account import Account
 from eth_utils import to_checksum_address
 try:
     from dotenv import load_dotenv
 except Exception:
-    def load_dotenv(path: Optional[str] = None):
+    def load_dotenv(path: str | None = None):
         """Lightweight .env loader fallback: KEY=VALUE per line, supports optional 'export ' prefix."""
         if not path:
             return False
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 for line in f:
                     line = line.strip()
                     if not line or line.startswith("#"):
@@ -67,7 +66,7 @@ def cmd_keystore_create(args: argparse.Namespace) -> int:
             load_dotenv(args.env_file)
 
         # Determine private key source: --private-key > --private-key-env/env > --random
-        priv_hex: Optional[str] = None
+        priv_hex: str | None = None
         if args.random:
             acct = Account.create()
             priv_hex = "0x" + bytes(acct.key).hex()
@@ -460,7 +459,7 @@ def build_parser() -> argparse.ArgumentParser:
             password = resolve_password(args.keystore_pass, args.keystore_pass_env)
             keys: List[str] = []
             if args.file:
-                with open(args.file, "r") as f:
+                with open(args.file) as f:
                     for line in f:
                         line = line.strip()
                         if line and not line.startswith("#"):
@@ -961,7 +960,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main(argv: Optional[list[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     if not hasattr(args, "func"):

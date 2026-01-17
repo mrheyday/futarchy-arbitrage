@@ -13,11 +13,17 @@ Usage
     SWAPR_POOL_NO_ADDRESS=0x… \
     BALANCER_POOL_ADDRESS=0x… \
     python -m src.arbitrage_commands.simple_bot \
-        --amount  500          \ # sDAI you are willing to deploy
-        --interval 300         \ # seconds between checks
+        --amount  500          \\ # sDAI you are willing to deploy
+        --interval 300         \\ # seconds between checks
         --tolerance 0.3          # % deviation that triggers a trade
 """
 from __future__ import annotations
+
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Initialize logger
+logger = setup_logger("simple_bot", level=10)  # DEBUG level
 
 import argparse
 import os
@@ -93,18 +99,18 @@ def run_loop(amount: Decimal, tolerance_pct: Decimal, interval: int) -> None:
             if yes_p < bal_p and no_p < bal_p:
                 print(f"📈  Balancer overpriced by {diff_pct:.2f}% → BUY conditional GNO")
                 tx_hashes = buy_gno_yes_and_no_amounts_with_sdai(float(amount))
-                print(f"✅  Sent {len(tx_hashes)} txs – first hash: {tx_hashes[0]}")
+                logger.info(f"  Sent {len(tx_hashes)} txs – first hash: {tx_hashes[0]}")
             elif yes_p > bal_p and no_p > bal_p:
                 print(f"📉  Balancer under‑priced by {diff_pct:.2f}% → SELL conditional GNO")
                 tx_hashes = sell_gno_yes_and_no_amounts_to_sdai(float(amount))
-                print(f"✅  Sent {len(tx_hashes)} txs – first hash: {tx_hashes[0]}")
+                logger.info(f"  Sent {len(tx_hashes)} txs – first hash: {tx_hashes[0]}")
             # else: within band – do nothing
 
         except KeyboardInterrupt:
             print("\n↩︎  Interrupted – exiting.")
             break
         except Exception as exc:
-            print(f"⚠️  {type(exc).__name__}: {exc}")
+            logger.warning(f"  {type(exc).__name__}: {exc}")
 
         time.sleep(interval)
 

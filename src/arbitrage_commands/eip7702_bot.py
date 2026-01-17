@@ -19,10 +19,16 @@ import os
 import sys
 import time
 import argparse
-from typing import Dict, Optional, Tuple, Any
+from typing import Any
 from decimal import Decimal
 from web3 import Web3
 from eth_account import Account
+
+# Import logging
+from src.config.logging_config import setup_logger, log_trade, log_price_check
+
+# Import alerts
+from src.monitoring.telegram_alerts import create_alerter_from_env
 
 # Import price fetching utilities
 from src.helpers.swapr_price import get_pool_price as swapr_price
@@ -35,6 +41,9 @@ from src.arbitrage_commands.sell_cond_eip7702 import sell_conditional_simple
 # Import utilities
 from src.helpers.bundle_helpers import get_token_balance
 from src.config.network import DEFAULT_RPC_URLS
+
+# Initialize logger
+logger = setup_logger("eip7702_bot", level=10)  # DEBUG level
 
 # Constants
 MIN_SDAI_BALANCE = 0.01  # Minimum sDAI balance in ether
@@ -52,19 +61,19 @@ def make_web3() -> Web3:
     return Web3(Web3.HTTPProvider(rpc_url))
 
 
-def fetch_swapr(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_swapr(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for an Algebra pool."""
     price, base, quote = swapr_price(w3, pool)
     return base, quote, str(price)
 
 
-def fetch_balancer(pool: str, w3: Web3) -> Tuple[str, str, str]:
+def fetch_balancer(pool: str, w3: Web3) -> tuple[str, str, str]:
     """Return 'base', 'quote', price string for a Balancer pool."""
     price, base, quote = bal_price(w3, pool)
     return base, quote, str(price)
 
 
-def fetch_all_prices(w3: Web3) -> Dict[str, float]:
+def fetch_all_prices(w3: Web3) -> dict[str, float]:
     """
     Fetch all relevant prices for arbitrage calculation.
     
@@ -118,7 +127,7 @@ def fetch_all_prices(w3: Web3) -> Dict[str, float]:
 # --------------------------------------------------------------------------- #
 
 
-def determine_action(balancer_price: float, ideal_price: float, tolerance: float) -> Optional[str]:
+def determine_action(balancer_price: float, ideal_price: float, tolerance: float) -> str | None:
     """
     Determine whether to buy or sell based on price discrepancy.
     
@@ -133,7 +142,7 @@ def determine_action(balancer_price: float, ideal_price: float, tolerance: float
         None: If within tolerance
     """
     if ideal_price == 0:
-        print("Warning: Ideal price is 0, skipping")
+        logger.warning(" Ideal price is 0, skipping")
         return None
     
     # Calculate percentage difference
@@ -148,7 +157,7 @@ def determine_action(balancer_price: float, ideal_price: float, tolerance: float
         return 'sell'  # Company cheap on Balancer, sell conditional
 
 
-def estimate_profit(action: str, amount: float, prices: Dict[str, float]) -> float:
+def estimate_profit(action: str, amount: float, prices: dict[str, float]) -> float:
     """
     Estimate expected profit before execution.
     
@@ -179,7 +188,7 @@ def estimate_profit(action: str, amount: float, prices: Dict[str, float]) -> flo
 # --------------------------------------------------------------------------- #
 
 
-def check_balances(w3: Web3, account_address: str) -> Dict[str, Any]:
+def check_balances(w3: Web3, account_address: str) -> dict[str, Any]:
     """
     Verify sufficient balances before trading.
     
@@ -235,9 +244,9 @@ def verify_environment() -> None:
     missing = [var for var in required_vars if not os.getenv(var)]
     
     if missing:
-        print("❌ Missing required environment variables:")
+        logger.error(" Missing required environment variables:")
         for var in missing:
-            print(f"  - {var}")
+            logger.info(f"  - {var}")
         sys.exit(1)
 
 
@@ -250,7 +259,7 @@ def execute_arbitrage(
     action: str, 
     amount: Decimal, 
     dry_run: bool = False
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Execute arbitrage using EIP-7702 bundled transactions.
     
@@ -265,14 +274,14 @@ def execute_arbitrage(
     try:
         if action == 'buy':
             # Buy conditional tokens and sell Company on Balancer
-            print(f"Executing BUY conditional with {amount} sDAI")
+            logger.info(f"Executing BUY conditional with {amount} sDAI")
             result = buy_conditional_simple(
                 amount_sdai=amount,
                 skip_balancer=False  # Include Balancer swap
             )
         elif action == 'sell':
             # Buy Company on Balancer and sell conditional tokens
-            print(f"Executing SELL conditional with {amount} sDAI")
+            logger.info(f"Executing SELL conditional with {amount} sDAI")
             # Skip merge to stay within 10-operation limit
             # This leaves us with conditional sDAI that can be merged later
             result = sell_conditional_simple(
@@ -280,13 +289,13 @@ def execute_arbitrage(
                 skip_merge=True  # Skip merge to stay within 10 ops
             )
             if result.get('status') == 'success':
-                print("Note: Conditional sDAI tokens held (merge skipped for 10-op limit)")
+                logger.info("Note: Conditional sDAI tokens held (merge skipped for 10-op limit)")
         else:
             raise ValueError(f"Unknown action: {action}")
         
         return result
     except Exception as e:
-        print(f"❌ Arbitrage execution failed: {e}")
+        logger.error(f" Arbitrage execution failed: {e}")
         return {
             'status': 'error',
             'error': str(e)
@@ -303,7 +312,7 @@ def run_bot(
     interval: int, 
     tolerance: float, 
     dry_run: bool = False,
-    max_iterations: Optional[int] = None
+    max_iterations: int | None = None
 ) -> None:
     """
     Main bot loop that monitors and executes arbitrage.
@@ -318,37 +327,58 @@ def run_bot(
     w3 = make_web3()
     account = Account.from_key(os.environ["PRIVATE_KEY"])
     
+    # Initialize Telegram alerts (optional)
+    telegram = create_alerter_from_env()
+    if telegram:
+        logger.info("Telegram alerts enabled")
+    
     iteration = 0
     consecutive_errors = 0
     max_consecutive_errors = 5
     
-    print(f"Starting EIP-7702 arbitrage bot...")
-    print(f"Account: {account.address}")
-    print(f"Amount: {amount} sDAI")
-    print(f"Interval: {interval}s")
-    print(f"Tolerance: {tolerance * 100:.2f}%")
-    print(f"Mode: {'DRY RUN' if dry_run else 'LIVE'}")
-    print()
+    logger.info(f"Starting EIP-7702 arbitrage bot...")
+    logger.info(f"Account: {account.address}")
+    logger.info(f"Amount: {amount} sDAI")
+    logger.info(f"Interval: {interval}s")
+    logger.info(f"Tolerance: {tolerance * 100:.2f}%")
+    logger.info(f"Mode: {'DRY RUN' if dry_run else 'LIVE'}")
+    logger.debug("")
+    
+    # Send bot start notification
+    if telegram:
+        try:
+            telegram.send_bot_status(
+                status="start",
+                message="EIP-7702 Arbitrage Bot Started",
+                details={
+                    "Amount": f"{amount} sDAI",
+                    "Tolerance": f"{tolerance * 100}%",
+                    "Mode": "Dry Run" if dry_run else "Live Trading",
+                    "Network": "Gnosis Chain"
+                }
+            )
+        except Exception as e:
+            logger.error(f"Failed to send Telegram alert: {e}")
     
     while max_iterations is None or iteration < max_iterations:
         try:
-            print(f"--- Iteration {iteration + 1} ---")
+            logger.debug(f"--- Iteration {iteration + 1} ---")
             
             # Check balances
             balances = check_balances(w3, account.address)
             if not balances['sufficient']:
-                print(f"⚠️ Insufficient balances - sDAI: {balances['sdai']}, ETH: {balances['eth']}")
+                logger.warning(f" Insufficient balances - sDAI: {balances['sdai']}, ETH: {balances['eth']}")
                 time.sleep(interval)
                 continue
             
             # Fetch current prices
             prices = fetch_all_prices(w3)
             
-            print(f"YES  pool: 1 {prices['yes_base']} = {prices['yes_price']:.6f} {prices['yes_quote']}")
-            print(f"PRED pool: 1 {prices['yes_base']} = {prices['pred_yes_price']:.6f} {prices['yes_quote']}")
-            print(f"NO   pool: 1 {prices['no_base']} = {prices['no_price']:.6f} {prices['no_quote']}")
-            print(f"BAL  pool: 1 {prices['bal_base']} = {prices['balancer_price']:.6f} {prices['bal_quote']}")
-            print(f"Ideal price: {prices['ideal_price']:.6f}")
+            logger.debug(f"YES  pool: 1 {prices['yes_base']} = {prices['yes_price']:.6f} {prices['yes_quote']}")
+            logger.debug(f"PRED pool: 1 {prices['yes_base']} = {prices['pred_yes_price']:.6f} {prices['yes_quote']}")
+            logger.debug(f"NO   pool: 1 {prices['no_base']} = {prices['no_price']:.6f} {prices['no_quote']}")
+            logger.debug(f"BAL  pool: 1 {prices['bal_base']} = {prices['balancer_price']:.6f} {prices['bal_quote']}")
+            logger.debug(f"Ideal price: {prices['ideal_price']:.6f}")
             
             # Calculate opportunity
             action = determine_action(
@@ -361,33 +391,60 @@ def run_bot(
                 # Calculate expected profit
                 expected_profit = estimate_profit(action, amount, prices)
                 print(f"\n🎯 Opportunity detected: {action.upper()}")
-                print(f"Balancer: {prices['balancer_price']:.6f}, Ideal: {prices['ideal_price']:.6f}")
-                print(f"Expected profit: {expected_profit:.6f} sDAI")
+                logger.debug(f"Balancer: {prices['balancer_price']:.6f}, Ideal: {prices['ideal_price']:.6f}")
+                logger.debug(f"Expected profit: {expected_profit:.6f} sDAI")
                 
                 if not dry_run and expected_profit > 0:
                     # Execute arbitrage
-                    print(f"Executing {action} arbitrage...")
+                    logger.info(f"Executing {action} arbitrage...")
                     result = execute_arbitrage(action, Decimal(str(amount)), dry_run=False)
                     
                     if result.get('status') == 'success':
-                        print(f"✅ Arbitrage successful!")
-                        print(f"  TX: {result.get('tx_hash')}")
-                        print(f"  Gas used: {result.get('gas_used')}")
+                        logger.info(f" Arbitrage successful!")
+                        logger.info(f"  TX: {result.get('tx_hash')}")
+                        logger.info(f"  Gas used: {result.get('gas_used')}")
+                        
+                        # Send Telegram alert for successful trade
+                        if telegram:
+                            try:
+                                telegram.send_trade_alert(
+                                    side=action,
+                                    amount=float(amount),
+                                    profit=float(expected_profit),
+                                    tx_hash=result.get('tx_hash'),
+                                    success=True,
+                                    gas_used=result.get('gas_used'),
+                                    ideal_price=float(prices['ideal_price']),
+                                    balancer_price=float(prices['balancer_price'])
+                                )
+                            except Exception as e:
+                                logger.error(f"Failed to send Telegram alert: {e}")
                         
                         # Show final balances
                         if action == 'buy':
-                            print(f"  Final sDAI: {result.get('sdai_balance')}")
+                            logger.info(f"  Final sDAI: {result.get('sdai_balance')}")
                         else:
-                            print(f"  Final Company: {result.get('company_balance')}")
+                            logger.info(f"  Final Company: {result.get('company_balance')}")
                         
                         consecutive_errors = 0
                     else:
-                        print(f"❌ Arbitrage failed: {result.get('error', 'Unknown error')}")
+                        logger.error(f" Arbitrage failed: {result.get('error', 'Unknown error')}")
+                        
+                        # Send Telegram alert for failed trade
+                        if telegram:
+                            try:
+                                telegram.send_error_alert(
+                                    error=result.get('error', 'Unknown error'),
+                                    context=f"{action.upper()} trade for {amount} sDAI"
+                                )
+                            except Exception as e:
+                                logger.error(f"Failed to send Telegram alert: {e}")
+                        
                         consecutive_errors += 1
                 elif dry_run:
                     print(f"📊 DRY RUN: Would execute {action} for {expected_profit:.6f} sDAI profit")
                 else:
-                    print(f"⚠️ Skipping: Expected profit negative ({expected_profit:.6f} sDAI)")
+                    logger.warning(f" Skipping: Expected profit negative ({expected_profit:.6f} sDAI)")
             else:
                 diff_pct = abs(prices['balancer_price'] - prices['ideal_price']) / prices['ideal_price'] * 100
                 print(f"No opportunity (diff {diff_pct:.2f}% < {tolerance * 100:.2f}%)")
@@ -406,6 +463,12 @@ def run_bot(
                 
         except KeyboardInterrupt:
             print("\n\n👋 Bot stopped by user")
+            if telegram:
+                telegram.send_bot_status(
+                    status="stop",
+                    message="Bot stopped by user",
+                    details={"Reason": "Manual interruption (Ctrl+C)"}
+                )
             break
         except Exception as e:
             print(f"\n❌ Error in bot loop: {e}")

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
@@ -32,7 +32,7 @@ def _utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _load_env(path: Optional[str]) -> None:
+def _load_env(path: str | None) -> None:
     if not path:
         return
     try:
@@ -41,7 +41,7 @@ def _load_env(path: Optional[str]) -> None:
         _ld(path)
     except Exception:
         try:
-            with open(path, "r") as f:
+            with open(path) as f:
                 for line in f:
                     s = line.strip()
                     if not s or s.startswith("#"):
@@ -56,10 +56,10 @@ def _load_env(path: Optional[str]) -> None:
             pass
 
 
-def _build_w3(rpc_url: Optional[str]) -> Web3:
+def _build_w3(rpc_url: str | None) -> Web3:
     url = rpc_url or os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
     if not url:
-        raise EnvironmentError("Set --rpc-url or RPC_URL/GNOSIS_RPC_URL in env")
+        raise OSError("Set --rpc-url or RPC_URL/GNOSIS_RPC_URL in env")
     w3 = Web3(Web3.HTTPProvider(url))
     try:
         from web3.middleware import geth_poa_middleware
@@ -83,7 +83,7 @@ def _default_log_path(base_dir: Path) -> Path:
     return base_dir / f"deploy_v5_{ts}.json"
 
 
-def _load_artifacts() -> Tuple[str, list]:
+def _load_artifacts() -> tuple[str, list]:
     """Load bytecode and ABI from build artifacts (preferred fallback to avoid requiring solc/solcx)."""
     abi_path = Path("build/FutarchyArbExecutorV5.abi")
     bin_path = Path("build/FutarchyArbExecutorV5.bin")
@@ -101,10 +101,10 @@ def _ensure_path_and_get_address(
     path: str,
     out_dir: Path,
     index_path: Path,
-    mnemonic: Optional[str],
-    keystore_pass: Optional[str],
-    keystore_pass_env: Optional[str],
-) -> Tuple[str, Optional[Dict[str, Any]]]:
+    mnemonic: str | None,
+    keystore_pass: str | None,
+    keystore_pass_env: str | None,
+) -> tuple[str, dict[str, Any] | None]:
     """Ensure the HD path exists in index/keystore if mnemonic is provided; return (address, record_or_None)."""
     existing = load_index(index_path)
     by_path = {r.get("path"): r for r in existing if r.get("path")}
@@ -162,10 +162,10 @@ def _derive_private_key_for_path(
     path: str,
     out_dir: Path,
     index_path: Path,
-    mnemonic: Optional[str],
-    keystore_pass: Optional[str],
-    keystore_pass_env: Optional[str],
-) -> Tuple[str, str]:
+    mnemonic: str | None,
+    keystore_pass: str | None,
+    keystore_pass_env: str | None,
+) -> tuple[str, str]:
     """Return (private_key_hex, checksum_address) for the requested HD path.
 
     Order of resolution:
@@ -212,11 +212,11 @@ def _derive_private_key_for_path(
 class DeployGasConfig:
     type: str  # "eip1559" or "legacy"
     gas_limit: int
-    max_fee_gwei: Optional[Decimal] = None
-    prio_fee_gwei: Optional[Decimal] = None
-    gas_price_gwei: Optional[Decimal] = None
+    max_fee_gwei: Decimal | None = None
+    prio_fee_gwei: Decimal | None = None
+    gas_price_gwei: Decimal | None = None
 
-    def as_tx_fields(self, w3: Web3) -> Dict[str, int]:
+    def as_tx_fields(self, w3: Web3) -> dict[str, int]:
         # Reuse semantics from funding GasConfig
         if self.type == "eip1559":
             assert self.max_fee_gwei is not None and self.prio_fee_gwei is not None
@@ -235,19 +235,19 @@ def deploy_v5(
     out_dir: Path,
     index_path: Path,
     ensure_path: bool,
-    ensure_mnemonic: Optional[str],
-    ensure_mnemonic_env: Optional[str],
-    keystore_pass: Optional[str],
-    keystore_pass_env: Optional[str],
-    env_file: Optional[str],
-    rpc_url: Optional[str],
+    ensure_mnemonic: str | None,
+    ensure_mnemonic_env: str | None,
+    keystore_pass: str | None,
+    keystore_pass_env: str | None,
+    env_file: str | None,
+    rpc_url: str | None,
     chain_id: int,
     gas: DeployGasConfig,
     timeout: int,
     dry_run: bool,
-    log_path: Optional[Path],
+    log_path: Path | None,
     require_confirm: bool,
-    fund_xdai_eth: Optional[str] = None,
+    fund_xdai_eth: str | None = None,
     funder_env: str = "FUNDER_PRIVATE_KEY",
 ) -> int:
     """Deploy FutarchyArbExecutorV5 with the owner set to the EOA derived at --path.
@@ -300,7 +300,7 @@ def deploy_v5(
     try:
         if hasattr(w3, "is_connected") and callable(getattr(w3, "is_connected")):
             if not w3.is_connected():
-                raise EnvironmentError("Web3 provider not connected (check RPC URL)")
+                raise OSError("Web3 provider not connected (check RPC URL)")
     except Exception:
         pass
     actual_chain_id = w3.eth.chain_id
@@ -355,7 +355,7 @@ def deploy_v5(
     deployer_bal = int(w3.eth.get_balance(deployer))
 
     # Optional/Automatic pre-fund
-    prefund_summary: Optional[Dict[str, Any]] = None
+    prefund_summary: dict[str, Any] | None = None
     def _top_up_to_target(target_wei: int) -> None:
         nonlocal deployer_bal
         rc = fund_xdai_topup(
@@ -407,7 +407,7 @@ def deploy_v5(
             prefund_summary = {"target_wei": target_wei, "after_balance_wei": deployer_bal}
 
     # Prepare plan/summary
-    summary: Dict[str, Any] = {
+    summary: dict[str, Any] = {
         "chain_id": actual_chain_id,
         "rpc_url": rpc_url or os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL"),
         "deployer": deployer,

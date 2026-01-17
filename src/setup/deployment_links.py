@@ -34,7 +34,6 @@ import re
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 
 LOGS_GLOB = "build/wallets/deploy_v5_*.json"
@@ -45,9 +44,9 @@ DEPLOYMENTS_GLOB = "deployments/deployment_executor_v5_*.json"
 class DeploymentLink:
     path: str
     address: str
-    deployer: Optional[str]
-    tx: Optional[str]
-    generated_at: Optional[str]
+    deployer: str | None
+    tx: str | None
+    generated_at: str | None
     log_file: str
 
     def timestamp(self) -> float:
@@ -63,9 +62,9 @@ class DeploymentLink:
             return 0.0
 
 
-def _load_json(path: Path) -> Optional[dict]:
+def _load_json(path: Path) -> dict | None:
     try:
-        with open(path, "r") as f:
+        with open(path) as f:
             return json.load(f)
     except Exception:
         return None
@@ -75,8 +74,8 @@ def _is_hex_address(s: str) -> bool:
     return bool(re.fullmatch(r"0x[a-fA-F0-9]{40}", s or ""))
 
 
-def scan_deploy_logs(logs_glob: str = LOGS_GLOB) -> List[DeploymentLink]:
-    links: List[DeploymentLink] = []
+def scan_deploy_logs(logs_glob: str = LOGS_GLOB) -> list[DeploymentLink]:
+    links: list[DeploymentLink] = []
     for p in sorted(Path(".").glob(logs_glob)):
         data = _load_json(p)
         if not data:
@@ -106,8 +105,8 @@ def scan_deploy_logs(logs_glob: str = LOGS_GLOB) -> List[DeploymentLink]:
     return links
 
 
-def latest_links_by_path(links: List[DeploymentLink]) -> Dict[str, DeploymentLink]:
-    latest: Dict[str, DeploymentLink] = {}
+def latest_links_by_path(links: list[DeploymentLink]) -> dict[str, DeploymentLink]:
+    latest: dict[str, DeploymentLink] = {}
     for link in links:
         cur = latest.get(link.path)
         if not cur or link.timestamp() >= cur.timestamp():
@@ -115,7 +114,7 @@ def latest_links_by_path(links: List[DeploymentLink]) -> Dict[str, DeploymentLin
     return latest
 
 
-def find_by_path(path: str, links: Optional[List[DeploymentLink]] = None) -> Optional[DeploymentLink]:
+def find_by_path(path: str, links: list[DeploymentLink] | None = None) -> DeploymentLink | None:
     if links is None:
         links = scan_deploy_logs()
     candidates = [l for l in links if l.path == path]
@@ -125,7 +124,7 @@ def find_by_path(path: str, links: Optional[List[DeploymentLink]] = None) -> Opt
     return candidates[0]
 
 
-def find_by_address(address: str, links: Optional[List[DeploymentLink]] = None) -> Optional[DeploymentLink]:
+def find_by_address(address: str, links: list[DeploymentLink] | None = None) -> DeploymentLink | None:
     if links is None:
         links = scan_deploy_logs()
     address = address.lower()
@@ -136,7 +135,7 @@ def find_by_address(address: str, links: Optional[List[DeploymentLink]] = None) 
     return candidates[0]
 
 
-def export_links(out_path: Path, links: Optional[List[DeploymentLink]] = None) -> Path:
+def export_links(out_path: Path, links: list[DeploymentLink] | None = None) -> Path:
     if links is None:
         links = scan_deploy_logs()
     latest = latest_links_by_path(links)

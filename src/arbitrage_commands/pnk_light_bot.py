@@ -22,7 +22,7 @@ import os
 import sys
 import time
 import asyncio
-from typing import Dict, Tuple, Any
+from typing import Any
 from decimal import Decimal
 
 from web3 import Web3
@@ -45,7 +45,7 @@ class PNKLightBot:
         rpc_url = self.cfg.get("RPC_URL", DEFAULT_RPC_URLS[0])
         return Web3(Web3.HTTPProvider(rpc_url))
     
-    async def _get_reserves(self, pool_address: str) -> Tuple[int, int]:
+    async def _get_reserves(self, pool_address: str) -> tuple[int, int]:
         """Get reserves from a Uniswap V2 pool."""
         pool = self.w3.eth.contract(
             address=self.w3.to_checksum_address(pool_address),
@@ -72,7 +72,7 @@ class PNKLightBot:
         dai_amount = sdai_contract.functions.convertToAssets(10**18).call()
         return dai_amount / 10**18
     
-    async def _current_price(self) -> Dict[str, float]:
+    async def _current_price(self) -> dict[str, float]:
         """Calculate current PNK prices in sDAI, USD, and WETH."""
         # Get WETH price in USD from WETH/WXDAI pool
         weth_address = self.cfg.get("WETH_ADDRESS")
@@ -93,7 +93,7 @@ class PNKLightBot:
         
         return {"sdai": price_sdai, "usd": price_usd, "weth": price_weth}
     
-    def display_prices(self, prices: Dict[str, float]) -> None:
+    def display_prices(self, prices: dict[str, float]) -> None:
         """Display current PNK prices."""
         print(f"PNK Prices:")
         print(f"  1 PNK = {prices['sdai']:.6f} sDAI")

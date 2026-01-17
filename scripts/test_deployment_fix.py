@@ -61,7 +61,7 @@ def compile_and_check():
     for name, path in contracts.items():
         print(f"\n📦 Compiling {name}...")
         
-        with open(path, 'r') as f:
+        with open(path) as f:
             source = f.read()
         
         # Compile with specific settings

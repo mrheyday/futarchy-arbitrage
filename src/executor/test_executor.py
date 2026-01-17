@@ -18,7 +18,6 @@ import sys
 import argparse
 import logging
 from decimal import Decimal
-from typing import Optional
 
 from web3 import Web3
 from web3.middleware import ExtraDataToPOAMiddleware
@@ -39,7 +38,7 @@ def get_web3() -> Web3:
     """Initialize Web3 connection."""
     rpc_url = os.getenv("RPC_URL") or os.getenv("GNOSIS_RPC_URL")
     if not rpc_url:
-        raise EnvironmentError("Set RPC_URL or GNOSIS_RPC_URL environment variable")
+        raise OSError("Set RPC_URL or GNOSIS_RPC_URL environment variable")
     
     w3 = Web3(Web3.HTTPProvider(rpc_url))
     w3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
@@ -129,7 +128,7 @@ def main():
     # Get wallet address
     sender = os.getenv("WALLET_ADDRESS") or os.getenv("SENDER_ADDRESS")
     if not sender:
-        raise EnvironmentError("Set WALLET_ADDRESS or SENDER_ADDRESS environment variable")
+        raise OSError("Set WALLET_ADDRESS or SENDER_ADDRESS environment variable")
     
     # Convert amounts to wei
     amount_wei = w3.to_wei(Decimal(str(args.amount)), "ether")
@@ -185,7 +184,7 @@ def main():
         
         private_key = os.getenv("PRIVATE_KEY")
         if not private_key:
-            raise EnvironmentError("Set PRIVATE_KEY to execute transactions")
+            raise OSError("Set PRIVATE_KEY to execute transactions")
         
         try:
             if args.direction == "sell":
@@ -231,7 +230,7 @@ def main():
         
         private_key = os.getenv("PRIVATE_KEY")
         if not private_key:
-            raise EnvironmentError("Set PRIVATE_KEY to execute transactions")
+            raise OSError("Set PRIVATE_KEY to execute transactions")
         
         try:
             if args.direction == "sell":

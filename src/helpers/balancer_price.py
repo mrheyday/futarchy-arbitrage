@@ -13,7 +13,6 @@ explicit error handling.
 from __future__ import annotations
 
 from decimal import Decimal
-from typing import Tuple
 
 from web3 import Web3
 
@@ -48,7 +47,7 @@ def get_pool_price(
     *,
     base_token_index: int = 0,
     vault_addr: str | None = None,
-) -> Tuple[Decimal, str, str]:
+) -> tuple[Decimal, str, str]:
     """
     Spot price of *base* token (index ``base_token_index``) in terms of the
     quote token for any Balancer V3 pool.

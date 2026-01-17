@@ -1,0 +1,22 @@
+[Unit]
+Description=Futarchy Arbitrage Bot (EIP-7702)
+After=network.target
+
+[Service]
+Type=simple
+User=arbitrage
+WorkingDirectory=/home/arbitrage/futarchy-arbitrage-1
+Environment="PATH=/home/arbitrage/futarchy-arbitrage-1/futarchy_env/bin"
+
+# Run the EIP-7702 bot module
+ExecStart=/home/arbitrage/futarchy-arbitrage-1/futarchy_env/bin/python \
+  -m src.arbitrage_commands.eip7702_arb_bot \
+  --amount 100.0 \
+  --interval 60 \
+  --tolerance 0.02
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

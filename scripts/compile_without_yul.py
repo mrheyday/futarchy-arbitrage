@@ -10,7 +10,7 @@ import subprocess
 import json
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 def check_solc_version():
     """Check if solc is available and get version."""
@@ -28,7 +28,7 @@ def check_solc_version():
     return False
 
 
-def compile_contract(contract_path: Path, contract_name: str) -> Dict[str, Any]:
+def compile_contract(contract_path: Path, contract_name: str) -> dict[str, Any]:
     """
     Compile a Solidity contract with Yul optimizer disabled.
     
@@ -43,7 +43,7 @@ def compile_contract(contract_path: Path, contract_name: str) -> Dict[str, Any]:
         raise FileNotFoundError(f"Contract not found: {contract_path}")
     
     # Read contract source
-    with open(contract_path, 'r') as f:
+    with open(contract_path) as f:
         source_code = f.read()
     
     # Update pragma to match available compiler

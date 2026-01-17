@@ -5,10 +5,9 @@ This module is currently in EXPERIMENTAL status.
 Contains RPC URLs and API endpoints for various services.
 """
 
-from typing import List
 
 # Default RPC URLs (fallbacks if not set in environment)
-DEFAULT_RPC_URLS: List[str] = [
+DEFAULT_RPC_URLS: list[str] = [
     "https://gnosis-mainnet.public.blastapi.io",  # Primary
     "https://rpc.gnosischain.com",                # Backup 1
     "https://rpc.ankr.com/gnosis"                 # Backup 2

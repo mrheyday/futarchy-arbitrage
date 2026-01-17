@@ -24,7 +24,7 @@ from pathlib import Path
 
 def compile_with_custom_settings(contract_path, output_dir):
     """Compile contract with Yul optimizer disabled."""
-    
+
     # Create standard JSON input
     input_json = {
         "language": "Solidity",
@@ -48,7 +48,7 @@ def compile_with_custom_settings(contract_path, output_dir):
             }
         }
     }
-    
+
     # Run solc with standard JSON
     result = subprocess.run(
         ["solc", "--standard-json"],
@@ -56,10 +56,10 @@ def compile_with_custom_settings(contract_path, output_dir):
         capture_output=True,
         text=True
     )
-    
+
     if result.returncode != 0:
         raise Exception(f"Compilation failed: {result.stderr}")
-    
+
     output = json.loads(result.stdout)
     return output["contracts"]["FutarchyBatchExecutor.sol"]["FutarchyBatchExecutor"]
 ```
@@ -71,15 +71,15 @@ def compile_with_custom_settings(contract_path, output_dir):
 def compile_contract() -> Dict[str, Any]:
     """Compile the FutarchyBatchExecutor contract with Yul disabled."""
     print("📦 Compiling FutarchyBatchExecutor contract (Yul optimizer disabled)...")
-    
+
     # Use custom compilation to disable Yul
     from scripts.compile_without_yul import compile_with_custom_settings
-    
+
     contract_data = compile_with_custom_settings(
         CONTRACT_PATH,
         Path("build")
     )
-    
+
     return {
         'abi': contract_data['abi'],
         'bytecode': contract_data['evm']['bytecode']['object'],
@@ -90,17 +90,20 @@ def compile_contract() -> Dict[str, Any]:
 ## Verification Steps
 
 1. **Compile and Check**:
+
    ```bash
    python scripts/compile_without_yul.py
    python scripts/analyze_bytecode.py build/FutarchyBatchExecutor.bin
    ```
 
 2. **Deploy**:
+
    ```bash
    python -m src.setup.deploy_batch_executor
    ```
 
 3. **Verify**:
+
    ```bash
    python -m src.helpers.pectra_verifier
    ```
@@ -121,6 +124,7 @@ def compile_contract() -> Dict[str, Any]:
 If direct solc manipulation proves difficult, we can use Hardhat or Foundry which have better support for optimizer details:
 
 ### Hardhat Configuration
+
 ```javascript
 // hardhat.config.js
 module.exports = {
@@ -131,15 +135,16 @@ module.exports = {
         enabled: true,
         runs: 200,
         details: {
-          yul: false  // Disable Yul optimizer
-        }
-      }
-    }
-  }
+          yul: false, // Disable Yul optimizer
+        },
+      },
+    },
+  },
 };
 ```
 
 ### Foundry Configuration
+
 ```toml
 # foundry.toml
 [profile.default]
@@ -154,6 +159,7 @@ yul = false  # Disable Yul optimizer
 ## Conclusion
 
 Disabling the Yul optimizer is the cleanest solution that:
+
 1. Preserves the existing contract interface
 2. Eliminates all 0xEF opcodes
 3. Has minimal gas impact (3-6%)

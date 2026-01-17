@@ -34,7 +34,7 @@ ERC20_ABI = [
 def _load_executor_abi(address: str):
     """Find the deployment JSON with the matching address and return its abi."""
     for p in Path(".").glob("deployment_executor_v4_*.json"):
-        with open(p, "r") as f:
+        with open(p) as f:
             data = json.load(f)
         if data.get("address","").lower() == address.lower():
             return data["abi"]

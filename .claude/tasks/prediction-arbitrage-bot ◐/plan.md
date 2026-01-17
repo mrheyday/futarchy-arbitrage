@@ -1,21 +1,19 @@
 Awesome—this is a clean, symmetric arbitrage you can implement with a very small, purpose‑built contract and one focused off‑chain executor. Below I give you:
 
 1. **A new on‑chain contract** `PredictionArbExecutorV1.sol` with exactly the two entrypoints you requested:
-
-   * `sell_conditional_arbitrage(...)`
-   * `buy_conditional_arbitrage(...)`
+   - `sell_conditional_arbitrage(...)`
+   - `buy_conditional_arbitrage(...)`
 
    It reuses the same Swapr/Algebra helpers, allowance patterns, and events from your existing V5 executor, but strips out Balancer/PNK specifics. It expects the off‑chain script to decide which function to call and with what `amount`.
 
 2. **A new off‑chain executor** `src/executor/prediction_arb_executor.py` that:
+   - Reads prices for **yes_currency <-> currency** and **no_currency <-> currency** Swapr pools off‑chain.
+   - Decides per your rule:
+     - if `yes_price + no_price > 1` → call **sell** function (split then sell exact‑in both legs)
+     - if `yes_price + no_price < 1` → call **buy** function (buy both legs exact‑out amount each, then merge)
 
-   * Reads prices for **yes\_currency <-> currency** and **no\_currency <-> currency** Swapr pools off‑chain.
-   * Decides per your rule:
-
-     * if `yes_price + no_price > 1` → call **sell** function (split then sell exact‑in both legs)
-     * if `yes_price + no_price < 1` → call **buy** function (buy both legs exact‑out amount each, then merge)
-   * Prefunds the contract with `{currency}` if necessary (same pattern as your current executors).
-   * Uses the same EIP‑1559 fee and ABI‑adaptive build patterns as `arbitrage_executor.py`.
+   - Prefunds the contract with `{currency}` if necessary (same pattern as your current executors).
+   - Uses the same EIP‑1559 fee and ABI‑adaptive build patterns as `arbitrage_executor.py`.
 
 Both pieces follow your project’s style and naming patterns so they drop into the repo without friction.
 
@@ -356,19 +354,19 @@ contract PredictionArbExecutorV1 {
 
 **Why this matches your plan**
 
-* **SELL:** `splitPosition` mints `amount` on each of YES/NO collateral; we then **exact‑in** both conditional legs to `{currency}`. Profit = proceeds − amount.
-* **BUY:** Two **exact‑out** trades for `amount` of YES/NO conditional collateral each; then `mergePositions` mints back exactly `amount` `{currency}`. Profit = amount − total spent.
-* No on‑chain price reads; **all price selection is off‑chain**.
-* Same **events, approvals, and safety patterns** as your V5 contract, plus a signed profit guard (`min_out_final`) to keep things atomic & safe.
+- **SELL:** `splitPosition` mints `amount` on each of YES/NO collateral; we then **exact‑in** both conditional legs to `{currency}`. Profit = proceeds − amount.
+- **BUY:** Two **exact‑out** trades for `amount` of YES/NO conditional collateral each; then `mergePositions` mints back exactly `amount` `{currency}`. Profit = amount − total spent.
+- No on‑chain price reads; **all price selection is off‑chain**.
+- Same **events, approvals, and safety patterns** as your V5 contract, plus a signed profit guard (`min_out_final`) to keep things atomic & safe.
 
 ---
 
 ## 2) Off‑chain executor — `src/executor/prediction_arb_executor.py`
 
-* Reads the two Swapr pools for *conditional‑currency ↔ currency* (you already have these as `SWAPR_POOL_PRED_YES_ADDRESS` and `SWAPR_POOL_PRED_NO_ADDRESS` in your config pattern).
-* Normalizes orientation so prices are in `{currency}` units (inverts if the pool returns the opposite side).
-* Applies your rule to decide **sell vs buy** and calls the corresponding function on the new contract.
-* Prefunds the executor contract with `{currency}` when needed (same pattern as `arbitrage_executor.py`).
+- Reads the two Swapr pools for _conditional‑currency ↔ currency_ (you already have these as `SWAPR_POOL_PRED_YES_ADDRESS` and `SWAPR_POOL_PRED_NO_ADDRESS` in your config pattern).
+- Normalizes orientation so prices are in `{currency}` units (inverts if the pool returns the opposite side).
+- Applies your rule to decide **sell vs buy** and calls the corresponding function on the new contract.
+- Prefunds the executor contract with `{currency}` when needed (same pattern as `arbitrage_executor.py`).
 
 ```py
 #!/usr/bin/env python3
@@ -672,19 +670,18 @@ if __name__ == "__main__":
 
 ### Expected env vars (all already familiar in your repo)
 
-* Network & wallet: `RPC_URL`, `PRIVATE_KEY`, `CHAIN_ID` (100 for Gnosis)
-* Executor: `PREDICTION_ARB_EXECUTOR_V1` (or `PREDICTION_EXECUTOR_V1_ADDRESS`) **after deploy**
-* Routers: `SWAPR_ROUTER_ADDRESS`, `FUTARCHY_ROUTER_ADDRESS`
-* Proposal: `FUTARCHY_PROPOSAL_ADDRESS`
-* Tokens (currency & conditionals):
+- Network & wallet: `RPC_URL`, `PRIVATE_KEY`, `CHAIN_ID` (100 for Gnosis)
+- Executor: `PREDICTION_ARB_EXECUTOR_V1` (or `PREDICTION_EXECUTOR_V1_ADDRESS`) **after deploy**
+- Routers: `SWAPR_ROUTER_ADDRESS`, `FUTARCHY_ROUTER_ADDRESS`
+- Proposal: `FUTARCHY_PROPOSAL_ADDRESS`
+- Tokens (currency & conditionals):
+  - `SDAI_TOKEN_ADDRESS` (base)
+  - `SWAPR_SDAI_YES_ADDRESS` (YES\_{currency})
+  - `SWAPR_SDAI_NO_ADDRESS` (NO\_{currency})
 
-  * `SDAI_TOKEN_ADDRESS` (base)
-  * `SWAPR_SDAI_YES_ADDRESS` (YES\_{currency})
-  * `SWAPR_SDAI_NO_ADDRESS` (NO\_{currency})
-* Pools (conditional currency ↔ base):
-
-  * `SWAPR_POOL_PRED_YES_ADDRESS`
-  * `SWAPR_POOL_PRED_NO_ADDRESS`
+- Pools (conditional currency ↔ base):
+  - `SWAPR_POOL_PRED_YES_ADDRESS`
+  - `SWAPR_POOL_PRED_NO_ADDRESS`
 
 > These variable names align with your `arbitrage_bot_v2.py` and env mapping.
 
@@ -708,23 +705,22 @@ python -m src.executor.prediction_arb_executor \
   --prefund
 ```
 
-* `--amount` is in **{currency} units** (e.g., sDAI).
-* In **SELL**, `amount` is the split size.
-* In **BUY**, `amount` is the **exact\_out target** per conditional leg (so total merge is exactly `amount` back to base).
-* `--min-profit` is a **signed** guard in base units. Keep it conservative in production.
+- `--amount` is in **{currency} units** (e.g., sDAI).
+- In **SELL**, `amount` is the split size.
+- In **BUY**, `amount` is the **exact_out target** per conditional leg (so total merge is exactly `amount` back to base).
+- `--min-profit` is a **signed** guard in base units. Keep it conservative in production.
 
 ---
 
 ## 4) Notes & next steps
 
-* **Decisions off‑chain**: No price reads on-chain; both functions revert unless the profit guard is satisfied, keeping you safe against transient pool changes.
-* **Fees/slippage**: The contract uses unlimited `maxIn` for the two exact‑out buys; your off‑chain check (+profit guard) ensures non‑profitable paths revert. If you prefer hard slippage caps on-chain, we can add `max_in_yes`/`max_in_no` parameters & read fee tiers via pools (already supported).
-* **Config integration**: If you want this under the JSON config/bot loop, we can:
+- **Decisions off‑chain**: No price reads on-chain; both functions revert unless the profit guard is satisfied, keeping you safe against transient pool changes.
+- **Fees/slippage**: The contract uses unlimited `maxIn` for the two exact‑out buys; your off‑chain check (+profit guard) ensures non‑profitable paths revert. If you prefer hard slippage caps on-chain, we can add `max_in_yes`/`max_in_no` parameters & read fee tiers via pools (already supported).
+- **Config integration**: If you want this under the JSON config/bot loop, we can:
+  - Add a small `PredictionMode` to `arbitrage_bot_v2.py` that shells out to this new executor when the comparator is the sum of conditional‑currency pools instead of Balancer/GNO.
 
-  * Add a small `PredictionMode` to `arbitrage_bot_v2.py` that shells out to this new executor when the comparator is the sum of conditional‑currency pools instead of Balancer/GNO.
-* **Tests**: You can adapt `tests/test_split_position.py` to sanity-check:
-
-  * split emits and sufficient balances appear
-  * sell/buy functions call the expected low-level helpers and Futarchy router.
+- **Tests**: You can adapt `tests/test_split_position.py` to sanity-check:
+  - split emits and sufficient balances appear
+  - sell/buy functions call the expected low-level helpers and Futarchy router.
 
 This gives you a minimal, self‑contained “prediction‑only” arbitrage path that matches your plan and plugs into your existing repo structure.

@@ -48,16 +48,19 @@ CLZ (Count Leading Zeros) is a CPU instruction that counts the number of leading
 ### Applications
 
 1. **Log2 Approximation**
+
    ```solidity
    uint256 log2_approx = 255 - clz(value);
    ```
 
 2. **Bid Scaling** (Auction Economics)
+
    ```solidity
    uint256 effectiveBid = value.mulDiv(255 - clz(value), 256);
    ```
 
 3. **Entropy Calculation** (MEV Protection)
+
    ```solidity
    bytes32 hash = keccak256(...);
    uint256 entropy = 255 - clz(hash);

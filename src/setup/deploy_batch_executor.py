@@ -18,7 +18,7 @@ import os
 import sys
 import json
 import argparse
-from typing import Dict, Any, Optional
+from typing import Any
 from pathlib import Path
 from decimal import Decimal
 from web3 import Web3
@@ -46,7 +46,7 @@ PRIORITY_FEE_GWEI = 2
 # Contract Compilation                                                        #
 # --------------------------------------------------------------------------- #
 
-def compile_contract() -> Dict[str, Any]:
+def compile_contract() -> dict[str, Any]:
     """Compile the FutarchyBatchExecutor contract."""
     print("📦 Compiling FutarchyBatchExecutor contract...")
     
@@ -61,7 +61,7 @@ def compile_contract() -> Dict[str, Any]:
         print(f"❌ Contract file not found: {CONTRACT_PATH}")
         sys.exit(1)
     
-    with open(CONTRACT_PATH, 'r') as f:
+    with open(CONTRACT_PATH) as f:
         contract_source = f.read()
     
     # Compile contract with optimizer settings to avoid 0xEF
@@ -121,7 +121,7 @@ def verify_bytecode(bytecode: str) -> bool:
 # Deployment Functions                                                        #
 # --------------------------------------------------------------------------- #
 
-def estimate_deployment_cost(w3: Web3, bytecode: str, account_address: str) -> Dict[str, Any]:
+def estimate_deployment_cost(w3: Web3, bytecode: str, account_address: str) -> dict[str, Any]:
     """Estimate gas costs for deployment."""
     # Get current gas prices
     latest_block = w3.eth.get_block('latest')
@@ -151,7 +151,7 @@ def estimate_deployment_cost(w3: Web3, bytecode: str, account_address: str) -> D
     }
 
 
-def deploy_contract(w3: Web3, account: Account, contract_data: Dict[str, Any], dry_run: bool = False) -> Optional[str]:
+def deploy_contract(w3: Web3, account: Account, contract_data: dict[str, Any], dry_run: bool = False) -> str | None:
     """Deploy the FutarchyBatchExecutor contract."""
     print("\n🚀 Deploying FutarchyBatchExecutorMinimal...")
     
@@ -250,7 +250,7 @@ def deploy_contract(w3: Web3, account: Account, contract_data: Dict[str, Any], d
 # Contract Verification                                                       #
 # --------------------------------------------------------------------------- #
 
-def verify_contract(contract_address: str, contract_data: Dict[str, Any]) -> bool:
+def verify_contract(contract_address: str, contract_data: dict[str, Any]) -> bool:
     """Verify contract on Gnosisscan."""
     api_key = os.getenv("GNOSISSCAN_API_KEY")
     if not api_key:
@@ -276,7 +276,7 @@ def update_environment_file(contract_address: str) -> None:
     # Read existing content if file exists
     existing_content = ""
     if env_file.exists():
-        with open(env_file, 'r') as f:
+        with open(env_file) as f:
             existing_content = f.read()
     
     # Update or add IMPLEMENTATION_ADDRESS

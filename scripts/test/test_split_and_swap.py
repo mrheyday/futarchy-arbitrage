@@ -14,7 +14,7 @@ from src.config.abis.swapr import SWAPR_ROUTER_ABI
 w3 = Web3(Web3.HTTPProvider(os.environ["RPC_URL"]))
 
 # Load contract ABI
-with open('deployment_info.json', 'r') as f:
+with open('deployment_info.json') as f:
     deployment_info = json.load(f)
     EXECUTOR_ABI = deployment_info['abi']
 

@@ -21,7 +21,6 @@ import argparse
 import os
 from decimal import Decimal
 from pathlib import Path
-from typing import Optional
 
 from dotenv import load_dotenv
 from web3 import Web3
@@ -53,7 +52,7 @@ _ERC20_MIN_ABI = [
 ]
 
 
-def load_env(env_file: Optional[str]) -> None:
+def load_env(env_file: str | None) -> None:
     base_env = Path(".env")
     if base_env.exists():
         load_dotenv(base_env)

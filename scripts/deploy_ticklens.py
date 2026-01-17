@@ -20,7 +20,6 @@ import re
 import json
 import time
 from pathlib import Path
-from typing import Dict
 
 from web3 import Web3
 from eth_account import Account
@@ -28,8 +27,8 @@ from eth_account import Account
 ARTIFACT_PATH = Path('ticklens-hardhat/node_modules/@cryptoalgebra/integral-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json')
 
 
-def load_env_file(path: str) -> Dict[str, str]:
-    env: Dict[str, str] = {}
+def load_env_file(path: str) -> dict[str, str]:
+    env: dict[str, str] = {}
     p = Path(path)
     if not p.exists():
         return env

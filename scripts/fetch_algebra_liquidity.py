@@ -27,7 +27,7 @@ import os
 import re
 import sys
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import requests
 from decimal import Decimal, getcontext
@@ -56,18 +56,18 @@ class PoolLiquidity:
     pool: str
     method: str
     subgraph_url: str
-    current_liquidity: Optional[int] = None
-    sqrt_price: Optional[int] = None
-    current_tick: Optional[int] = None
-    token0: Optional[str] = None
-    token1: Optional[str] = None
-    ticks_count: Optional[int] = None
-    minted_liquidity_sum: Optional[int] = None
-    burned_liquidity_sum: Optional[int] = None
-    max_abs_tick_liquidity: Optional[int] = None
+    current_liquidity: int | None = None
+    sqrt_price: int | None = None
+    current_tick: int | None = None
+    token0: str | None = None
+    token1: str | None = None
+    ticks_count: int | None = None
+    minted_liquidity_sum: int | None = None
+    burned_liquidity_sum: int | None = None
+    max_abs_tick_liquidity: int | None = None
 
 
-def _post_graphql(url: str, query: str, variables: Dict[str, Any]) -> Dict[str, Any]:
+def _post_graphql(url: str, query: str, variables: dict[str, Any]) -> dict[str, Any]:
     headers = {"content-type": "application/json"}
     resp = requests.post(url, json={"query": query, "variables": variables}, headers=headers, timeout=30)
     resp.raise_for_status()
@@ -78,7 +78,7 @@ def _post_graphql(url: str, query: str, variables: Dict[str, Any]) -> Dict[str, 
     return data
 
 
-def _try_query_pool_entity(url: str, pool: str) -> Optional[Dict[str, Any]]:
+def _try_query_pool_entity(url: str, pool: str) -> dict[str, Any] | None:
     """
     Try common Pool entity shapes to get current liquidity.
 
@@ -87,7 +87,7 @@ def _try_query_pool_entity(url: str, pool: str) -> Optional[Dict[str, Any]]:
     # Normalize ID (most subgraphs use lowercase hex string for id)
     pid = pool.lower()
 
-    attempts: List[Tuple[str, Dict[str, Any], str]] = [
+    attempts: list[tuple[str, dict[str, Any], str]] = [
         (
             # Attempt 1: single pool by id
             "query ($id: ID!) { pool(id: $id) { id liquidity sqrtPrice tick token0 { id symbol } token1 { id symbol } } }",
@@ -124,7 +124,7 @@ def _try_query_pool_entity(url: str, pool: str) -> Optional[Dict[str, Any]]:
     return None
 
 
-def _query_ticks_summary(url: str, pool: str) -> Tuple[int, int, int, int]:
+def _query_ticks_summary(url: str, pool: str) -> tuple[int, int, int, int]:
     """
     Query ticks for a pool and return summary metrics:
     - ticks_count
@@ -177,15 +177,15 @@ def _query_ticks_summary(url: str, pool: str) -> Tuple[int, int, int, int]:
     return total, minted_sum, burned_sum, max_abs
 
 
-def parse_pool_from_example(path: str) -> Optional[str]:
+def parse_pool_from_example(path: str) -> str | None:
     if not os.path.exists(path):
         return None
-    content = open(path, "r", encoding="utf-8").read()
+    content = open(path, encoding="utf-8").read()
     m = re.search(r'"poolAddress"\s*:\s*"(0x[a-fA-F0-9]{40})"', content)
     return m.group(1) if m else None
 
 
-def _erc20_decimals(w3: Web3, token_addr: str) -> Optional[int]:
+def _erc20_decimals(w3: Web3, token_addr: str) -> int | None:
     try:
         c = w3.eth.contract(address=Web3.to_checksum_address(token_addr), abi=ERC20_ABI)
         return c.functions.decimals().call()
@@ -213,7 +213,7 @@ def _erc20_symbol_or_name(w3: Web3, token_addr: str) -> str:
     return token_addr
 
 
-def _pool_tokens_and_state(w3: Web3, pool_addr: str) -> Tuple[Optional[str], Optional[str], Optional[int]]:
+def _pool_tokens_and_state(w3: Web3, pool_addr: str) -> tuple[str | None, str | None, int | None]:
     """Return (token0, token1, sqrtPriceX96) from the pool via RPC if possible."""
     try:
         pool = w3.eth.contract(address=Web3.to_checksum_address(pool_addr), abi=ALGEBRA_POOL_ABI)
@@ -225,7 +225,7 @@ def _pool_tokens_and_state(w3: Web3, pool_addr: str) -> Tuple[Optional[str], Opt
         return None, None, None
 
 
-def _price_from_sqrtX96(sqrt_price_x96: int, dec0: int, dec1: int) -> Optional[Tuple[Decimal, Decimal]]:
+def _price_from_sqrtX96(sqrt_price_x96: int, dec0: int, dec1: int) -> tuple[Decimal, Decimal] | None:
     """Compute price0in1 and price1in0 using decimals. Returns (p01, p10)."""
     try:
         getcontext().prec = 60
