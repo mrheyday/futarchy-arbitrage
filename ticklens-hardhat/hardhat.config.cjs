@@ -2,8 +2,10 @@ require("dotenv/config");
 require("@nomicfoundation/hardhat-ethers");
 require("@nomicfoundation/hardhat-verify");
 
-const RPC_FALLBACK = process.env.GNOSIS_RPC_URL || process.env.RPC_URL;
-const { PRIVATE_KEY, GNOSISSCAN_API_KEY } = process.env;
+const GNOSIS_RPC = process.env.GNOSIS_RPC_URL || process.env.RPC_URL;
+const BASE_RPC = process.env.BASE_RPC_URL || "https://mainnet.base.org";
+const BASE_SEPOLIA_RPC = process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org";
+const { PRIVATE_KEY, GNOSISSCAN_API_KEY, BASESCAN_API_KEY } = process.env;
 
 function getAccounts() {
   if (!PRIVATE_KEY) return [];
@@ -19,13 +21,27 @@ module.exports = {
   },
   networks: {
     gnosis: {
-      url: RPC_FALLBACK || "https://rpc.gnosischain.com",
+      url: GNOSIS_RPC || "https://rpc.gnosischain.com",
       chainId: 100,
+      accounts: getAccounts(),
+    },
+    base: {
+      url: BASE_RPC,
+      chainId: 8453,
+      accounts: getAccounts(),
+    },
+    base_sepolia: {
+      url: BASE_SEPOLIA_RPC,
+      chainId: 84532,
       accounts: getAccounts(),
     },
   },
   etherscan: {
-    apiKey: { gnosis: GNOSISSCAN_API_KEY || "" },
+    apiKey: {
+      gnosis: GNOSISSCAN_API_KEY || "",
+      base: BASESCAN_API_KEY || "",
+      base_sepolia: BASESCAN_API_KEY || "",
+    },
     customChains: [
       {
         network: "gnosis",
@@ -33,6 +49,22 @@ module.exports = {
         urls: {
           apiURL: "https://api.gnosisscan.io/api",
           browserURL: "https://gnosisscan.io",
+        },
+      },
+      {
+        network: "base",
+        chainId: 8453,
+        urls: {
+          apiURL: "https://api.basescan.org/api",
+          browserURL: "https://basescan.org",
+        },
+      },
+      {
+        network: "base_sepolia",
+        chainId: 84532,
+        urls: {
+          apiURL: "https://api-sepolia.basescan.org/api",
+          browserURL: "https://sepolia.basescan.org",
         },
       },
     ],

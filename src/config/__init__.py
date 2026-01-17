@@ -8,7 +8,14 @@ Please use with caution as functionality may change.
 from src.config.network import (
     DEFAULT_RPC_URLS,
     COWSWAP_API_URL,
-    CHAIN_ID
+    CHAIN_ID,
+    CHAIN_NAME,
+    CHAINS,
+    get_chain_config,
+    get_chain_id,
+    get_rpc_url,
+    get_explorer_url,
+    get_explorer_api_url,
 )
 
 from src.config.contracts import (
@@ -48,7 +55,14 @@ __all__ = [
     'DEFAULT_RPC_URLS',
     'COWSWAP_API_URL',
     'CHAIN_ID',
-    
+    'CHAIN_NAME',
+    'CHAINS',
+    'get_chain_config',
+    'get_chain_id',
+    'get_rpc_url',
+    'get_explorer_url',
+    'get_explorer_api_url',
+
     # Contracts
     'CONTRACT_ADDRESSES',
     'CONTRACT_WARNINGS',
