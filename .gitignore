@@ -18,6 +18,7 @@ passthrough_router_swap_temp.py
 # Environment files
 .env.*
 .env
+!.env.example
 
 # Verification files
 verify_key.py
